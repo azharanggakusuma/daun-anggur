@@ -1,6 +1,5 @@
 /* ---
   PALET WARNA & VARIABEL UTAMA
-  Sistem terpusat untuk Light & Dark Mode yang lebih kaya.
 --- */
 :root {
   /* Warna Merek (Aksi Utama) */
@@ -12,10 +11,9 @@
   --bg-primary: #f8fafc; /* slate-50 */
   --bg-secondary: #ffffff; /* white */
   --bg-tertiary: #f1f5f9; /* slate-100 */
-  --bg-backdrop: rgba(255, 255, 255, 0.6); /* Transparan untuk efek glassmorphism */
 
   /* Teks */
-  --text-primary: #0f172a; /* slate-900 */
+  --text-primary: #1e293b; /* slate-800 */
   --text-secondary: #475569; /* slate-600 */
   --text-muted: #64748b; /* slate-500 */
   --text-inverted: #ffffff;
@@ -24,40 +22,40 @@
   /* Border */
   --border-primary: #e2e8f0; /* slate-200 */
   --border-secondary: #cbd5e1; /* slate-300 */
-  --border-brand: #22c55e; /* green-500 */
 
-  /* Bayangan */
-  --shadow-color-light: rgba(15, 23, 42, 0.03);
-  --shadow-color-medium: rgba(15, 23, 42, 0.08);
-  --shadow-brand: rgba(22, 163, 74, 0.2);
+  /* Bayangan yang Lembut */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-brand: 0 4px 14px 0 rgba(22, 163, 74, 0.15);
 }
 
 html.dark {
   /* Warna Merek - Gelap */
   --brand-gradient: linear-gradient(to right, #22c55e, #4ade80);
   --brand-color: #22c55e; /* green-500 */
-  --brand-color-hover: #4ade80; /* green-400 */
+  --brand-color-hover: #16a34a; /* green-600 */
 
   /* Latar Belakang - Gelap */
-  --bg-primary: #0b1120; /* Warna biru malam yang lebih dalam */
-  --bg-secondary: #172033; /* Sedikit lebih terang dari primary */
-  --bg-tertiary: #202940; /* Untuk elemen seperti kartu info */
-  --bg-backdrop: rgba(11, 17, 32, 0.6);
+  --bg-primary: #111827;  /* gray-900 */
+  --bg-secondary: #1f2937; /* gray-800 */
+  --bg-tertiary: #374151; /* gray-700 */
 
   /* Teks - Gelap */
-  --text-primary: #f1f5f9; /* slate-100 */
-  --text-secondary: #94a3b8; /* slate-400 */
-  --text-muted: #64748b; /* slate-500 */
+  --text-primary: #f3f4f6; /* gray-100 */
+  --text-secondary: #9ca3af; /* gray-400 */
+  --text-muted: #6b7280; /* gray-500 */
   --text-brand: #4ade80; /* green-400 */
 
   /* Border - Gelap */
-  --border-primary: #334155; /* slate-700 */
-  --border-secondary: #475569; /* slate-600 */
+  --border-primary: #374151; /* gray-700 */
+  --border-secondary: #4b5563; /* gray-600 */
 
-  /* Bayangan */
-  --shadow-color-light: rgba(0, 0, 0, 0.1);
-  --shadow-color-medium: rgba(0, 0, 0, 0.2);
-  --shadow-brand: rgba(34, 197, 94, 0.25);
+  /* Bayangan - Gelap */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-brand: 0 4px 14px 0 rgba(34, 197, 94, 0.2);
 }
 
 
@@ -67,13 +65,8 @@ html.dark {
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--bg-primary);
-  background-image:
-    radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 97% 21%, hsla(135, 98%, 61%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 82% 99%, hsla(340, 98%, 61%, 0.1) 0px, transparent 50%);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
 }
 
 .antialiased {
@@ -81,17 +74,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Pola titik-titik di latar belakang */
+/* Pola titik-titik yang terlihat */
 .bg-dots-pattern {
     background-image: radial-gradient(var(--border-secondary) 1px, transparent 1px);
-    background-size: 20px 20px;
-    transition: background-image 0.3s ease;
+    background-size: 24px 24px;
+    /* Opacity dihapus agar pattern terlihat jelas */
 }
 html.dark .bg-dots-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 0.5px, transparent 0.5px);
+    background-image: radial-gradient(var(--border-secondary) 0.5px, transparent 0.5px);
 }
 
-/* Gradien teks untuk judul utama */
 .text-brand-gradient {
   background-image: var(--brand-gradient);
   -webkit-background-clip: text;
@@ -102,28 +94,29 @@ html.dark .bg-dots-pattern {
 
 /* --- Tombol --- */
 .button-base {
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .button-primary {
-  background-image: var(--brand-gradient);
+  background-color: var(--brand-color);
   color: var(--text-inverted);
-  box-shadow: 0 4px 15px -5px var(--shadow-brand);
+  box-shadow: var(--shadow-brand);
 }
 .button-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px -7px var(--shadow-brand);
+  background-color: var(--brand-color-hover);
+  box-shadow: var(--shadow-lg);
 }
 .button-primary:disabled {
-  background: var(--border-secondary);
+  background-color: var(--bg-tertiary);
   color: var(--text-muted);
   cursor: not-allowed;
   box-shadow: none;
@@ -133,13 +126,13 @@ html.dark .bg-dots-pattern {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
-    box-shadow: 0 1px 2px 0 var(--shadow-color-light);
+    box-shadow: var(--shadow-sm);
 }
 .button-secondary:hover:not(:disabled) {
     border-color: var(--border-secondary);
     background-color: var(--bg-tertiary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px var(--shadow-color-medium), 0 2px 4px -2px var(--shadow-color-medium);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .button-tertiary {
@@ -154,36 +147,30 @@ html.dark .bg-dots-pattern {
 
 /* --- Struktur & Layout Utama --- */
 .card-layout {
-    background-color: var(--bg-backdrop);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    border-radius: 1.25rem; /* 20px */
+    border-radius: 1rem; /* 16px */
     padding: 1.5rem; /* 24px */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
     transition: all 0.3s ease;
 }
 @media (min-width: 640px) {
     .card-layout { padding: 2rem; }
 }
-html.dark .card-layout {
-    box-shadow: 0 0 0 1px var(--border-primary);
-}
-
 
 #dropzone {
-    border-color: var(--border-secondary);
+    border: 2px dashed var(--border-secondary);
     background-color: var(--bg-primary);
+    border-radius: 0.75rem;
     transition: all 0.2s ease-in-out;
 }
-#dropzone.dropzone-active {
-  border-color: var(--text-brand) !important;
-  background-color: var(--bg-tertiary) !important;
-  transform: scale(1.02);
-  box-shadow: 0 0 25px -5px var(--shadow-brand);
-}
 #dropzone:hover {
-    border-color: var(--text-brand);
+    border-color: var(--brand-color);
+    background-color: var(--bg-secondary);
+}
+#dropzone.dropzone-active {
+  border-color: var(--brand-color) !important;
+  border-style: solid;
 }
 
 /* --- Elemen UI Lainnya --- */
@@ -193,7 +180,7 @@ html.dark .card-layout {
   color: var(--text-muted);
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease-in-out;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
 }
 .tab-button:hover:not(.active) {
   background-color: var(--bg-tertiary);
@@ -201,30 +188,8 @@ html.dark .card-layout {
 }
 .tab-button.active {
   color: var(--text-brand);
-  background-color: var(--bg-tertiary);
   border-bottom-color: var(--text-brand);
   font-weight: 600;
-}
-
-.info-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  background-color: var(--bg-tertiary);
-  padding: 1rem;
-  border-radius: 0.75rem;
-  border-left: 4px solid var(--border-secondary);
-  color: var(--text-secondary);
-  transition: all 0.2s ease-in-out;
-}
-.info-card:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 4px 10px -2px var(--shadow-color-medium);
-  border-left-color: var(--text-brand);
-}
-.info-card-icon {
-  flex-shrink: 0;
-  margin-top: 0.25rem;
 }
 
 
@@ -243,18 +208,15 @@ html.dark .card-layout {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px var(--shadow-color-light);
+  box-shadow: var(--shadow-md);
 }
 #home-button:hover,
 #history-button:hover,
 #theme-toggle:hover {
   color: var(--text-brand);
-  border-color: var(--text-brand);
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 7px 14px -5px var(--shadow-brand);
-}
-#theme-toggle:hover {
-  transform: scale(1.1) rotate(20deg);
+  border-color: var(--brand-color);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
 }
 
 .theme-icon {
@@ -262,26 +224,21 @@ html.dark .card-layout {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-in-out;
+  transition: transform 0.4s ease, opacity 0.3s ease;
 }
-#theme-icon-container {
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-  transform: rotate(0deg);
-}
-#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
-#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) rotate(90deg); }
-html.dark #theme-icon-container { transform: rotate(360deg); }
-html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg); }
-html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
+#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 
 /* --- Animasi --- */
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(25px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-slide-in-up {
-  animation: slide-in-up 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: slide-in-up 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @keyframes stagger-in {
@@ -300,15 +257,15 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
   padding: 1rem 1.5rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-primary);
-  border-left-width: 5px;
-  border-radius: 0.75rem; /* 12px */
-  box-shadow: 0 2px 4px -1px var(--shadow-color-light);
+  border-left-width: 4px;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
   transition: all 0.25s ease-in-out;
 }
 #history-container a.history-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-4px);
   border-color: var(--brand-color);
-  box-shadow: 0 10px 15px -3px var(--shadow-color-medium), 0 4px 6px -4px var(--shadow-color-medium);
+  box-shadow: var(--shadow-lg);
 }
 
 /* --- Kelas utilitas untuk warna berdasarkan hasil --- */
@@ -322,7 +279,7 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
     padding: 0.5rem 1rem;
     border-radius: 9999px;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     display: inline-block;
     color: white;
 }
