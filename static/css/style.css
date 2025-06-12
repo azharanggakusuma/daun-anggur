@@ -1,13 +1,11 @@
 /* ---
-   PALET WARNA & VARIABEL UTAMA
-   Sistem terpusat untuk Light & Dark Mode.
+  PALET WARNA & VARIABEL UTAMA
+  Sistem terpusat untuk Light & Dark Mode.
 --- */
-
 :root {
   /* Warna Merek (Aksi) */
   --brand-color: #16a34a; /* green-600 */
   --brand-color-hover: #15803d; /* green-700 */
-  --brand-color-light: #22c55e; /* green-500 */
   --brand-color-subtle-bg: #f0fdf4; /* green-50 */
 
   /* Latar Belakang */
@@ -19,11 +17,13 @@
   --text-primary: #0f172a; /* slate-900 */
   --text-secondary: #475569; /* slate-600 */
   --text-muted: #64748b; /* slate-500 */
+  --text-inverted: #ffffff;
 
   /* Border */
   --border-primary: #e2e8f0; /* slate-200 */
   --border-secondary: #cbd5e1; /* slate-300 */
   --border-hover: #94a3b8; /* slate-400 */
+  --border-brand: #22c55e; /* green-500 */
 
   /* Bayangan */
   --shadow-color-brand-light: rgba(22, 163, 74, 0.1);
@@ -32,22 +32,22 @@
   --shadow-color-medium: rgba(15, 23, 42, 0.1);
 }
 
-body.dark {
+html.dark {
   /* Warna Merek - Gelap */
   --brand-color: #22c55e; /* green-500 */
   --brand-color-hover: #4ade80; /* green-400 */
-  --brand-color-light: #4ade80; /* green-400 */
   --brand-color-subtle-bg: rgba(34, 197, 94, 0.1);
 
   /* Latar Belakang - Gelap */
-  --bg-primary: #0f172a; /* slate-900 */
-  --bg-secondary: #1e293b; /* slate-800 */
-  --bg-tertiary: #334155; /* slate-700 */
+  --bg-primary: #020617; /* slate-950 */
+  --bg-secondary: #0f172a; /* slate-900 */
+  --bg-tertiary: #1e293b; /* slate-800 */
 
   /* Teks - Gelap */
   --text-primary: #f8fafc; /* slate-50 */
   --text-secondary: #cbd5e1; /* slate-300 */
-  --text-muted: #94a3b8; /* slate-400 */
+  --text-muted: #64748b; /* slate-500 */
+  --text-inverted: #0f172a;
 
   /* Border - Gelap */
   --border-primary: #334155; /* slate-700 */
@@ -63,7 +63,7 @@ body.dark {
 
 
 /* ---
-   GAYA DASAR & KOMPONEN
+  GAYA DASAR & KOMPONEN
 --- */
 
 body {
@@ -78,19 +78,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Pola titik-titik di latar belakang */
+.bg-dots-pattern {
+    background-image: radial-gradient(var(--border-primary) 1px, transparent 1px);
+    background-size: 16px 16px;
+    transition: background-image 0.3s ease;
+}
+html.dark .bg-dots-pattern {
+    background-image: radial-gradient(var(--border-primary) 1px, transparent 1px);
+}
+
+/* Gradien teks untuk judul utama */
 .text-brand-gradient {
     background-image: linear-gradient(to right, #16a34a, #22c55e);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
-
-.bg-dots-pattern {
-    background-image: radial-gradient(var(--border-primary) 1px, transparent 1px);
-    background-size: 16px 16px;
-}
-body.dark .bg-dots-pattern {
-    background-image: radial-gradient(var(--border-primary) 1px, transparent 1px);
+html.dark .text-brand-gradient {
+    background-image: linear-gradient(to right, #22c55e, #4ade80);
 }
 
 
@@ -98,7 +104,7 @@ body.dark .bg-dots-pattern {
 
 .button-primary {
   background-color: var(--brand-color);
-  color: #ffffff;
+  color: var(--text-inverted);
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -112,8 +118,8 @@ body.dark .bg-dots-pattern {
   box-shadow: 0 10px 15px -3px var(--shadow-color-brand-medium), 0 4px 6px -4px var(--shadow-color-brand-medium);
 }
 .button-primary:disabled {
-  background-color: #9ca3af; /* gray-400 */
-  color: #e5e7eb; /* gray-200 */
+  background-color: var(--border-secondary);
+  color: var(--text-muted);
   transform: translateY(0);
   cursor: not-allowed;
   box-shadow: none;
@@ -135,13 +141,13 @@ body.dark .bg-dots-pattern {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px var(--shadow-color-medium), 0 2px 4px -2px var(--shadow-color-medium);
 }
-body.dark .button-secondary:hover:not(:disabled) {
+html.dark .button-secondary:hover:not(:disabled) {
     background-color: var(--bg-tertiary);
 }
 
 .button-tertiary {
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-primary);
+    background-color: transparent;
+    border: 1px solid transparent;
     color: var(--text-secondary);
     padding: 0.75rem 1.5rem;
     border-radius: 0.75rem;
@@ -151,36 +157,34 @@ body.dark .button-secondary:hover:not(:disabled) {
 .button-tertiary:hover:not(:disabled) {
     border-color: var(--border-secondary);
     color: var(--text-primary);
-    transform: translateY(-1px);
-}
-body.dark .button-tertiary {
-    background-color: var(--border-primary);
-}
-body.dark .button-tertiary:hover:not(:disabled) {
-    background-color: var(--border-secondary);
+    background-color: var(--bg-tertiary);
 }
 
 
-/* --- Uploader & Report Sections --- */
+/* --- Bagian Uploader & Laporan --- */
 
 #uploader-section, #report-section {
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-color: var(--border-primary);
+    background-color: var(--bg-secondary);
+}
+html.dark #uploader-section, html.dark #report-section {
+    background-color: var(--bg-secondary);
 }
 
 .shadow-2xl-brand {
     box-shadow: 0 25px 50px -12px var(--shadow-color-brand-light);
 }
-body.dark .shadow-2xl-brand {
+html.dark .shadow-2xl-brand {
      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
 }
 
 .shadow-xl-brand {
      box-shadow: 0 20px 25px -5px var(--shadow-color-brand-light), 0 8px 10px -6px var(--shadow-color-brand-light);
 }
-body.dark .shadow-xl-brand {
+html.dark .shadow-xl-brand {
      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3), 0 8px 10px -6px rgba(0,0,0,0.3);
 }
-
 
 #dropzone {
     border-color: var(--border-secondary);
@@ -190,11 +194,8 @@ body.dark .shadow-xl-brand {
   border-color: var(--brand-color) !important;
   background-color: var(--brand-color-subtle-bg) !important;
 }
-body.dark #dropzone {
-    background-color: var(--bg-primary);
-}
-body.dark #dropzone:hover {
-     background-color: var(--bg-secondary);
+#dropzone:hover {
+    border-color: var(--border-brand);
 }
 
 /* --- Elemen UI Lainnya --- */
@@ -204,6 +205,7 @@ body.dark #dropzone:hover {
   color: var(--text-muted);
   border-bottom: 2px solid transparent;
   transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
+  white-space: nowrap;
 }
 @media (min-width: 640px) {
     .tab-button {
@@ -231,24 +233,18 @@ body.dark #dropzone:hover {
   transition: all 0.2s ease-in-out;
 }
 .info-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.02);
     border-color: var(--border-secondary);
-    background-color: var(--bg-secondary);
-}
-body.dark .info-card {
-    background-color: var(--border-primary);
-    border-color: var(--border-secondary);
-}
-body.dark .info-card:hover {
-    background-color: #3e4c5f; /* Slightly lighter than slate-700 */
-    border-color: var(--border-hover);
+    background-color: var(--bg-primary);
+    box-shadow: 0 4px 6px -1px var(--shadow-color-medium);
 }
 .info-card-icon {
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
 
-/* --- Header & Theme Toggle --- */
+
+/* --- Header & Tombol Tema --- */
 #home-button,
 #history-button,
 #theme-toggle {
@@ -269,7 +265,7 @@ body.dark .info-card:hover {
 #history-button:hover,
 #theme-toggle:hover {
   color: var(--brand-color);
-  border-color: var(--border-hover);
+  border-color: var(--border-brand);
   transform: scale(1.1);
 }
 #theme-toggle:hover {
@@ -290,9 +286,9 @@ body.dark .info-card:hover {
 }
 #theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
 #theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) rotate(90deg); }
-body.dark #theme-icon-container { transform: rotate(360deg); }
-body.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg); }
-body.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
+html.dark #theme-icon-container { transform: rotate(360deg); }
+html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg); }
+html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
 
 
 /* --- Animasi --- */
@@ -315,24 +311,17 @@ body.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
 }
 
 /* --- Riwayat --- */
-#history-container > a {
+#history-container > a.history-card {
     display: block;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     border: 1px solid var(--border-primary);
     border-radius: 0.75rem;
     background-color: var(--bg-secondary);
     transition: all 0.2s ease-in-out;
     box-shadow: 0 1px 2px 0 var(--shadow-color-light);
 }
-#history-container > a:hover {
+#history-container > a.history-card:hover {
     transform: translateY(-3px);
     border-color: var(--brand-color);
-    box-shadow: 0 4px 6px -1px var(--shadow-color-brand-light), 0 2px 4px -2px var(--shadow-color-brand-light);
-}
-body.dark #history-container > a {
-    background-color: var(--bg-secondary);
-}
-body.dark #history-container > a:hover {
-    background-color: var(--bg-tertiary);
-    border-color: var(--brand-color);
+    box-shadow: 0 4px 10px -2px var(--shadow-color-brand-light);
 }

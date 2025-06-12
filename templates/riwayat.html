@@ -8,12 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="antialiased">
+    <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
+    
     <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
-        <a href="/" id="history-button" title="Kembali ke Halaman Utama">
+        <a href="/" id="home-button" title="Kembali ke Halaman Utama">
             <i class="fa-solid fa-house"></i>
         </a>
         <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
@@ -23,18 +25,21 @@
             </div>
         </button>
     </header>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold">Riwayat Analisis</h1>
-            <p class="mt-2 text-lg">Berikut adalah hasil analisis yang pernah Anda lakukan.</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-primary">Riwayat Analisis</h1>
+            <p class="mt-2 text-lg text-secondary">Berikut adalah hasil analisis yang pernah Anda lakukan.</p>
         </header>
+
         <main>
             <div id="history-container" class="space-y-4">
-                <div id="empty-history" class="text-center p-8 border-2 border-dashed rounded-lg hidden">
-                    <i class="fa-solid fa-box-open fa-3x text-gray-400"></i>
-                    <p class="mt-4 font-semibold">Belum ada riwayat analisis.</p>
-                    <p class="text-gray-500">Mulai analisis pertama Anda untuk melihat riwayat di sini.</p>
+                <div id="empty-history" class="text-center p-8 border-2 border-dashed border-secondary rounded-lg hidden">
+                    <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                    <p class="mt-4 font-semibold text-primary">Belum ada riwayat analisis.</p>
+                    <p class="text-muted">Mulai analisis pertama Anda untuk melihat riwayat di sini.</p>
                 </div>
+                <!-- Riwayat akan dimuat di sini oleh history.js -->
             </div>
             <div class="text-center mt-12">
                 <a href="/" class="button-primary">
@@ -42,7 +47,12 @@
                 </a>
             </div>
         </main>
+        
+        <footer class="text-center mt-12 text-sm text-muted">
+             <p>&copy; <span id="currentYear"></span> Analisis Daun Anggur. Seluruh hak cipta dilindungi.</p>
+        </footer>
     </div>
+
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/history.js') }}"></script>
 </body>

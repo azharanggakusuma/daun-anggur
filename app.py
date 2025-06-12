@@ -57,7 +57,7 @@ disease_info = {
         'color': 'yellow'
     },
     'Negative': {
-        'description': 'Gambar yang diunggah tidak dapat diidentifikasi sebagai daun anggur atau kualitasnya tidak cukup untuk analisis oleh model CNN.',
+        'description': 'Gambar yang diunggah tidak dapat diidentifikasi sebagai daun anggur atau kualitasnya tidak cukup untuk analisis.',
         'tips': ['Gunakan Latar Belakang Polos: Posisikan daun di atas permukaan kontras seperti kertas putih.', 'Fokus yang Tajam: Pastikan kamera fokus pada daun, bukan pada latar belakang.', 'Pencahayaan Merata: Hindari bayangan tajam atau cahaya yang terlalu terang (overexposure).', 'Resolusi yang Cukup: Gunakan gambar dengan resolusi yang baik untuk detail yang lebih jelas.'],
         'action': [], 'symptoms': [], 'triggers': [], 'color': 'zinc'
     }
