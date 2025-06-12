@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const alertBox = document.getElementById("alert-box");
     const alertMessage = document.getElementById("alert-message");
 
-    // --- PERBAIKAN: Variabel untuk menyimpan file yang dipilih ---
     let selectedFile = null;
 
     /**
@@ -36,25 +35,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function displayImagePreview(file) {
         const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
         if (!allowedTypes.includes(file.type)) {
-            showAlert(
-                "Format file tidak didukung. Harap pilih file JPG, PNG, atau JPEG."
-            );
-            fileInput.value = ""; // Reset input file
-            resetDropzone(); // Pastikan UI kembali ke awal
+            showAlert("Format file tidak didukung. Harap pilih file JPG, PNG, atau JPEG.");
+            resetDropzone();
             return;
         }
 
         const maxSize = 10 * 1024 * 1024; // 10MB
         if (file.size > maxSize) {
             showAlert("Ukuran file terlalu besar. Maksimal 10MB.");
-            fileInput.value = ""; // Reset input file
-            resetDropzone(); // Pastikan UI kembali ke awal
+            resetDropzone();
             return;
         }
 
         hideAlert();
-        
-        // --- PERBAIKAN: Simpan file yang valid ke variabel ---
         selectedFile = file;
 
         const reader = new FileReader();
@@ -62,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
             uploadPlaceholder.classList.add("opacity-0", "hidden");
             imagePreview.innerHTML = `<img src="${e.target.result}" style="max-height: 160px; object-fit: cover;" class="rounded-lg mx-auto border border-secondary shadow-sm"><p class="text-sm text-muted mt-3 font-semibold truncate">${file.name}</p>`;
             imagePreview.classList.remove("hidden");
-            setTimeout(() => imagePreview.classList.remove("opacity-0"), 50); // Efek fade in
-            submitButton.disabled = false; // Aktifkan tombol submit
+            setTimeout(() => imagePreview.classList.remove("opacity-0"), 50);
+            submitButton.disabled = false;
         };
         reader.readAsDataURL(file);
     }
@@ -78,79 +71,85 @@ document.addEventListener("DOMContentLoaded", function () {
         imagePreview.innerHTML = "";
         fileInput.value = "";
         submitButton.disabled = true;
-        // --- PERBAIKAN: Reset juga variabel file yang disimpan ---
         selectedFile = null;
     }
 
     if (uploadForm) {
+        /**
+         * PENINGKATAN: Fungsi terpusat untuk menangani kegagalan unggah.
+         * @param {string} errorMessage - Pesan error yang akan ditampilkan.
+         */
+        function handleUploadFailure(errorMessage) {
+            showAlert(errorMessage);
+            buttonText.textContent = "Mulai Analisis";
+            buttonSpinner.classList.add("hidden");
+            resetDropzone(); // Reset UI, termasuk file preview dan tombol
+        }
+
         uploadForm.addEventListener("submit", function (e) {
             e.preventDefault();
 
-            // --- PERBAIKAN: Periksa variabel, bukan input.files ---
             if (!selectedFile) {
                 showAlert("Tidak ada file yang dipilih. Harap unggah sebuah gambar.");
                 return;
             }
 
-            // Ubah tampilan tombol menjadi loading
             buttonText.textContent = "Menganalisis...";
             buttonSpinner.classList.remove("hidden");
             submitButton.disabled = true;
 
-            // --- PERBAIKAN: Buat FormData secara manual untuk keandalan ---
             const formData = new FormData();
             formData.append('file', selectedFile, selectedFile.name);
+
+            // --- PENINGKATAN: Tambahkan AbortController untuk timeout ---
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // Timeout 30 detik
 
             fetch("/upload", {
                 method: "POST",
                 body: formData,
+                signal: controller.signal, // Kaitkan sinyal dengan fetch
             })
             .then((response) => {
+                clearTimeout(timeoutId); // Hapus timeout jika respons diterima
+                
+                // --- PENINGKATAN: Penanganan error server yang lebih baik ---
                 if (!response.ok) {
-                    // Jika ada error dari server, lempar sebagai promise rejection
-                    return response.json().then((err) => {
-                        throw err;
-                    });
+                    // Coba baca sebagai JSON, jika gagal, lempar error umum
+                    return response.json()
+                        .then(err => { throw err; })
+                        .catch(() => { throw new Error(`Server merespons dengan status ${response.status}`); });
                 }
                 return response.json();
             })
             .then((data) => {
                 if (data.success) {
-                    // Arahkan ke halaman hasil jika berhasil
                     window.location.href = data.redirect_url;
                 } else {
-                    // Tampilkan error jika gagal
-                    showAlert(data.error || "Terjadi kesalahan saat mengunggah file.");
-                    buttonText.textContent = "Mulai Analisis";
-                    buttonSpinner.classList.add("hidden");
-                    if (selectedFile) {
-                        submitButton.disabled = false;
-                    }
+                    // Gunakan fungsi terpusat untuk menangani kegagalan
+                    handleUploadFailure(data.error || "Terjadi kesalahan saat mengunggah file.");
                 }
             })
             .catch((error) => {
+                clearTimeout(timeoutId);
                 console.error("Error:", error);
-                showAlert(
-                    error.error || "Tidak dapat terhubung ke server. Silakan coba lagi."
-                );
-                // Kembalikan tombol ke keadaan semula
-                buttonText.textContent = "Mulai Analisis";
-                buttonSpinner.classList.add("hidden");
-                if (selectedFile) {
-                    submitButton.disabled = false;
+
+                let message;
+                if (error.name === 'AbortError') {
+                    message = "Proses unggah terlalu lama. Periksa koneksi Anda dan coba lagi.";
+                } else if (error.error) {
+                    message = error.error;
+                } else {
+                    message = "Tidak dapat terhubung ke server atau terjadi kesalahan.";
                 }
+                // Gunakan fungsi terpusat untuk menangani kegagalan
+                handleUploadFailure(message);
             });
         });
     }
 
     if (dropzone) {
-        // --- BUG FIX: Hapus event listener klik manual pada dropzone. ---
-        // Input file yang transparan sudah menutupi area dropzone, 
-        // sehingga klik dari pengguna akan langsung diterima oleh input file secara alami.
-        // Event listener tambahan ini menyebabkan event klik kedua yang tidak perlu, 
-        // sehingga memunculkan dialog pilih file dua kali.
-        // dropzone.addEventListener("click", () => fileInput.click());
-
+        // Event listener untuk drag-and-drop
         ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
             dropzone.addEventListener(eventName, (e) => {
                 e.preventDefault();
@@ -171,11 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         dropzone.addEventListener("drop", (e) => {
             if (e.dataTransfer.files.length) {
-                // Gunakan file dari event drop secara langsung
                 displayImagePreview(e.dataTransfer.files[0]);
             }
         });
 
+        // Event listener untuk input file
         fileInput.addEventListener("change", () => {
             if (fileInput.files.length) {
                 displayImagePreview(fileInput.files[0]);
