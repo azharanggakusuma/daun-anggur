@@ -12,7 +12,7 @@
   --bg-primary: #f8fafc; /* slate-50 */
   --bg-secondary: #ffffff; /* white */
   --bg-tertiary: #f1f5f9; /* slate-100 */
-  --bg-backdrop: rgba(248, 250, 252, 0.5); /* Transparan untuk efek glassmorphism */
+  --bg-backdrop: rgba(255, 255, 255, 0.6); /* Transparan untuk efek glassmorphism */
 
   /* Teks */
   --text-primary: #0f172a; /* slate-900 */

@@ -59,10 +59,10 @@
                 <p class="mt-2 max-w-lg mx-auto text-secondary">{{ result.info.description }}</p>
                 <div class="mt-8 text-left max-w-md mx-auto">
                     <h4 class="font-semibold text-center mb-4 text-primary">Tips untuk Foto Lebih Baik</h4>
-                    <ul class="space-y-3">
+                    <ul class="space-y-3 list-inside text-secondary">
                         {% for tip in result.info.tips %}
-                        <li class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms; border-left-color: var(--text-brand);">
-                            <i class="fa-solid fa-lightbulb w-5 text-center text-brand flex-shrink-0 mt-1"></i>
+                        <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
+                            <i class="fa-solid fa-lightbulb mt-1 text-brand"></i>
                             <span>{{ tip }}</span>
                         </li>
                         {% endfor %}
@@ -113,19 +113,34 @@
                     <div id="tab-content" class="pt-6 min-h-[180px]">
                         <div id="tab-desc" class="tab-pane prose prose-sm max-w-none text-secondary" role="tabpanel"><p>{{ result.info.description }}</p></div>
                         <div id="tab-symptoms" class="tab-pane hidden" role="tabpanel">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {% for symptom in result.info.symptoms %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms; border-left-color: #ef4444;"><i class="fa-solid fa-circle-dot info-card-icon text-red-500"></i><p>{{ symptom }}</p></div>{% endfor %}
-                            </div>
+                            <ul class="space-y-3 list-inside text-secondary">
+                                {% for symptom in result.info.symptoms %}
+                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
+                                    <i class="fa-solid fa-circle-dot mt-1 text-red-500"></i>
+                                    <span>{{ symptom }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                         <div id="tab-triggers" class="tab-pane hidden" role="tabpanel">
-                           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {% for trigger in result.info.triggers %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms; border-left-color: #f59e0b;"><i class="fa-solid fa-circle-dot info-card-icon text-yellow-500"></i><p>{{ trigger }}</p></div>{% endfor %}
-                            </div>
+                           <ul class="space-y-3 list-inside text-secondary">
+                                {% for trigger in result.info.triggers %}
+                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
+                                    <i class="fa-solid fa-circle-dot mt-1 text-yellow-500"></i>
+                                    <span>{{ trigger }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                         <div id="tab-action" class="tab-pane hidden" role="tabpanel">
-                            <div class="grid grid-cols-1 gap-4">
-                                {% for step in result.info.action %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms; border-left-color: #22c55e;"><i class="fa-solid fa-circle-check info-card-icon text-green-500"></i><p>{{ step }}</p></div>{% endfor %}
-                            </div>
+                            <ul class="space-y-3 list-inside text-secondary">
+                                {% for step in result.info.action %}
+                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
+                                    <i class="fa-solid fa-circle-check mt-1 text-green-500"></i>
+                                    <span>{{ step }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>
