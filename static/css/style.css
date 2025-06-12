@@ -201,13 +201,15 @@ html.dark .shadow-xl-brand {
 
 /* --- Elemen UI Lainnya --- */
 .tab-button {
-  padding: 0.75rem 0.25rem;
+  padding: 0.75rem 0.5rem; /* Padding lebih kecil untuk mobile */
   font-weight: 500;
   color: var(--text-muted);
   border-bottom: 2px solid transparent;
   transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
-  white-space: nowrap;
+  white-space: nowrap; /* Mencegah teks turun baris */
+  flex-shrink: 0; /* Mencegah tombol menyusut */
 }
+/* Media query untuk layar lebih besar */
 @media (min-width: 640px) {
     .tab-button {
         padding: 0.75rem 1rem;

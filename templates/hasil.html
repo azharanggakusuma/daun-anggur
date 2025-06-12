@@ -35,26 +35,26 @@
         </button>
     </header>
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-20">
         
         <!-- Header Halaman Hasil -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-3xl md:text-4xl font-bold text-primary">Laporan Analisis</h1>
                 <p id="timestamp-display" class="mt-1 text-muted text-sm"></p>
             </div>
-            <a href="/" class="button-tertiary mt-4 sm:mt-0">
+            <a href="/" class="button-tertiary w-full sm:w-auto flex-shrink-0">
                 <i class="fa-solid fa-arrows-rotate mr-2"></i>Analisis Lain
             </a>
         </header>
 
         <!-- Konten Laporan -->
-        <section id="report-section" class="p-6 sm:p-8 rounded-2xl shadow-xl-brand border bg-secondary animate-slide-in-up">
+        <section id="report-section" class="p-4 sm:p-8 rounded-2xl shadow-xl-brand border bg-secondary animate-slide-in-up">
             
             <!-- Jika gambar tidak teridentifikasi -->
             {% if result.label == 'Negative' %}
             <div class="text-center py-8">
-                <i class="fa-solid fa-circle-xmark fa-4x mx-auto text-muted"></i>
+                <i class="fa-solid fa-circle-xmark text-5xl mx-auto text-muted"></i>
                 <h3 class="mt-6 text-2xl font-bold text-primary">Tidak Teridentifikasi</h3>
                 <p class="mt-2 max-w-lg mx-auto text-secondary">{{ result.info.description }}</p>
                 <div class="mt-8 text-left max-w-md mx-auto">
@@ -74,16 +74,16 @@
             <!-- Jika gambar berhasil dianalisis -->
             <div class="space-y-10">
                 
-                <!-- Bagian Gambar dan Diagnosis Utama -->
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-x-8 lg:gap-x-12 gap-y-8">
-                    <div class="md:col-span-2">
+                <!-- Bagian Gambar dan Diagnosis Utama: Stacking di mobile, side-by-side di desktop -->
+                <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+                    <div class="md:w-2/5 flex-shrink-0">
                         <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-3">Gambar Dianalisis</h3>
                         <img src="{{ url_for('static', filename='uploads/' + result.image) }}" alt="Gambar daun anggur yang dianalisis" class="w-full h-auto rounded-lg object-cover border-2 border-primary shadow-md">
                     </div>
-                    <div class="md:col-span-3 flex flex-col justify-center space-y-6">
+                    <div class="md:w-3/5 flex flex-col justify-center space-y-6">
                         <div>
                             <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-1">Hasil Diagnosis</h3>
-                            <p class="text-5xl font-black text-{{ result.info.color }}-600">{{ result.label }}</p>
+                            <p class="text-4xl lg:text-5xl font-black text-{{ result.info.color }}-600">{{ result.label }}</p>
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-2">Tingkat Keyakinan</h3>
