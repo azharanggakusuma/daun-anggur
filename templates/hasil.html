@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hasil Analisis | {{ result.label }}</title>
     
-    <!-- Library & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -14,15 +13,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="antialiased">
 
-    <!-- Latar belakang berpola titik-titik -->
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
 
-    <!-- Tombol header -->
     <header class="fixed z-50 top-4 right-4 flex items-center gap-3">
         <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
             <i class="fa-solid fa-clock-rotate-left"></i>
@@ -37,7 +33,6 @@
 
     <div class="max-w-4xl mx-auto px-4 py-16 sm:py-24">
         
-        <!-- Header Halaman Hasil -->
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-3xl md:text-4xl font-bold text-primary">Laporan Analisis</h1>
@@ -48,12 +43,10 @@
             </a>
         </header>
 
-        <!-- Konten Laporan -->
-        <section id="report-section" class="card-layout animate-slide-in-up">
+        <section class="animate-slide-in-up">
             
-            <!-- Jika gambar tidak teridentifikasi -->
             {% if result.label == 'Negative' %}
-            <div class="text-center py-8">
+            <div class="card-layout text-center py-8">
                 <i class="fa-solid fa-circle-xmark text-5xl mx-auto text-muted"></i>
                 <h3 class="mt-6 text-2xl font-bold text-primary">Tidak Teridentifikasi</h3>
                 <p class="mt-2 max-w-lg mx-auto text-secondary">{{ result.info.description }}</p>
@@ -68,108 +61,94 @@
                         {% endfor %}
                     </ul>
                 </div>
+                <div class="mt-12">
+                    <a href="/" class="button-base button-primary w-full sm:w-auto">
+                        <i class="fa-solid fa-arrows-rotate"></i>Coba Analisis Lagi
+                    </a>
+                </div>
             </div>
+
             {% else %}
-            
-            <!-- Jika gambar berhasil dianalisis -->
-            <div class="space-y-10">
+            <div class="space-y-8">
                 
-                <!-- Bagian Gambar dan Diagnosis Utama -->
-                <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
-                    <div class="md:w-2/5 flex-shrink-0">
-                        <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-3">Gambar Dianalisis</h3>
-                        <img src="{{ url_for('static', filename='uploads/' + result.image) }}" alt="Gambar daun anggur yang dianalisis" class="w-full h-auto rounded-lg object-cover border-2 border-primary/20 shadow-md">
-                    </div>
-                    <div class="md:w-3/5 flex flex-col justify-center space-y-6">
-                        <div>
-                            <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-2">Hasil Diagnosis</h3>
-                            <div class="diagnosis-badge bg-badge-{{ result.info.color }}">{{ result.label }}</div>
+                <div class="card-layout">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="md:w-1/2">
+                            <img src="{{ url_for('static', filename='uploads/' + result.image) }}" alt="Gambar daun anggur yang dianalisis" class="w-full h-auto rounded-lg object-cover shadow-md border border-primary/10">
                         </div>
-                        <div>
-                            <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-2">Tingkat Keyakinan</h3>
-                            <div class="flex items-center gap-4">
-                                <div class="w-full bg-tertiary rounded-full h-2.5 overflow-hidden">
-                                    <div id="confidence-bar" class="bg-{{ result.info.color }}-500 h-2.5 rounded-full" style="width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);" data-confidence="{{ '%.2f'|format(result.confidence) }}"></div>
-                                </div>
-                                <p class="text-lg font-semibold w-24 text-right text-primary">{{ '%.1f'|format(result.confidence) }}%</p>
+                        <div class="md:w-1/2 flex flex-col justify-center space-y-6">
+                            <div>
+                                <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-2">Hasil Diagnosis</h3>
+                                <div class="diagnosis-badge bg-badge-{{ result.info.color }}">{{ result.label }}</div>
                             </div>
-                             <p class="text-xs text-right mt-1 text-muted">
-                                {% if result.confidence > 90 %}<span class="font-medium text-green-600 dark:text-green-400">(Sangat Tinggi)</span>
-                                {% elif result.confidence > 70 %}<span class="font-medium text-yellow-500 dark:text-yellow-400">(Tinggi)</span>
-                                {% else %}<span class="font-medium text-red-600 dark:text-red-500">(Rendah)</span>{% endif %}
-                            </p>
+                            <div>
+                                <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-2">Tingkat Keyakinan</h3>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-full bg-tertiary rounded-full h-2.5 overflow-hidden">
+                                        <div id="confidence-bar" class="bg-{{ result.info.color }}-500 h-2.5 rounded-full" style="width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);" data-confidence="{{ '%.2f'|format(result.confidence) }}"></div>
+                                    </div>
+                                    <p class="text-lg font-semibold w-24 text-right text-primary">{{ '%.1f'|format(result.confidence) }}%</p>
+                                </div>
+                                <p class="text-xs text-right mt-1 text-muted">
+                                    {% if result.confidence > 90 %}<span class="font-medium text-green-600 dark:text-green-400">(Sangat Tinggi)</span>
+                                    {% elif result.confidence > 70 %}<span class="font-medium text-yellow-500 dark:text-yellow-400">(Tinggi)</span>
+                                    {% else %}<span class="font-medium text-red-600 dark:text-red-500">(Rendah)</span>{% endif %}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bagian Detail dengan Tab -->
-                <div class="border-t border-primary/20 pt-10">
+                <div class="card-layout">
                     <div id="tab-buttons" class="border-b border-primary/20 flex space-x-1" role="tablist">
                         <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-desc" data-tab="tab-desc"><i class="fa-solid fa-file-lines w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Deskripsi</span></button>
-                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-symptoms" data-tab="tab-symptoms"><i class="fa-solid fa-virus-covid w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Gejala</span></button>
-                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-triggers" data-tab="tab-triggers"><i class="fa-solid fa-bolt w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Pemicu</span></button>
+                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-symptoms" data-tab="tab-symptoms"><i class="fa-solid fa-virus-covid w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Gejala & Pemicu</span></button>
                         <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-action" data-tab="tab-action"><i class="fa-solid fa-shield-halved w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Rekomendasi</span></button>
+                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-chart" data-tab="tab-chart"><i class="fa-solid fa-chart-pie w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Grafik</span></button>
                     </div>
-                    <div id="tab-content" class="pt-6 min-h-[180px]">
+                    <div id="tab-content" class="pt-6 min-h-[250px]">
                         <div id="tab-desc" class="tab-pane prose prose-sm max-w-none text-secondary" role="tabpanel"><p>{{ result.info.description }}</p></div>
                         <div id="tab-symptoms" class="tab-pane hidden" role="tabpanel">
-                            <ul class="space-y-3 list-inside text-secondary">
+                            <h4 class="font-bold text-lg mb-3 text-primary">Gejala Umum</h4>
+                            <ul class="space-y-3 list-inside text-secondary mb-6">
                                 {% for symptom in result.info.symptoms %}
-                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
-                                    <i class="fa-solid fa-circle-dot mt-1 text-red-500"></i>
-                                    <span>{{ symptom }}</span>
-                                </li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
                                 {% endfor %}
                             </ul>
-                        </div>
-                        <div id="tab-triggers" class="tab-pane hidden" role="tabpanel">
-                           <ul class="space-y-3 list-inside text-secondary">
+                            <h4 class="font-bold text-lg mb-3 text-primary">Faktor Pemicu</h4>
+                             <ul class="space-y-3 list-inside text-secondary">
                                 {% for trigger in result.info.triggers %}
-                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
-                                    <i class="fa-solid fa-circle-dot mt-1 text-yellow-500"></i>
-                                    <span>{{ trigger }}</span>
-                                </li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-yellow-500 text-xs"></i><span>{{ trigger }}</span></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div id="tab-action" class="tab-pane hidden" role="tabpanel">
-                            <ul class="space-y-3 list-inside text-secondary">
+                             <ul class="space-y-3 list-inside text-secondary">
                                 {% for step in result.info.action %}
-                                <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
-                                    <i class="fa-solid fa-circle-check mt-1 text-green-500"></i>
-                                    <span>{{ step }}</span>
-                                </li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
                                 {% endfor %}
                             </ul>
+                        </div>
+                        <div id="tab-chart" class="tab-pane hidden" role="tabpanel">
+                            <div class="max-w-sm mx-auto"><canvas id="probChart"></canvas></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bagian Grafik Probabilitas -->
-                <div class="border-t border-primary/20 pt-10">
-                    <h3 class="text-xl font-bold mb-4 text-center text-primary">Distribusi Probabilitas</h3>
-                    <div class="max-w-xs mx-auto"><canvas id="probChart"></canvas></div>
+                <div class="text-center pt-4">
+                   <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                       <button id="copyButton" class="button-base button-secondary w-full sm:w-auto">
+                           <i id="copyIcon" class="fa-regular fa-copy"></i><span id="copyButtonText">Salin Laporan</span>
+                       </button>
+                       <button id="downloadButton" class="button-base button-primary w-full sm:w-auto">
+                           <i id="downloadIcon" class="fa-solid fa-file-arrow-down"></i><span id="downloadButtonText">Unduh PDF</span>
+                       </button>
+                   </div>
                 </div>
+
             </div>
             {% endif %}
             
-            <!-- Tombol Aksi di Bawah -->
-            <div class="mt-10 pt-8 border-t border-primary/20">
-               <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                   {% if result.label != 'Negative' %}
-                    <button id="copyButton" class="button-base button-secondary w-full sm:w-auto">
-                        <i id="copyIcon" class="fa-regular fa-copy"></i><span id="copyButtonText">Salin Laporan</span>
-                    </button>
-                    <button id="downloadButton" class="button-base button-primary w-full sm:w-auto">
-                        <i id="downloadIcon" class="fa-solid fa-file-arrow-down"></i><span id="downloadButtonText">Unduh PDF</span>
-                    </button>
-                   {% else %}
-                    <a href="/" class="button-base button-primary w-full sm:w-auto">
-                        <i class="fa-solid fa-arrows-rotate"></i>Coba Analisis Lagi
-                    </a>
-                   {% endif %}
-               </div>
-            </div>
         </section>
         
         <footer class="text-center mt-12 text-sm text-muted">
@@ -177,13 +156,11 @@
         </footer>
     </div>
 
-    <!-- Data dari backend untuk JavaScript -->
     <script>
         const RESULT_DATA = {{ result|tojson|safe }};
         const DISEASE_INFO = {{ disease_info|tojson|safe }};
     </script>
     
-    <!-- Skrip JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 </body>
