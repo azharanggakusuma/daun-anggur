@@ -35,59 +35,52 @@
         </button>
     </header>
 
-    <div class="relative min-h-screen flex flex-col items-center justify-center px-4">
-        <div class="max-w-3xl w-full mx-auto py-12 sm:py-20">
-            
-            <!-- Judul dan Deskripsi Utama -->
+    <div class="relative min-h-screen flex flex-col items-center justify-center p-4">
+        <main class="w-full max-w-2xl">
+            <!-- Header Utama -->
             <header class="text-center mb-10">
-                <div class="flex justify-center items-center gap-3 mb-4">
-                    <!-- Ukuran font disesuaikan untuk mobile dan desktop -->
-                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-brand-gradient">GrapeCheck</h1>
-                </div>
+                <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-brand-gradient">GrapeCheck</h1>
                 <p class="text-base sm:text-lg mt-4 max-w-2xl mx-auto text-secondary">
                     Unggah gambar daun anggur untuk mendeteksi potensi penyakit secara cepat dan akurat.
                 </p>
             </header>
 
-            <main>
-                <!-- Form untuk mengunggah file -->
-                <section id="uploader-section" class="p-4 sm:p-8 rounded-2xl shadow-2xl-brand border bg-secondary">
-                    
+            <!-- Form Uploader dalam sebuah 'card' yang rapi -->
+            <section id="uploader-section" class="card-layout">
+                <form id="uploadForm" method="POST" enctype="multipart/form-data">
                     <!-- Kotak Notifikasi Error -->
                     <div id="alert-box" class="hidden mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
                         <p class="font-bold">Terjadi Kesalahan</p>
                         <p id="alert-message">Pesan error akan muncul di sini.</p>
                     </div>
 
-                    <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                        <!-- Area Dropzone -->
-                        <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 ease-in-out">
-                            <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/jpg" required>
-                            
-                            <!-- Placeholder saat belum ada gambar -->
-                            <div id="uploadPlaceholder" class="space-y-3 pointer-events-none transition-opacity duration-300">
-                                <i class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"></i>
-                                <p class="font-semibold text-primary text-sm sm:text-base">Seret & letakkan file, atau <span class="text-brand font-bold">jelajahi file</span></p>
-                                <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
-                            </div>
-                            
-                            <!-- Pratinjau gambar setelah diunggah -->
-                            <div id="imagePreview" class="hidden text-center pointer-events-none transition-opacity duration-300 opacity-0"></div>
+                    <!-- Area Dropzone -->
+                    <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 ease-in-out">
+                        <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/jpg" required>
+                        
+                        <!-- Placeholder saat belum ada gambar -->
+                        <div id="uploadPlaceholder" class="space-y-3 pointer-events-none transition-opacity duration-300">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"></i>
+                            <p class="font-semibold text-primary text-sm sm:text-base">Seret & letakkan file, atau <span class="text-brand font-bold">jelajahi file</span></p>
+                            <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
                         </div>
                         
-                        <!-- Tombol Submit -->
-                        <button type="submit" id="submitButton" class="button-primary w-full flex justify-center items-center gap-3 mt-6" disabled>
-                            <i class="fa-solid fa-magnifying-glass-chart"></i>
-                            <span id="buttonText">Mulai Analisis</span>
-                            <div id="buttonSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"></div>
-                        </button>
-                    </form>
-                </section>
-            </main>
-        </div>
+                        <!-- Pratinjau gambar setelah diunggah -->
+                        <div id="imagePreview" class="hidden text-center pointer-events-none transition-opacity duration-300 opacity-0"></div>
+                    </div>
+                    
+                    <!-- Tombol Submit -->
+                    <button type="submit" id="submitButton" class="button-primary w-full flex justify-center items-center gap-3 mt-6" disabled>
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <span id="buttonText">Mulai Analisis</span>
+                        <div id="buttonSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"></div>
+                    </button>
+                </form>
+            </section>
+        </main>
         
         <!-- Footer -->
-        <footer class="w-full text-center py-6 px-4 text-sm text-muted">
+        <footer class="w-full text-center py-8 px-4 text-sm text-muted mt-8">
             <p>&copy; <span id="currentYear"></span> GrapeCheck. Seluruh hak cipta dilindungi.</p>
         </footer>
     </div>
