@@ -14,57 +14,68 @@ document.addEventListener("DOMContentLoaded", function () {
         emptyHistoryMessage.classList.add("hidden");
         const fragment = document.createDocumentFragment();
         
-        // Membalik urutan riwayat agar yang terbaru muncul di atas
-        history.reverse();
-
         const diseaseInfo = {
-            'Sehat': { color: 'green', icon: 'fa-solid fa-leaf' },
-            'Busuk': { color: 'red', icon: 'fa-solid fa-virus' },
-            'Esca': { color: 'orange', icon: 'fa-solid fa-disease' },
-            'Hawar': { color: 'yellow', icon: 'fa-solid fa-bacterium' },
-            'Negative': { color: 'zinc', icon: 'fa-solid fa-question-circle' }
+            'Sehat': { color: 'green', icon: 'fa-leaf' },
+            'Busuk': { color: 'red', icon: 'fa-virus' },
+            'Esca': { color: 'orange', icon: 'fa-disease' },
+            'Hawar': { color: 'yellow', icon: 'fa-bacterium' },
+            'Negative': { color: 'zinc', icon: 'fa-question-circle' }
         };
 
         history.forEach((item, index) => {
-            // Format tanggal dan waktu
             const date = new Date(item.timestamp);
-            const formattedDate = new Intl.DateTimeFormat("id-ID", {
+            
+            // Format tanggal untuk desktop (Lengkap)
+            const desktopDate = new Intl.DateTimeFormat("id-ID", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
             }).format(date);
-            const formattedTime = date.toLocaleTimeString("id-ID", {
+            const desktopTime = date.toLocaleTimeString("id-ID", {
                 hour: "2-digit",
                 minute: "2-digit",
             });
 
-            // Buat elemen kartu riwayat
-            const card = document.createElement("a");
-            card.href = `/hasil/${item.filename}`;
-            const info = diseaseInfo[item.label] || diseaseInfo['Negative'];
-            card.className = `history-card animate-stagger-in border-color-${info.color}`;
-            card.style.setProperty('--delay', `${index * 60}ms`);
+            // Format tanggal untuk mobile (Ringkas)
+             const mobileDate = new Intl.DateTimeFormat("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+            }).format(date);
 
-            // Isi konten HTML untuk kartu
-            card.innerHTML = `
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex items-center gap-4 flex-grow">
-                         <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 rounded-md object-cover border-2 border-primary/20 flex-shrink-0">
-                         <div>
-                             <p class="font-bold text-lg text-${info.color}-600 dark:text-${info.color}-400">${item.label}</p>
-                             <p class="text-sm text-secondary font-medium">Keyakinan: ${item.confidence}%</p>
-                         </div>
+            const info = diseaseInfo[item.label] || diseaseInfo['Negative'];
+
+            const cardLink = document.createElement("a");
+            cardLink.href = `/hasil/${item.filename}`;
+            cardLink.className = `history-card group animate-stagger-in`;
+            cardLink.style.setProperty('--delay', `${index * 60}ms`);
+            
+            // STRUKTUR HTML FINAL DENGAN TANGGAL RESPONSIF
+            cardLink.innerHTML = `
+                <div class="flex items-center gap-4 w-full">
+                    <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
+                    
+                    <div class="flex-grow">
+                        <p class="font-bold text-base sm:text-lg text-primary dark:text-white flex items-center gap-2">
+                            <i class="fa-solid ${info.icon} text-sm text-${info.color}-500"></i>
+                            <span>${item.label}</span>
+                        </p>
+                        <p class="text-sm text-secondary font-medium">Keyakinan: ${item.confidence}%</p>
+                        <p class="block sm:hidden text-xs text-muted mt-1">${mobileDate}, ${desktopTime}</p>
                     </div>
-                    <div class="text-left sm:text-right text-sm text-muted mt-2 sm:mt-0 flex-shrink-0">
-                         <p class="font-semibold">${formattedDate}</p>
-                         <p class="text-xs">pukul ${formattedTime}</p>
+                    
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="text-right text-sm text-muted hidden sm:block">
+                            <p class="font-semibold">${desktopDate}</p>
+                            <p class="text-xs">pukul ${desktopTime}</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-muted group-hover:text-brand transition-colors duration-200"></i>
                     </div>
                 </div>
             `;
-            fragment.appendChild(card);
+            fragment.appendChild(cardLink);
         });
         
-        // Tambahkan semua kartu ke kontainer riwayat
         historyContainer.appendChild(fragment);
     }
 });

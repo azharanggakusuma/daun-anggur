@@ -198,6 +198,7 @@ html.dark .bg-dots-pattern {
   font-weight: 600;
 }
 
+
 /* --- Header & Tombol Tema --- */
 #home-button,
 #history-button,
@@ -257,20 +258,20 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 }
 
 /* --- Halaman Riwayat --- */
-#history-container a.history-card {
+/* GAYA BARU UNTUK KARTU RIWAYAT */
+.history-card {
   display: block;
-  padding: 1rem 1.5rem;
   background-color: var(--bg-secondary);
+  border-radius: 0.75rem; /* 12px */
   border: 1px solid var(--border-primary);
-  border-left-width: 4px;
-  border-radius: 0.75rem;
   box-shadow: var(--shadow-md);
   transition: all 0.25s ease-in-out;
+  padding: 1rem;
 }
-#history-container a.history-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--brand-color);
+.history-card:hover {
+  transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
+  border-color: var(--border-secondary);
 }
 
 /* --- Kelas utilitas untuk warna berdasarkan hasil --- */
