@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hasil Analisis | {{ result.label }}</title>
+    
+    <!-- Library & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,12 +13,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="antialiased">
 
+    <!-- Latar belakang berpola titik-titik -->
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
 
+    <!-- Tombol header -->
     <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
         <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
             <i class="fa-solid fa-clock-rotate-left"></i>
@@ -30,6 +36,8 @@
     </header>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        
+        <!-- Header Halaman Hasil -->
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
             <div>
                 <h1 class="text-3xl md:text-4xl font-bold text-primary">Laporan Analisis</h1>
@@ -40,7 +48,10 @@
             </a>
         </header>
 
+        <!-- Konten Laporan -->
         <section id="report-section" class="p-6 sm:p-8 rounded-2xl shadow-xl-brand border bg-secondary animate-slide-in-up">
+            
+            <!-- Jika gambar tidak teridentifikasi -->
             {% if result.label == 'Negative' %}
             <div class="text-center py-8">
                 <i class="fa-solid fa-circle-xmark fa-4x mx-auto text-muted"></i>
@@ -51,7 +62,7 @@
                     <ul class="space-y-3">
                         {% for tip in result.info.tips %}
                         <li class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
-                             <i class="fa-solid fa-lightbulb w-5 text-center text-brand flex-shrink-0 mt-1"></i>
+                            <i class="fa-solid fa-lightbulb w-5 text-center text-brand flex-shrink-0 mt-1"></i>
                             <span>{{ tip }}</span>
                         </li>
                         {% endfor %}
@@ -59,7 +70,11 @@
                 </div>
             </div>
             {% else %}
+            
+            <!-- Jika gambar berhasil dianalisis -->
             <div class="space-y-10">
+                
+                <!-- Bagian Gambar dan Diagnosis Utama -->
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-x-8 lg:gap-x-12 gap-y-8">
                     <div class="md:col-span-2">
                         <h3 class="text-sm font-semibold text-brand tracking-wider uppercase mb-3">Gambar Dianalisis</h3>
@@ -79,14 +94,15 @@
                                 <p class="text-lg font-semibold w-20 text-right text-primary">{{ '%.1f'|format(result.confidence) }}%</p>
                             </div>
                              <p class="text-xs text-right mt-1 text-muted">
-                                {% if result.confidence > 90 %}<span class="font-medium text-green-700">(Sangat Tinggi)</span>
-                                {% elif result.confidence > 70 %}<span class="font-medium text-yellow-600">(Tinggi)</span>
-                                {% else %}<span class="font-medium text-red-600">(Rendah)</span>{% endif %}
+                                {% if result.confidence > 90 %}<span class="font-medium text-green-700 dark:text-green-500">(Sangat Tinggi)</span>
+                                {% elif result.confidence > 70 %}<span class="font-medium text-yellow-600 dark:text-yellow-500">(Tinggi)</span>
+                                {% else %}<span class="font-medium text-red-600 dark:text-red-500">(Rendah)</span>{% endif %}
                             </p>
                         </div>
                     </div>
                 </div>
 
+                <!-- Bagian Detail dengan Tab -->
                 <div class="border-t border-primary pt-10">
                     <div id="tab-buttons" class="border-b border-primary flex space-x-1 sm:space-x-4 overflow-x-auto -mb-px" role="tablist">
                         <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-desc" data-tab="tab-desc"><i class="fa-solid fa-file-lines w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Deskripsi</span></button>
@@ -114,6 +130,7 @@
                     </div>
                 </div>
 
+                <!-- Bagian Grafik Probabilitas -->
                 <div class="border-t border-primary pt-10">
                     <h3 class="text-xl font-bold mb-4 text-center text-primary">Distribusi Probabilitas</h3>
                     <div class="max-w-xs mx-auto"><canvas id="probChart"></canvas></div>
@@ -121,6 +138,7 @@
             </div>
             {% endif %}
             
+            <!-- Tombol Aksi di Bawah -->
             <div class="mt-10 pt-8 border-t border-primary">
                <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
                    {% if result.label != 'Negative' %}
@@ -130,24 +148,27 @@
                     <button id="downloadButton" class="button-primary w-full sm:w-auto flex items-center justify-center gap-2">
                         <i id="downloadIcon" class="fa-solid fa-file-arrow-down"></i><span id="downloadButtonText">Unduh PDF</span>
                     </button>
-                    {% else %}
-                     <a href="/" class="button-primary w-full sm:w-auto flex items-center justify-center gap-2">
+                   {% else %}
+                    <a href="/" class="button-primary w-full sm:w-auto flex items-center justify-center gap-2">
                         <i class="fa-solid fa-arrows-rotate"></i>Coba Analisis Lagi
                     </a>
-                    {% endif %}
+                   {% endif %}
                </div>
             </div>
         </section>
         
         <footer class="text-center mt-12 text-sm text-muted">
-             <p>&copy; <span id="currentYear"></span> Analisis Daun Anggur. Seluruh hak cipta dilindungi.</p>
+             <p>&copy; <span id="currentYear"></span> GrapeCheck. Seluruh hak cipta dilindungi.</p>
         </footer>
     </div>
 
+    <!-- Data dari backend untuk JavaScript -->
     <script>
         const RESULT_DATA = {{ result|tojson|safe }};
         const DISEASE_INFO = {{ disease_info|tojson|safe }};
     </script>
+    
+    <!-- Skrip JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 </body>

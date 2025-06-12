@@ -72,7 +72,7 @@
                 applyTheme(newTheme);
                 localStorage.setItem('theme', newTheme);
 
-                // Perbarui tema pada grafik.
+                // Perbarui tema pada grafik jika ada.
                 updateChartsTheme(newTheme);
             });
         }

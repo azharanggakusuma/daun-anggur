@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Analisis</title>
+    <title>Riwayat Analisis | GrapeCheck</title>
+    
+    <!-- Library & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="antialiased">
+    
+    <!-- Latar belakang berpola titik-titik -->
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
     
+    <!-- Tombol header -->
     <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
         <a href="/" id="home-button" title="Kembali ke Halaman Utama">
             <i class="fa-solid fa-house"></i>
@@ -27,20 +34,28 @@
     </header>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        
+        <!-- Header Halaman Riwayat -->
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-primary">Riwayat Analisis</h1>
             <p class="mt-2 text-lg text-secondary">Berikut adalah hasil analisis yang pernah Anda lakukan.</p>
         </header>
 
         <main>
+            <!-- Kontainer untuk daftar riwayat -->
             <div id="history-container" class="space-y-4">
+                
+                <!-- Pesan saat riwayat kosong -->
                 <div id="empty-history" class="text-center p-8 border-2 border-dashed border-secondary rounded-lg hidden">
                     <i class="fa-solid fa-box-open fa-3x text-muted"></i>
                     <p class="mt-4 font-semibold text-primary">Belum ada riwayat analisis.</p>
                     <p class="text-muted">Mulai analisis pertama Anda untuk melihat riwayat di sini.</p>
                 </div>
+                
                 <!-- Riwayat akan dimuat di sini oleh history.js -->
             </div>
+            
+            <!-- Tombol Aksi di Bawah -->
             <div class="text-center mt-12">
                 <a href="/" class="button-primary">
                     <i class="fa-solid fa-arrow-left mr-2"></i>Kembali ke Halaman Utama
@@ -49,10 +64,11 @@
         </main>
         
         <footer class="text-center mt-12 text-sm text-muted">
-             <p>&copy; <span id="currentYear"></span> Analisis Daun Anggur. Seluruh hak cipta dilindungi.</p>
+             <p>&copy; <span id="currentYear"></span> GrapeCheck. Seluruh hak cipta dilindungi.</p>
         </footer>
     </div>
 
+    <!-- Skrip JavaScript -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/history.js') }}"></script>
 </body>

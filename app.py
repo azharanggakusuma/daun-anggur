@@ -20,7 +20,9 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 # --- Memuat Model & Data Penyakit ---
 try:
+    # Memuat model machine learning yang telah dilatih sebelumnya
     model = load_model('model/model_daun_anggur.h5')
+    # Daftar nama kelas/label yang sesuai dengan output model
     class_names = ['Busuk', 'Esca', 'Hawar', 'Negative', 'Sehat']
 except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
@@ -65,19 +67,26 @@ disease_info = {
 
 # --- Fungsi Bantuan ---
 def allowed_file(filename):
+    """Memeriksa apakah ekstensi file diizinkan."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 def process_prediction(image_path):
+    """Memproses gambar dan mengembalikan hasil prediksi dari model."""
     if not model:
         return "Error", 0, {}
     try:
+        # Muat dan proses gambar agar sesuai dengan input model
         img = load_img(image_path, target_size=(224, 224))
         img_array = img_to_array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
+        
+        # Lakukan prediksi
         predictions = model.predict(img_array)[0]
         predicted_index = np.argmax(predictions)
         predicted_label = class_names[predicted_index]
         confidence = float(predictions[predicted_index]) * 100
+        
+        # Kumpulkan semua probabilitas
         all_probs = {class_names[i]: float(predictions[i]) * 100 for i in range(len(class_names))}
         return predicted_label, confidence, all_probs
     except Exception as e:
@@ -87,41 +96,58 @@ def process_prediction(image_path):
 # --- Penangan Kesalahan (Error Handlers) ---
 @app.errorhandler(413)
 def request_entity_too_large(error):
+    """Menangani error ketika file yang diunggah terlalu besar."""
     return jsonify({'error': 'Ukuran file melebihi batas maksimal (10MB).'}), 413
 
 # --- Rute Aplikasi ---
 @app.route('/')
 def index():
+    """Menampilkan halaman utama untuk mengunggah gambar."""
     return render_template('index.html')
 
 @app.route('/riwayat')
 def riwayat():
+    """Menampilkan halaman riwayat analisis."""
     return render_template('riwayat.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    """Menangani proses unggah file gambar."""
     if 'file' not in request.files:
         return jsonify({'error': 'Tidak ada file yang dikirim.'}), 400
+        
     file = request.files['file']
+    
     if file.filename == '' or not allowed_file(file.filename):
         return jsonify({'error': 'Jenis file tidak valid. Harap unggah file JPG, JPEG, atau PNG.'}), 400
+        
     if file:
+        # Amankan nama file dan buat nama unik untuk menghindari konflik
         original_filename = secure_filename(file.filename)
         file_extension = original_filename.rsplit('.', 1)[1].lower()
         unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         file.save(save_path)
+        
+        # Kembalikan URL untuk halaman hasil
         return jsonify({'success': True, 'redirect_url': url_for('hasil', filename=unique_filename)})
+        
     return redirect(url_for('index'))
 
 @app.route('/hasil/<filename>')
 def hasil(filename):
+    """Menampilkan halaman hasil analisis berdasarkan file gambar."""
     save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if not os.path.exists(save_path):
         return "File tidak ditemukan.", 404
+        
+    # Proses gambar untuk mendapatkan diagnosis
     label, confidence, all_probs = process_prediction(save_path)
+    
+    # Siapkan data untuk ditampilkan di template
     wib = pytz.timezone('Asia/Jakarta')
     timestamp = datetime.now(wib).isoformat()
+    
     result_data = {
         'image': filename,
         'label': label,
@@ -130,6 +156,7 @@ def hasil(filename):
         'info': disease_info.get(label, disease_info['Negative']),
         'timestamp': timestamp
     }
+    
     return render_template('hasil.html', result=result_data, disease_info=disease_info)
 
 # --- Menjalankan Aplikasi ---

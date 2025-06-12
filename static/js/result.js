@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Jangan jalankan skrip jika data hasil tidak ada
+    // Jangan jalankan skrip jika data hasil tidak ada (untuk halaman lain)
     if (typeof RESULT_DATA === 'undefined' || !RESULT_DATA) return;
 
     // --- Logika Pemformatan Waktu Terpusat ---
@@ -15,19 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
         timestampDisplay.textContent = `Dianalisis pada ${formattedTimestamp}`;
     }
     
-    // --- Simpan ke Riwayat ---
+    // --- Simpan ke Riwayat di LocalStorage ---
     function saveToHistory() {
-        if (RESULT_DATA.label === 'Negative') return;
+        if (RESULT_DATA.label === 'Negative') return; // Jangan simpan jika tidak teridentifikasi
         let history = JSON.parse(localStorage.getItem('analysisHistory')) || [];
+        // Cek apakah hasil ini sudah ada di riwayat berdasarkan nama file unik
         const isAlreadyExist = history.some(item => item.filename === RESULT_DATA.image);
         if (isAlreadyExist) return;
+
         const historyItem = {
             filename: RESULT_DATA.image,
             label: RESULT_DATA.label,
             confidence: RESULT_DATA.confidence.toFixed(1),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString() // Simpan waktu saat ini
         };
-        history.unshift(historyItem);
+        history.unshift(historyItem); // Tambahkan item baru di awal array
+        // Batasi riwayat hingga 15 item terakhir
         if (history.length > 15) {
             history = history.slice(0, 15);
         }
@@ -35,29 +38,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     saveToHistory();
 
-    // --- Animasi Bar Keyakinan ---
+    // --- Animasi Bar Tingkat Keyakinan ---
     const confidenceBar = document.getElementById('confidence-bar');
     if (confidenceBar) {
         setTimeout(() => {
             const confidenceValue = confidenceBar.getAttribute('data-confidence');
             confidenceBar.style.width = `${confidenceValue}%`;
-        }, 100);
+        }, 100); // Beri sedikit jeda agar transisi terlihat
     }
 
-    // --- Logika Tab ---
+    // --- Logika Kontrol Tab ---
     const tabContainer = document.getElementById('tab-buttons');
     if (tabContainer) {
         const tabButtons = tabContainer.querySelectorAll('.tab-button');
         const tabPanes = document.getElementById('tab-content').querySelectorAll('.tab-pane');
+        
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetId = button.getAttribute('data-tab');
                 const targetPane = document.getElementById(targetId);
+
+                // Non-aktifkan semua tombol dan sembunyikan semua panel
                 tabButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.setAttribute('aria-selected', 'false');
                 });
                 tabPanes.forEach(pane => pane.classList.add('hidden'));
+
+                // Aktifkan tombol yang diklik dan tampilkan panel yang sesuai
                 button.classList.add('active');
                 button.setAttribute('aria-selected', 'true');
                 if (targetPane) { targetPane.classList.remove('hidden'); }
@@ -65,16 +73,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Fungsi Salin Laporan ---
+    // --- Fungsi Salin Laporan ke Clipboard ---
     const copyButton = document.getElementById('copyButton');
     if (copyButton) {
         copyButton.addEventListener('click', function() {
             const { label, confidence, info } = RESULT_DATA;
             const formatList = (title, list) => list && list.length ? `${title}:\n${list.map(item => `• ${item}`).join('\n')}\n\n` : '';
             const formatNumberedList = (title, list) => list && list.length ? `${title}:\n${list.map((item, index) => `${index + 1}. ${item}`).join('\n')}\n\n` : '';
+            
+            // Buat teks laporan yang rapi
             const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDASI TINDAKAN', info.action)}----------------------------------`;
             
             navigator.clipboard.writeText(reportText.trim()).then(() => {
+                // Beri feedback visual kepada pengguna
                 const copyButtonText = document.getElementById('copyButtonText');
                 const copyIcon = document.getElementById('copyIcon');
                 copyButtonText.innerText = 'Tersalin!';
@@ -89,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Fungsi Unduh PDF ---
+    // --- Fungsi Unduh Laporan sebagai PDF ---
     const downloadButton = document.getElementById('downloadButton');
     if (downloadButton) {
         downloadButton.addEventListener('click', function() {
@@ -98,13 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
             downloadButtonText.innerText = 'Membuat...';
             downloadButton.disabled = true;
 
-            setTimeout(() => {
+            setTimeout(() => { // Beri jeda agar UI bisa update
                 try {
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
-                    const primaryColor = '#166534'; // green-800
-                    const textColor = '#334155'; // slate-700
-                    const lightTextColor = '#64748b'; // slate-500
+                    const primaryColor = '#166534';
+                    const textColor = '#334155';
+                    const lightTextColor = '#64748b';
                     const margin = 15;
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const usableWidth = pageWidth - (2 * margin);
@@ -112,32 +123,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     const colorMap = { 'green': '#16a34a', 'red': '#dc2626', 'orange': '#f97316', 'yellow': '#eab308', 'zinc': '#71717a' };
                     const diagnosisColor = colorMap[info.color] || '#71717a';
 
+                    // Fungsi untuk menambah header di setiap halaman
                     const addHeader = () => {
                         pdf.setFillColor(primaryColor);
                         pdf.rect(0, 0, pageWidth, 25, 'F');
                         pdf.setFontSize(16);
                         pdf.setTextColor('#FFFFFF');
                         pdf.setFont(undefined, 'bold');
-                        pdf.text('Laporan Analisis Daun Anggur', margin, 16);
+                        pdf.text('Laporan Analisis GrapeCheck', margin, 16);
                         yPosition = 35;
                     };
 
+                    // Fungsi untuk menambah footer di setiap halaman
                     const addFooter = (pageNumber, pageCount) => {
                         pdf.setFontSize(8);
                         pdf.setTextColor(lightTextColor);
                         pdf.setLineWidth(0.2);
                         pdf.line(margin, 280, pageWidth - margin, 280);
                         pdf.text(`Halaman ${pageNumber} dari ${pageCount}`, pageWidth - margin, 285, { align: 'right' });
-                        pdf.text('© Analisis Daun Anggur', margin, 285);
+                        pdf.text('© GrapeCheck', margin, 285);
                     };
 
+                    // Cek jika butuh halaman baru
                     const checkPageBreak = () => {
                         if (yPosition > 260) {
                             pdf.addPage();
                             addHeader();
                         }
                     };
-
+                    
+                    // Fungsi untuk menambah bagian (judul + konten)
                     const addSection = (title, content, options = {}) => {
                         checkPageBreak();
                         pdf.setFontSize(options.size || 12);
@@ -155,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     };
 
+                    // Fungsi untuk menambah daftar (list)
                     const addList = (title, list, isNumbered) => {
                         if (!list || list.length === 0) return;
                         addSection(title, null);
@@ -204,11 +220,13 @@ document.addEventListener('DOMContentLoaded', function() {
                            Object.entries(all_probs).sort(([, a], [, b]) => b - a).map(([disease, prob]) => `${disease}: ${prob.toFixed(2)}%`), false);
                     }
 
+                    // Tambahkan footer ke semua halaman yang ada
                     const pageCount = pdf.internal.getNumberOfPages();
                     for (let i = 1; i <= pageCount; i++) {
                         pdf.setPage(i);
                         addFooter(i, pageCount);
                     }
+                    
                     const safeLabel = label.replace(/ /g, '_');
                     const fileDate = new Date().toISOString().split('T')[0];
                     const fileName = `Laporan_Analisis_${safeLabel}_${fileDate}.pdf`;
@@ -225,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Inisialisasi Grafik ---
+    // --- Inisialisasi Grafik Doughnut dengan Chart.js ---
     const probChartCanvas = document.getElementById('probChart');
     if (probChartCanvas && RESULT_DATA.label !== 'Negative') {
         const labels = Object.keys(RESULT_DATA.all_probs);
