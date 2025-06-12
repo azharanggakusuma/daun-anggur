@@ -23,7 +23,7 @@
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
 
     <!-- Tombol header (Riwayat & Ganti Tema) -->
-    <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
+    <header class="fixed z-50 top-4 right-4 flex items-center gap-3">
         <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
             <i class="fa-solid fa-clock-rotate-left"></i>
         </a>
@@ -39,9 +39,11 @@
         <main class="w-full max-w-2xl">
             <!-- Header Utama -->
             <header class="text-center mb-10">
-                <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-brand-gradient">GrapeCheck</h1>
-                <p class="text-base sm:text-lg mt-4 max-w-2xl mx-auto text-secondary">
-                    Analisis citra daun anggur menggunakan teknologi Deep Learning.
+                <h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-brand-gradient">
+                    <span class="text-primary">Grape</span>Check
+                </h1>
+                <p class="text-base sm:text-lg mt-4 max-w-xl mx-auto text-secondary">
+                    Deteksi dini penyakit pada daun anggur melalui analisis gambar untuk mendukung kesehatan tanaman Anda.
                 </p>
             </header>
 
@@ -55,7 +57,7 @@
                     </div>
 
                     <!-- Area Dropzone -->
-                    <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 ease-in-out">
+                    <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer">
                         <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/jpg" required>
                         
                         <!-- Placeholder saat belum ada gambar -->
@@ -70,7 +72,7 @@
                     </div>
                     
                     <!-- Tombol Submit -->
-                    <button type="submit" id="submitButton" class="button-primary w-full flex justify-center items-center gap-3 mt-6" disabled>
+                    <button type="submit" id="submitButton" class="button-base button-primary w-full mt-6" disabled>
                         <i class="fa-solid fa-magnifying-glass-chart"></i>
                         <span id="buttonText">Mulai Analisis</span>
                         <div id="buttonSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"></div>

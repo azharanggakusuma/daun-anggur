@@ -1,74 +1,79 @@
 /* ---
   PALET WARNA & VARIABEL UTAMA
-  Sistem terpusat untuk Light & Dark Mode.
+  Sistem terpusat untuk Light & Dark Mode yang lebih kaya.
 --- */
 :root {
-  /* Warna Merek (Aksi) */
+  /* Warna Merek (Aksi Utama) */
+  --brand-gradient: linear-gradient(to right, #16a34a, #22c55e);
   --brand-color: #16a34a; /* green-600 */
   --brand-color-hover: #15803d; /* green-700 */
-  --brand-color-light: #22c55e; /* green-500 */
-  --brand-color-subtle-bg: #f0fdf4; /* green-50 */
 
   /* Latar Belakang */
   --bg-primary: #f8fafc; /* slate-50 */
   --bg-secondary: #ffffff; /* white */
   --bg-tertiary: #f1f5f9; /* slate-100 */
+  --bg-backdrop: rgba(248, 250, 252, 0.5); /* Transparan untuk efek glassmorphism */
 
   /* Teks */
   --text-primary: #0f172a; /* slate-900 */
   --text-secondary: #475569; /* slate-600 */
   --text-muted: #64748b; /* slate-500 */
   --text-inverted: #ffffff;
+  --text-brand: #16a34a;
 
   /* Border */
   --border-primary: #e2e8f0; /* slate-200 */
   --border-secondary: #cbd5e1; /* slate-300 */
-  --border-hover: #94a3b8; /* slate-400 */
   --border-brand: #22c55e; /* green-500 */
 
   /* Bayangan */
   --shadow-color-light: rgba(15, 23, 42, 0.03);
   --shadow-color-medium: rgba(15, 23, 42, 0.08);
+  --shadow-brand: rgba(22, 163, 74, 0.2);
 }
 
 html.dark {
   /* Warna Merek - Gelap */
+  --brand-gradient: linear-gradient(to right, #22c55e, #4ade80);
   --brand-color: #22c55e; /* green-500 */
   --brand-color-hover: #4ade80; /* green-400 */
-  --brand-color-subtle-bg: rgba(34, 197, 94, 0.1);
 
   /* Latar Belakang - Gelap */
-  --bg-primary: #020617; /* slate-950 */
-  --bg-secondary: #0f172a; /* slate-900 */
-  --bg-tertiary: #1e293b; /* slate-800 */
+  --bg-primary: #0b1120; /* Warna biru malam yang lebih dalam */
+  --bg-secondary: #172033; /* Sedikit lebih terang dari primary */
+  --bg-tertiary: #202940; /* Untuk elemen seperti kartu info */
+  --bg-backdrop: rgba(11, 17, 32, 0.6);
 
   /* Teks - Gelap */
-  --text-primary: #f8fafc; /* slate-50 */
-  --text-secondary: #cbd5e1; /* slate-300 */
+  --text-primary: #f1f5f9; /* slate-100 */
+  --text-secondary: #94a3b8; /* slate-400 */
   --text-muted: #64748b; /* slate-500 */
-  --text-inverted: #0f172a;
+  --text-brand: #4ade80; /* green-400 */
 
   /* Border - Gelap */
-  --border-primary: #1e293b; /* slate-800 */
-  --border-secondary: #334155; /* slate-700 */
-  --border-hover: #64748b; /* slate-500 */
+  --border-primary: #334155; /* slate-700 */
+  --border-secondary: #475569; /* slate-600 */
 
   /* Bayangan */
   --shadow-color-light: rgba(0, 0, 0, 0.1);
   --shadow-color-medium: rgba(0, 0, 0, 0.2);
+  --shadow-brand: rgba(34, 197, 94, 0.25);
 }
 
 
 /* ---
   GAYA DASAR & KOMPONEN
 --- */
-
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(135, 98%, 61%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 82% 99%, hsla(340, 98%, 61%, 0.1) 0px, transparent 50%);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden; /* Mencegah scroll horizontal */
+  overflow-x: hidden;
 }
 
 .antialiased {
@@ -83,41 +88,43 @@ body {
     transition: background-image 0.3s ease;
 }
 html.dark .bg-dots-pattern {
-    background-image: radial-gradient(var(--border-primary) 0.5px, transparent 0.5px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 0.5px, transparent 0.5px);
 }
 
 /* Gradien teks untuk judul utama */
 .text-brand-gradient {
-    background-image: linear-gradient(to right, #16a34a, #22c55e);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  background-image: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-html.dark .text-brand-gradient {
-    background-image: linear-gradient(to right, #22c55e, #4ade80);
-}
+
 
 /* --- Tombol --- */
-
-.button-primary {
-  background-color: var(--brand-color);
-  color: var(--text-inverted);
+.button-base {
   padding: 0.8rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 1px 2px 0 var(--shadow-color-light), 0 2px 4px 0 var(--shadow-color-light);
   border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.button-primary {
+  background-image: var(--brand-gradient);
+  color: var(--text-inverted);
+  box-shadow: 0 4px 15px -5px var(--shadow-brand);
 }
 .button-primary:hover:not(:disabled) {
-  background-color: var(--brand-color-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px var(--shadow-color-medium), 0 4px 6px -4px var(--shadow-color-medium);
+  box-shadow: 0 10px 20px -7px var(--shadow-brand);
 }
 .button-primary:disabled {
-  background-color: var(--border-secondary);
+  background: var(--border-secondary);
   color: var(--text-muted);
-  transform: translateY(0);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -126,10 +133,6 @@ html.dark .text-brand-gradient {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.2s ease-in-out;
     box-shadow: 0 1px 2px 0 var(--shadow-color-light);
 }
 .button-secondary:hover:not(:disabled) {
@@ -141,34 +144,27 @@ html.dark .text-brand-gradient {
 
 .button-tertiary {
     background-color: transparent;
-    border: 1px solid transparent;
     color: var(--text-secondary);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.2s ease-in-out;
 }
 .button-tertiary:hover:not(:disabled) {
-    border-color: var(--border-secondary);
     color: var(--text-primary);
     background-color: var(--bg-tertiary);
 }
 
 
 /* --- Struktur & Layout Utama --- */
-
 .card-layout {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-backdrop);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--border-primary);
-    border-radius: 1rem; /* 16px */
+    border-radius: 1.25rem; /* 20px */
     padding: 1.5rem; /* 24px */
-    box-shadow: 0 4px 6px -1px var(--shadow-color-light), 0 2px 4px -2px var(--shadow-color-light);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 @media (min-width: 640px) {
-    .card-layout {
-        padding: 2rem; /* 32px */
-    }
+    .card-layout { padding: 2rem; }
 }
 html.dark .card-layout {
     box-shadow: 0 0 0 1px var(--border-primary);
@@ -181,36 +177,32 @@ html.dark .card-layout {
     transition: all 0.2s ease-in-out;
 }
 #dropzone.dropzone-active {
-  border-color: var(--brand-color) !important;
-  background-color: var(--brand-color-subtle-bg) !important;
+  border-color: var(--text-brand) !important;
+  background-color: var(--bg-tertiary) !important;
   transform: scale(1.02);
+  box-shadow: 0 0 25px -5px var(--shadow-brand);
 }
 #dropzone:hover {
-    border-color: var(--border-brand);
+    border-color: var(--text-brand);
 }
 
 /* --- Elemen UI Lainnya --- */
 .tab-button {
-  padding: 0.75rem 0.5rem; /* Padding lebih kecil untuk mobile */
+  padding: 0.75rem 1rem;
   font-weight: 500;
   color: var(--text-muted);
   border-bottom: 2px solid transparent;
-  transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
-  white-space: nowrap; /* Mencegah teks turun baris */
-  flex-shrink: 0; /* Mencegah tombol menyusut */
+  transition: all 0.2s ease-in-out;
+  border-radius: 8px 8px 0 0;
 }
-/* Media query untuk layar lebih besar */
-@media (min-width: 640px) {
-    .tab-button {
-        padding: 0.75rem 1rem;
-    }
-}
-.tab-button:hover {
-  color: var(--brand-color);
+.tab-button:hover:not(.active) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-brand);
 }
 .tab-button.active {
-  color: var(--brand-color);
-  border-bottom-color: var(--brand-color);
+  color: var(--text-brand);
+  background-color: var(--bg-tertiary);
+  border-bottom-color: var(--text-brand);
   font-weight: 600;
 }
 
@@ -221,13 +213,14 @@ html.dark .card-layout {
   background-color: var(--bg-tertiary);
   padding: 1rem;
   border-radius: 0.75rem;
-  border: 1px solid var(--border-primary);
+  border-left: 4px solid var(--border-secondary);
   color: var(--text-secondary);
   transition: all 0.2s ease-in-out;
 }
 .info-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--border-secondary);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 4px 10px -2px var(--shadow-color-medium);
+  border-left-color: var(--text-brand);
 }
 .info-card-icon {
   flex-shrink: 0;
@@ -242,25 +235,26 @@ html.dark .card-layout {
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-muted);
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 9999px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 1px 3px 0 var(--shadow-color-light);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px var(--shadow-color-light);
 }
 #home-button:hover,
 #history-button:hover,
 #theme-toggle:hover {
-  color: var(--brand-color);
-  border-color: var(--border-brand);
-  transform: scale(1.1);
+  color: var(--text-brand);
+  border-color: var(--text-brand);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 7px 14px -5px var(--shadow-brand);
 }
 #theme-toggle:hover {
-  transform: scale(1.1) rotate(15deg);
+  transform: scale(1.1) rotate(20deg);
 }
 
 .theme-icon {
@@ -268,7 +262,6 @@ html.dark .card-layout {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--text-muted);
   transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-in-out;
 }
 #theme-icon-container {
@@ -284,7 +277,7 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
 
 /* --- Animasi --- */
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(25px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-slide-in-up {
@@ -292,7 +285,7 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
 }
 
 @keyframes stagger-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-stagger-in {
@@ -301,18 +294,40 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
   animation-delay: var(--delay, 0s);
 }
 
-/* --- Riwayat --- */
-#history-container > a.history-card {
-    display: block;
-    padding: 1rem 1.5rem;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-primary);
-    border-radius: 0.75rem; /* 12px */
-    box-shadow: 0 2px 4px -1px var(--shadow-color-light);
-    transition: all 0.2s ease-in-out;
+/* --- Halaman Riwayat --- */
+#history-container a.history-card {
+  display: block;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-left-width: 5px;
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: 0 2px 4px -1px var(--shadow-color-light);
+  transition: all 0.25s ease-in-out;
 }
-#history-container > a.history-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--brand-color);
-    box-shadow: 0 4px 10px -2px var(--shadow-color-medium);
+#history-container a.history-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--brand-color);
+  box-shadow: 0 10px 15px -3px var(--shadow-color-medium), 0 4px 6px -4px var(--shadow-color-medium);
 }
+
+/* --- Kelas utilitas untuk warna berdasarkan hasil --- */
+.border-color-green { border-left-color: #16a34a; }
+.border-color-red { border-left-color: #dc2626; }
+.border-color-orange { border-left-color: #f97316; }
+.border-color-yellow { border-left-color: #eab308; }
+.border-color-zinc { border-left-color: #71717a; }
+
+.diagnosis-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: inline-block;
+    color: white;
+}
+.bg-badge-green { background-color: #16a34a; }
+.bg-badge-red { background-color: #dc2626; }
+.bg-badge-orange { background-color: #f97316; }
+.bg-badge-yellow { background-color: #eab308; }
+.bg-badge-zinc { background-color: #71717a; }

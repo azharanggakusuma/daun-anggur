@@ -14,15 +14,22 @@ document.addEventListener("DOMContentLoaded", function () {
         emptyHistoryMessage.classList.add("hidden");
         const fragment = document.createDocumentFragment();
         
+        const diseaseInfo = {
+            'Sehat': { color: 'green', icon: 'fa-solid fa-leaf' },
+            'Busuk': { color: 'red', icon: 'fa-solid fa-virus' },
+            'Esca': { color: 'orange', icon: 'fa-solid fa-disease' },
+            'Hawar': { color: 'yellow', icon: 'fa-solid fa-bacterium' },
+            'Negative': { color: 'zinc', icon: 'fa-solid fa-question-circle' }
+        };
+
         history.forEach((item, index) => {
             // Format tanggal dan waktu
             const date = new Date(item.timestamp);
-            const options = {
+            const formattedDate = new Intl.DateTimeFormat("id-ID", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-            };
-            const formattedDate = new Intl.DateTimeFormat("id-ID", options).format(date);
+            }).format(date);
             const formattedTime = date.toLocaleTimeString("id-ID", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -31,26 +38,21 @@ document.addEventListener("DOMContentLoaded", function () {
             // Buat elemen kartu riwayat
             const card = document.createElement("a");
             card.href = `/hasil/${item.filename}`;
-            card.className = "history-card animate-stagger-in";
+            const info = diseaseInfo[item.label] || diseaseInfo['Negative'];
+            card.className = `history-card animate-stagger-in border-color-${info.color}`;
             card.style.setProperty('--delay', `${index * 60}ms`);
-
-            // Tentukan warna teks untuk label penyakit
-            let labelColorClass = 'text-green-600 dark:text-green-500'; // Default untuk 'Sehat'
-            if (item.label === 'Busuk') labelColorClass = 'text-red-600 dark:text-red-500';
-            else if (item.label === 'Esca') labelColorClass = 'text-orange-600 dark:text-orange-500';
-            else if (item.label === 'Hawar') labelColorClass = 'text-yellow-600 dark:text-yellow-500';
 
             // Isi konten HTML untuk kartu
             card.innerHTML = `
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div class="flex items-center gap-4">
-                         <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-12 h-12 rounded-md object-cover border-2 border-primary hidden sm:block">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-4 flex-grow">
+                         <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 rounded-md object-cover border-2 border-primary/20 flex-shrink-0">
                          <div>
-                             <p class="font-bold text-lg ${labelColorClass}">${item.label}</p>
-                             <p class="text-sm text-secondary">Keyakinan: ${item.confidence}%</p>
+                             <p class="font-bold text-lg text-${info.color}-600 dark:text-${info.color}-400">${item.label}</p>
+                             <p class="text-sm text-secondary font-medium">Keyakinan: ${item.confidence}%</p>
                          </div>
                     </div>
-                    <div class="text-left sm:text-right text-sm text-muted mt-2 sm:mt-0">
+                    <div class="text-left sm:text-right text-sm text-muted mt-2 sm:mt-0 flex-shrink-0">
                          <p class="font-semibold">${formattedDate}</p>
                          <p class="text-xs">pukul ${formattedTime}</p>
                     </div>
