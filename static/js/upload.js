@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const alertBox = document.getElementById("alert-box");
     const alertMessage = document.getElementById("alert-message");
 
+    // --- PERBAIKAN: Variabel untuk menyimpan file yang dipilih ---
+    let selectedFile = null;
+
     /**
      * Menampilkan notifikasi kesalahan.
      * @param {string} message - Pesan kesalahan yang akan ditampilkan.
@@ -37,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Format file tidak didukung. Harap pilih file JPG, PNG, atau JPEG."
             );
             fileInput.value = ""; // Reset input file
+            resetDropzone(); // Pastikan UI kembali ke awal
             return;
         }
 
@@ -44,10 +48,15 @@ document.addEventListener("DOMContentLoaded", function () {
         if (file.size > maxSize) {
             showAlert("Ukuran file terlalu besar. Maksimal 10MB.");
             fileInput.value = ""; // Reset input file
+            resetDropzone(); // Pastikan UI kembali ke awal
             return;
         }
 
         hideAlert();
+        
+        // --- PERBAIKAN: Simpan file yang valid ke variabel ---
+        selectedFile = file;
+
         const reader = new FileReader();
         reader.onload = function (e) {
             uploadPlaceholder.classList.add("opacity-0", "hidden");
@@ -69,13 +78,16 @@ document.addEventListener("DOMContentLoaded", function () {
         imagePreview.innerHTML = "";
         fileInput.value = "";
         submitButton.disabled = true;
+        // --- PERBAIKAN: Reset juga variabel file yang disimpan ---
+        selectedFile = null;
     }
 
     if (uploadForm) {
         uploadForm.addEventListener("submit", function (e) {
             e.preventDefault();
 
-            if (fileInput.files.length === 0) {
+            // --- PERBAIKAN: Periksa variabel, bukan input.files ---
+            if (!selectedFile) {
                 showAlert("Tidak ada file yang dipilih. Harap unggah sebuah gambar.");
                 return;
             }
@@ -85,7 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
             buttonSpinner.classList.remove("hidden");
             submitButton.disabled = true;
 
-            const formData = new FormData(this);
+            // --- PERBAIKAN: Buat FormData secara manual untuk keandalan ---
+            const formData = new FormData();
+            formData.append('file', selectedFile, selectedFile.name);
 
             fetch("/upload", {
                 method: "POST",
@@ -109,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     showAlert(data.error || "Terjadi kesalahan saat mengunggah file.");
                     buttonText.textContent = "Mulai Analisis";
                     buttonSpinner.classList.add("hidden");
-                    if (fileInput.files.length > 0) {
+                    if (selectedFile) {
                         submitButton.disabled = false;
                     }
                 }
@@ -122,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Kembalikan tombol ke keadaan semula
                 buttonText.textContent = "Mulai Analisis";
                 buttonSpinner.classList.add("hidden");
-                if (fileInput.files.length > 0) {
+                if (selectedFile) {
                     submitButton.disabled = false;
                 }
             });
@@ -130,8 +144,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (dropzone) {
-        // Event listener untuk klik, drag, dan drop file
-        dropzone.addEventListener("click", () => fileInput.click());
+        // --- BUG FIX: Hapus event listener klik manual pada dropzone. ---
+        // Input file yang transparan sudah menutupi area dropzone, 
+        // sehingga klik dari pengguna akan langsung diterima oleh input file secara alami.
+        // Event listener tambahan ini menyebabkan event klik kedua yang tidak perlu, 
+        // sehingga memunculkan dialog pilih file dua kali.
+        // dropzone.addEventListener("click", () => fileInput.click());
 
         ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
             dropzone.addEventListener(eventName, (e) => {
@@ -153,8 +171,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         dropzone.addEventListener("drop", (e) => {
             if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                displayImagePreview(fileInput.files[0]);
+                // Gunakan file dari event drop secara langsung
+                displayImagePreview(e.dataTransfer.files[0]);
             }
         });
 
