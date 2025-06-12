@@ -52,7 +52,7 @@
                 <p class="mt-2 max-w-lg mx-auto text-secondary">{{ result.info.description }}</p>
                 <div class="mt-8 text-left max-w-md mx-auto">
                     <h4 class="font-semibold text-center mb-4 text-primary">Tips untuk Foto Lebih Baik</h4>
-                    <ul class="space-y-3 list-inside text-secondary">
+                    <ul class="space-y-3 list-inside text-secondary leading-relaxed">
                         {% for tip in result.info.tips %}
                         <li class="flex items-start gap-3 animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;">
                             <i class="fa-solid fa-lightbulb mt-1 text-brand"></i>
@@ -71,7 +71,7 @@
             {% else %}
             <div class="space-y-8">
                 
-                <div class="card-layout">
+                <div class="card-layout card-interactive">
                     <div class="flex flex-col md:flex-row gap-8">
                         <div class="md:w-1/2">
                             <img src="{{ url_for('static', filename='uploads/' + result.image) }}" alt="Gambar daun anggur yang dianalisis" class="w-full h-auto rounded-lg object-cover shadow-md border border-primary/10">
@@ -107,23 +107,23 @@
                         <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-chart" data-tab="tab-chart"><i class="fa-solid fa-chart-pie w-5 text-center sm:mr-1.5"></i><span class="hidden sm:inline">Grafik</span></button>
                     </div>
                     <div id="tab-content" class="pt-6 min-h-[250px]">
-                        <div id="tab-desc" class="tab-pane prose prose-sm max-w-none text-secondary" role="tabpanel"><p>{{ result.info.description }}</p></div>
+                        <div id="tab-desc" class="tab-pane prose prose-sm max-w-none text-secondary leading-relaxed" role="tabpanel"><p>{{ result.info.description }}</p></div>
                         <div id="tab-symptoms" class="tab-pane hidden" role="tabpanel">
                             <h4 class="font-bold text-lg mb-3 text-primary">Gejala Umum</h4>
-                            <ul class="space-y-3 list-inside text-secondary mb-6">
+                            <ul class="space-y-3 list-inside text-secondary mb-6 leading-relaxed">
                                 {% for symptom in result.info.symptoms %}
                                 <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
                                 {% endfor %}
                             </ul>
                             <h4 class="font-bold text-lg mb-3 text-primary">Faktor Pemicu</h4>
-                             <ul class="space-y-3 list-inside text-secondary">
+                             <ul class="space-y-3 list-inside text-secondary leading-relaxed">
                                 {% for trigger in result.info.triggers %}
                                 <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-yellow-500 text-xs"></i><span>{{ trigger }}</span></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div id="tab-action" class="tab-pane hidden" role="tabpanel">
-                             <ul class="space-y-3 list-inside text-secondary">
+                             <ul class="space-y-3 list-inside text-secondary leading-relaxed">
                                 {% for step in result.info.action %}
                                 <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
                                 {% endfor %}
@@ -136,6 +136,7 @@
                 </div>
 
                 <div class="text-center pt-4">
+                   <p class="text-secondary mb-4">Simpan atau bagikan laporan ini untuk referensi di masa mendatang.</p>
                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                        <button id="copyButton" class="button-base button-secondary w-full sm:w-auto">
                            <i id="copyIcon" class="fa-regular fa-copy"></i><span id="copyButtonText">Salin Laporan</span>
