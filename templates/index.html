@@ -43,11 +43,6 @@
 
             <section id="uploader-section" class="card-layout animate-slide-in-up" style="animation-delay: 150ms;">
                 <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                    <div id="alert-box" class="hidden mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
-                        <p class="font-bold">Terjadi Kesalahan</p>
-                        <p id="alert-message">Pesan error akan muncul di sini.</p>
-                    </div>
-
                     <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-10 text-center cursor-pointer">
                         <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/jpg" required>
                         
@@ -72,6 +67,11 @@
         <footer class="w-full text-center py-8 px-4 text-sm text-muted mt-auto pt-12">
             <p>&copy; <span id="currentYear"></span> GrapeCheck. Seluruh hak cipta dilindungi.</p>
         </footer>
+    </div>
+
+    <div id="toast" class="toast">
+        <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
+        <p id="toast-message">Pesan error akan muncul di sini.</p>
     </div>
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>

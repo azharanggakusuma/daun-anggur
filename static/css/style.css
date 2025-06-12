@@ -258,7 +258,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 }
 
 /* --- Halaman Riwayat --- */
-/* GAYA BARU UNTUK KARTU RIWAYAT */
 .history-card {
   display: block;
   background-color: var(--bg-secondary);
@@ -298,4 +297,37 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 /* PENYEMPURNAAN: Menambah jarak pada daftar untuk kenyamanan membaca */
 .prose ul, .prose ol {
     line-height: 1.75;
+}
+
+/* GAYA TOAST NOTIFICATION YANG SEPENUHNYA RESPONSIF */
+.toast {
+  position: fixed;
+  z-index: 100;
+  /* PERBAIKAN: Posisi dan lebar yang lebih baik untuk semua perangkat */
+  left: 1rem;
+  right: 1rem;
+  bottom: 1.5rem;
+  max-width: 400px; /* Batasi lebar maksimum di desktop */
+  margin: 0 auto; /* Otomatis tengahkan jika layar lebih lebar */
+
+  transform: translateY(200%); /* Mulai dari bawah layar */
+  background-color: #ef4444; /* red-500 */
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-lg);
+  font-weight: 600;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+}
+.toast.toast-visible {
+  transform: translateY(0); /* Muncul ke posisi akhir */
+  pointer-events: auto;
+}
+html.dark .toast {
+    background-color: #f87171; /* red-400 */
+    color: #450a0a; /* red-950 */
 }

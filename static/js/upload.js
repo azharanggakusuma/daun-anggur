@@ -7,25 +7,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.getElementById("fileInput");
     const uploadPlaceholder = document.getElementById("uploadPlaceholder");
     const imagePreview = document.getElementById("imagePreview");
-    const alertBox = document.getElementById("alert-box");
-    const alertMessage = document.getElementById("alert-message");
+    
+    // Elemen Toast Baru
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toast-message");
+    let toastTimeout;
 
     let selectedFile = null;
 
     /**
-     * Menampilkan notifikasi kesalahan.
-     * @param {string} message - Pesan kesalahan yang akan ditampilkan.
+     * Menampilkan notifikasi toast.
+     * @param {string} message - Pesan yang akan ditampilkan.
      */
     function showAlert(message) {
-        alertMessage.textContent = message;
-        alertBox.classList.remove("hidden");
-    }
+        // Hapus timeout sebelumnya jika ada
+        clearTimeout(toastTimeout);
 
-    /**
-     * Menyembunyikan notifikasi kesalahan.
-     */
-    function hideAlert() {
-        alertBox.classList.add("hidden");
+        toastMessage.textContent = message;
+        toast.classList.add("toast-visible");
+
+        // Sembunyikan toast setelah 4 detik
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove("toast-visible");
+        }, 4000);
     }
 
     /**
@@ -46,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
             resetDropzone();
             return;
         }
-
-        hideAlert();
+        
         selectedFile = file;
 
         const reader = new FileReader();
@@ -76,14 +79,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (uploadForm) {
         /**
-         * PENINGKATAN: Fungsi terpusat untuk menangani kegagalan unggah.
+         * Fungsi terpusat untuk menangani kegagalan unggah.
          * @param {string} errorMessage - Pesan error yang akan ditampilkan.
          */
         function handleUploadFailure(errorMessage) {
             showAlert(errorMessage);
             buttonText.textContent = "Mulai Analisis";
             buttonSpinner.classList.add("hidden");
-            resetDropzone(); // Reset UI, termasuk file preview dan tombol
+            submitButton.disabled = false; // Aktifkan lagi tombolnya
+            // Jangan reset dropzone jika file sudah ada, agar pengguna tidak perlu upload ulang
         }
 
         uploadForm.addEventListener("submit", function (e) {
@@ -101,21 +105,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const formData = new FormData();
             formData.append('file', selectedFile, selectedFile.name);
 
-            // --- PENINGKATAN: Tambahkan AbortController untuk timeout ---
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 30000); // Timeout 30 detik
 
             fetch("/upload", {
                 method: "POST",
                 body: formData,
-                signal: controller.signal, // Kaitkan sinyal dengan fetch
+                signal: controller.signal,
             })
             .then((response) => {
-                clearTimeout(timeoutId); // Hapus timeout jika respons diterima
+                clearTimeout(timeoutId);
                 
-                // --- PENINGKATAN: Penanganan error server yang lebih baik ---
                 if (!response.ok) {
-                    // Coba baca sebagai JSON, jika gagal, lempar error umum
                     return response.json()
                         .then(err => { throw err; })
                         .catch(() => { throw new Error(`Server merespons dengan status ${response.status}`); });
@@ -126,7 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     window.location.href = data.redirect_url;
                 } else {
-                    // Gunakan fungsi terpusat untuk menangani kegagalan
                     handleUploadFailure(data.error || "Terjadi kesalahan saat mengunggah file.");
                 }
             })
@@ -136,13 +136,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 let message;
                 if (error.name === 'AbortError') {
-                    message = "Proses unggah terlalu lama. Periksa koneksi Anda dan coba lagi.";
+                    message = "Proses unggah terlalu lama. Coba lagi.";
                 } else if (error.error) {
                     message = error.error;
                 } else {
-                    message = "Tidak dapat terhubung ke server atau terjadi kesalahan.";
+                    message = "Tidak dapat terhubung ke server. Periksa koneksi Anda.";
                 }
-                // Gunakan fungsi terpusat untuk menangani kegagalan
                 handleUploadFailure(message);
             });
         });
