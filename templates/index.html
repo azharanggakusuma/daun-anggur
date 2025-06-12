@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analisis Penyakit Daun Anggur | Unggah Gambar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
+        <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </a>
+        <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
+            <div class="relative w-5 h-5" id="theme-icon-container">
+                <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
+                <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
+            </div>
+        </button>
+    </header>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+        <header class="text-center mb-12 -mt-6">
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <!--<i class="fa-solid fa-leaf fa-3x text-green-600"></i>-->
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight">Analisis Daun Anggur</h1>
+            </div>
+            <p class="text-lg mt-6 max-w-2xl mx-auto">Analisis citra daun anggur menggunakan model Deep Learning <br> untuk diagnosis penyakit pada daun anggur.</p>
+            <p class="text-sm text-slate-400 mt-4">Didukung oleh model Deep Learning (CNN)</p>
+        </header>
+        <main>
+            <section id="uploader-section" class="p-6 sm:p-8 rounded-xl shadow-lg border">
+                <div id="alert-box" class="hidden mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
+                    <p class="font-bold">Terjadi Kesalahan</p>
+                    <p id="alert-message">Pesan error akan muncul di sini.</p>
+                </div>
+                <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                    <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors duration-200">
+                        <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0" accept="image/jpeg, image/png, image/jpg" required>
+                        <div id="uploadPlaceholder" class="space-y-3 pointer-events-none">
+                            <i class="fa-solid fa-cloud-arrow-up fa-3x mx-auto text-gray-400"></i>
+                            <p class="font-semibold">Seret & letakkan file di sini, atau <span class="text-green-600">jelajahi file</span></p>
+                            <p class="text-xs">Format yang didukung: JPG, JPEG, PNG (Maks. 10MB)</p>
+                        </div>
+                        <div id="imagePreview" class="hidden text-center pointer-events-none"></div>
+                    </div>
+                    <button type="submit" id="submitButton" class="button-primary w-full flex justify-center items-center gap-3 mt-6" disabled>
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <span id="buttonText">Mulai Analisis</span>
+                        <div id="buttonSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"></div>
+                    </button>
+                </form>
+            </section>
+        </main>
+        <footer class="text-center mt-12 text-sm">
+            <p>&copy; <span id="currentYear"></span> Analisis Daun Anggur. Dibuat dengan Flask & TensorFlow.</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>

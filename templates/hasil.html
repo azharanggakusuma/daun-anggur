@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hasil Analisis | {{ result.label }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
+        <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </a>
+        <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
+            <div class="relative w-5 h-5" id="theme-icon-container">
+                <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
+                <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
+            </div>
+        </button>
+    </header>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold">Laporan Analisis</h2>
+                <p class="mt-1 text-gray-500 text-sm">Dihasilkan oleh Model Deep Learning (CNN)</p>
+            </div>
+            <p class="text-sm mt-2 sm:mt-0" id="timestamp-display"></p>
+        </header>
+        <section id="report-section" class="p-8 rounded-lg shadow-lg border animate-slide-in-up">
+            {% if result.label == 'Negative' %}
+            <div class="text-center py-8">
+                <i class="fa-solid fa-circle-xmark fa-3x mx-auto text-gray-400"></i>
+                <h3 class="mt-4 text-xl font-semibold">Tidak Teridentifikasi</h3>
+                <p class="mt-2 max-w-lg mx-auto">{{ result.info.description }}</p>
+                <div class="mt-8 text-left">
+                    <h4 class="font-semibold text-center mb-4">Tips untuk Foto Lebih Baik</h4>
+                    <ul class="space-y-3">
+                        {% for tip in result.info.tips %}
+                        <li class="flex items-start gap-3 p-3 rounded-md border">
+                            <i class="fa-solid fa-lightbulb w-5 text-center text-green-600 flex-shrink-0 mt-1"></i>
+                            <span>{{ tip }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+            <div class="space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-x-12 gap-y-8 items-center">
+                    <div class="md:col-span-2">
+                        <h3 class="text-sm font-semibold text-green-700 tracking-wider uppercase mb-3">Gambar yang Dianalisis</h3>
+                        <img src="{{ url_for('static', filename='uploads/' + result.image) }}" alt="Gambar daun anggur yang dianalisis" class="w-full h-auto rounded-lg object-cover border">
+                    </div>
+                    <div class="md:col-span-3 flex flex-col justify-center space-y-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-green-700 tracking-wider uppercase mb-1">Hasil Diagnosis</h3>
+                            <p class="text-5xl font-black text-{{ result.info.color }}-600">{{ result.label }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold text-green-700 tracking-wider uppercase mb-2">Tingkat Keyakinan</h3>
+                            <div class="flex items-center gap-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                    <div id="confidence-bar" class="bg-{{ result.info.color }}-500 h-2.5 rounded-full" style="width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);" data-confidence="{{ '%.2f'|format(result.confidence) }}"></div>
+                                </div>
+                                <p class="text-lg font-semibold w-20 text-right">{{ '%.1f'|format(result.confidence) }}%</p>
+                            </div>
+                            <p class="text-xs text-right mt-1">
+                                {% if result.confidence > 90 %}<span class="font-medium text-green-700">(Keyakinan Sangat Tinggi)</span>
+                                {% elif result.confidence > 70 %}<span class="font-medium text-yellow-600">(Keyakinan Tinggi)</span>
+                                {% else %}<span class="font-medium text-red-600">(Keyakinan Rendah)</span>{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t pt-10">
+                    <div id="tab-buttons" class="border-b flex space-x-4 sm:space-x-6 overflow-x-auto -mb-px" role="tablist">
+                        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-desc" data-tab="tab-desc"><i class="fa-solid fa-file-lines w-5 text-center mr-1.5"></i>Deskripsi</button>
+                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-symptoms" data-tab="tab-symptoms"><i class="fa-solid fa-virus-covid w-5 text-center mr-1.5"></i>Gejala</button>
+                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-triggers" data-tab="tab-triggers"><i class="fa-solid fa-bolt w-5 text-center mr-1.5"></i>Pemicu</button>
+                        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-action" data-tab="tab-action"><i class="fa-solid fa-shield-halved w-5 text-center mr-1.5"></i>Rekomendasi</button>
+                    </div>
+                    <div id="tab-content" class="pt-6 min-h-[160px]">
+                        <div id="tab-desc" class="tab-pane prose prose-sm max-w-none" role="tabpanel"><p>{{ result.info.description }}</p></div>
+                        <div id="tab-symptoms" class="tab-pane hidden" role="tabpanel">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% for symptom in result.info.symptoms %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;"><i class="fa-solid fa-circle-dot info-card-icon text-red-500"></i><p>{{ symptom }}</p></div>{% endfor %}
+                            </div>
+                        </div>
+                        <div id="tab-triggers" class="tab-pane hidden" role="tabpanel">
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% for trigger in result.info.triggers %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;"><i class="fa-solid fa-circle-dot info-card-icon text-yellow-500"></i><p>{{ trigger }}</p></div>{% endfor %}
+                            </div>
+                        </div>
+                        <div id="tab-action" class="tab-pane hidden" role="tabpanel">
+                            <div class="grid grid-cols-1 gap-4">
+                                {% for step in result.info.action %}<div class="info-card animate-stagger-in" style="--delay: {{ loop.index * 80 }}ms;"><i class="fa-solid fa-circle-check info-card-icon text-green-500"></i><p>{{ step }}</p></div>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t pt-10">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Distribusi Probabilitas</h3>
+                    <div class="max-w-sm mx-auto"><canvas id="probChart"></canvas></div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="mt-10 pt-8 border-t">
+                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <a href="/" class="button-primary w-full flex items-center justify-center gap-2">
+                         <i class="fa-solid fa-arrows-rotate"></i>Analisis Gambar Lain
+                     </a>
+                     {% if result.label != 'Negative' %}
+                     <div class="grid grid-cols-2 gap-2">
+                        <button id="copyButton" class="button-secondary w-full flex items-center justify-center gap-2">
+                            <i id="copyIcon" class="fa-regular fa-copy"></i><span id="copyButtonText">Salin</span>
+                        </button>
+                        <button id="downloadButton" class="button-secondary w-full flex items-center justify-center gap-2">
+                            <i id="downloadIcon" class="fa-solid fa-file-arrow-down"></i><span id="downloadButtonText">Unduh</span>
+                        </button>
+                    </div>
+                     {% endif %}
+                 </div>
+             </div>
+        </section>
+        <footer class="text-center mt-12 text-sm">
+            <p>&copy; <span id="currentYear"></span> Analisis Daun Anggur. Dibuat dengan Flask & TensorFlow.</p>
+        </footer>
+    </div>
+    <script>
+        const RESULT_DATA = {{ result|tojson|safe }};
+        const DISEASE_INFO = {{ disease_info|tojson|safe }};
+    </script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
+</body>
+</html>

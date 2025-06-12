@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Analisis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="fixed z-50 top-4 right-4 flex items-center gap-2">
+        <a href="/" id="history-button" title="Kembali ke Halaman Utama">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
+            <div class="relative w-5 h-5" id="theme-icon-container">
+                <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
+                <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
+            </div>
+        </button>
+    </header>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold">Riwayat Analisis</h1>
+            <p class="mt-2 text-lg">Berikut adalah hasil analisis yang pernah Anda lakukan.</p>
+        </header>
+        <main>
+            <div id="history-container" class="space-y-4">
+                <div id="empty-history" class="text-center p-8 border-2 border-dashed rounded-lg hidden">
+                    <i class="fa-solid fa-box-open fa-3x text-gray-400"></i>
+                    <p class="mt-4 font-semibold">Belum ada riwayat analisis.</p>
+                    <p class="text-gray-500">Mulai analisis pertama Anda untuk melihat riwayat di sini.</p>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="/" class="button-primary">
+                    <i class="fa-solid fa-arrow-left mr-2"></i>Kembali ke Halaman Utama
+                </a>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+</body>
+</html>
