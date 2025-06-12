@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
         emptyHistoryMessage.classList.add("hidden");
         const fragment = document.createDocumentFragment();
         
+        // Membalik urutan riwayat agar yang terbaru muncul di atas
+        history.reverse();
+
         const diseaseInfo = {
             'Sehat': { color: 'green', icon: 'fa-solid fa-leaf' },
             'Busuk': { color: 'red', icon: 'fa-solid fa-virus' },
