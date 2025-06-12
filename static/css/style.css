@@ -28,7 +28,7 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-brand: 0 4px 14px 0 rgba(22, 163, 74, 0.15);
-  --shadow-brand-glow: 0 0 25px 0 rgba(22, 163, 74, 0.2); /* Efek Pendaran Baru */
+  --shadow-brand-glow: 0 0 25px 0 rgba(22, 163, 74, 0.2);
 }
 
 html.dark {
@@ -57,7 +57,7 @@ html.dark {
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
   --shadow-brand: 0 4px 14px 0 rgba(34, 197, 94, 0.2);
-  --shadow-brand-glow: 0 0 25px 0 rgba(34, 197, 94, 0.25); /* Efek Pendaran Baru */
+  --shadow-brand-glow: 0 0 25px 0 rgba(34, 197, 94, 0.25);
 }
 
 
@@ -158,7 +158,6 @@ html.dark .bg-dots-pattern {
     .card-layout { padding: 2rem; }
 }
 
-/* PENYEMPURNAAN: Efek interaktif untuk kartu utama */
 .card-interactive:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-brand-glow);
@@ -259,9 +258,11 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 
 /* --- Halaman Riwayat --- */
 .history-card {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   background-color: var(--bg-secondary);
-  border-radius: 0.75rem; /* 12px */
+  border-radius: 0.75rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-md);
   transition: all 0.25s ease-in-out;
@@ -272,14 +273,39 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   box-shadow: var(--shadow-lg);
   border-color: var(--border-secondary);
 }
+.history-card-link {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+.history-delete-button {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: transparent;
+  color: var(--text-muted);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.history-delete-button:hover {
+  background-color: #fee2e2; /* red-100 */
+  color: #ef4444; /* red-500 */
+  transform: scale(1.1);
+}
+html.dark .history-delete-button:hover {
+  background-color: #7f1d1d; /* red-900 */
+  color: #fca5a5; /* red-400 */
+}
 
 /* --- Kelas utilitas untuk warna berdasarkan hasil --- */
-.border-color-green { border-left-color: #16a34a; }
-.border-color-red { border-left-color: #dc2626; }
-.border-color-orange { border-left-color: #f97316; }
-.border-color-yellow { border-left-color: #eab308; }
-.border-color-zinc { border-left-color: #71717a; }
-
 .diagnosis-badge {
     padding: 0.5rem 1rem;
     border-radius: 9999px;
@@ -303,15 +329,13 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 .toast {
   position: fixed;
   z-index: 100;
-  /* PERBAIKAN: Posisi dan lebar yang lebih baik untuk semua perangkat */
   left: 1rem;
   right: 1rem;
   bottom: 1.5rem;
-  max-width: 400px; /* Batasi lebar maksimum di desktop */
-  margin: 0 auto; /* Otomatis tengahkan jika layar lebih lebar */
-
-  transform: translateY(200%); /* Mulai dari bawah layar */
-  background-color: #ef4444; /* red-500 */
+  max-width: 400px;
+  margin: 0 auto;
+  transform: translateY(200%);
+  background-color: #ef4444;
   color: white;
   padding: 1rem 1.25rem;
   border-radius: 0.75rem;
@@ -324,10 +348,62 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   pointer-events: none;
 }
 .toast.toast-visible {
-  transform: translateY(0); /* Muncul ke posisi akhir */
+  transform: translateY(0);
   pointer-events: auto;
 }
 html.dark .toast {
-    background-color: #f87171; /* red-400 */
-    color: #450a0a; /* red-950 */
+    background-color: #f87171;
+    color: #450a0a;
+}
+
+/* --- GAYA MODAL KONFIRMASI YANG DISEMPURNAKAN --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-box {
+  background-color: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px; /* Sedikit lebih kecil agar pas */
+  text-align: center;
+}
+@media(min-width: 640px) {
+    .modal-box { padding: 2rem; }
+}
+
+/* PERBAIKAN: Tombol modal sekarang di tengah */
+.modal-box .flex {
+  justify-content: center;
+}
+
+/* PERBAIKAN: Tombol hapus (modal) */
+#modal-confirm-button {
+    background-color: #ef4444; /* red-500 */
+    border: 1px solid #ef4444;
+    box-shadow: none;
+}
+#modal-confirm-button:hover {
+    background-color: #dc2626; /* red-600 */
+    border-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
