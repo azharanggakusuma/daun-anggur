@@ -136,8 +136,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnIncorrect = document.getElementById('feedback-incorrect');
         const thanksMsg = document.getElementById('feedback-thanks');
 
+        // Fungsi untuk mengubah UI ke state "sudah disubmit"
+        const setFeedbackSubmittedState = () => {
+            btnCorrect.disabled = true;
+            btnIncorrect.disabled = true;
+            btnCorrect.classList.add('opacity-50', 'cursor-not-allowed');
+            btnIncorrect.classList.add('opacity-50', 'cursor-not-allowed');
+            thanksMsg.classList.remove('hidden');
+        };
+
+        // Fungsi untuk menangani klik tombol feedback
         const handleFeedback = (feedbackValue) => {
-            // Kirim data ke server
             fetch('/feedback', {
                 method: 'POST',
                 headers: {
@@ -148,24 +157,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     feedback: feedbackValue
                 }),
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Gagal mengirim feedback ke server');
+                return response.json();
+            })
             .then(data => {
                 if (data.status === 'success') {
-                    // Beri respon visual ke pengguna setelah berhasil
-                    btnCorrect.disabled = true;
-                    btnIncorrect.disabled = true;
-                    btnCorrect.classList.add('opacity-50', 'cursor-not-allowed');
-                    btnIncorrect.classList.add('opacity-50', 'cursor-not-allowed');
-                    thanksMsg.classList.remove('hidden');
+                    // Simpan status feedback ke localStorage
+                    let feedbackHistory = JSON.parse(localStorage.getItem('feedbackHistory')) || {};
+                    feedbackHistory[RESULT_DATA.image] = feedbackValue;
+                    localStorage.setItem('feedbackHistory', JSON.stringify(feedbackHistory));
+
+                    // Update UI
+                    setFeedbackSubmittedState();
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
+                // Mungkin tampilkan pesan error kepada pengguna
             });
         };
-
+        
+        // Cek saat halaman dimuat apakah feedback sudah pernah diberikan
+        const checkInitialFeedbackState = () => {
+            let feedbackHistory = JSON.parse(localStorage.getItem('feedbackHistory')) || {};
+            if (feedbackHistory[RESULT_DATA.image]) {
+                setFeedbackSubmittedState();
+            }
+        };
+        
         btnCorrect.addEventListener('click', () => handleFeedback('correct'));
         btnIncorrect.addEventListener('click', () => handleFeedback('incorrect'));
+
+        // Jalankan pengecekan status awal saat halaman selesai dimuat
+        checkInitialFeedbackState();
     }
 
     // --- Fungsi Unduh Laporan sebagai PDF ---
