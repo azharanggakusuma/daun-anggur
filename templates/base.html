@@ -19,13 +19,13 @@
     
     {% block head_extra %}{% endblock %}
 </head>
-<body class="antialiased">
+<body class="antialiased flex flex-col min-h-screen">
     
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
     
     {% include 'components/header.html' %}
 
-    <div class="w-full pb-16 sm:pb-0">
+    <div class="w-full pb-16 sm:pb-0 flex-grow">
         {% block content %}{% endblock %}
     </div>
 
