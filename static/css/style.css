@@ -758,3 +758,126 @@ html.dark .toast {
     display: none;
   }
 }
+
+/* --- GAYA ACCORDION MINIMALIS --- */
+.accordion-item {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.accordion-item:hover {
+  border-color: var(--brand-color);
+  box-shadow: var(--shadow-brand-glow);
+}
+
+.accordion-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  list-style: none; /* Menghilangkan panah default */
+}
+.accordion-summary::-webkit-details-marker {
+  display: none; /* Menghilangkan panah default di Chrome/Safari */
+}
+
+.accordion-chevron {
+  color: var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+details[open] > summary .accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--brand-color);
+}
+
+.accordion-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+/* --- GAYA TIMELINE MINIMALIS --- */
+.timeline-container {
+  position: relative;
+  max-width: sm;
+  margin: 0 auto;
+}
+
+/* Garis vertikal di tengah timeline */
+.timeline-container::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: var(--border-primary);
+  top: 10px;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -1px;
+}
+
+.timeline-item {
+  padding: 10px 40px;
+  position: relative;
+  width: 50%;
+}
+
+/* Titik di garis timeline */
+.timeline-dot {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: var(--bg-secondary);
+  border: 3px solid var(--brand-color);
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Penataan item KIRI */
+.timeline-item:nth-child(odd) {
+  left: 0;
+  text-align: right;
+}
+.timeline-item:nth-child(odd) .timeline-dot {
+  right: -8px;
+}
+.timeline-item:nth-child(odd) .timeline-content {
+  padding-right: 20px;
+}
+
+/* Penataan item KANAN */
+.timeline-item:nth-child(even) {
+  left: 50%;
+  text-align: left;
+}
+.timeline-item:nth-child(even) .timeline-dot {
+  left: -8px;
+}
+.timeline-item:nth-child(even) .timeline-content {
+  padding-left: 20px;
+}
+
+/* Responsif untuk mobile */
+@media screen and (max-width: 768px) {
+  .timeline-container::after {
+    left: 20px;
+  }
+  .timeline-item {
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 15px;
+    text-align: left !important;
+  }
+  .timeline-item:nth-child(even) {
+    left: 0;
+  }
+  .timeline-dot {
+    left: 12px !important;
+  }
+  .timeline-content {
+    padding-left: 20px !important;
+    padding-right: 0 !important;
+  }
+}
