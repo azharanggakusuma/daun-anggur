@@ -1,32 +1,54 @@
-<header id="app-header" class="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-secondary/80 backdrop-blur-sm border-primary/10
-                                 sm:top-4 sm:right-4 sm:bottom-auto sm:left-auto sm:h-auto sm:w-auto sm:bg-transparent sm:border-none sm:backdrop-blur-none">
+<header
+  id="app-header"
+  class="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-secondary/80 backdrop-blur-sm border-primary/10 sm:top-4 sm:right-4 sm:bottom-auto sm:left-auto sm:h-auto sm:w-auto sm:bg-transparent sm:border-none sm:backdrop-blur-none"
+>
+  <nav id="app-nav" class="mx-auto h-full max-w-md">
+    <a
+      href="{{ url_for('index') }}"
+      class="nav-item {% if request.endpoint in ['index', 'hasil'] %}active{% endif %}"
+      title="Halaman Utama"
+    >
+      <i class="fa-solid fa-house"></i>
+      <span class="nav-text">Utama</span>
+    </a>
 
-    <nav id="app-nav" class="mx-auto h-full max-w-md">
-        <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint in ['index', 'hasil'] %}active{% endif %}" title="Halaman Utama">
-            <i class="fa-solid fa-house"></i>
-            <span class="nav-text">Utama</span>
-        </a>
+    <a
+      href="{{ url_for('riwayat') }}"
+      class="nav-item {% if request.endpoint == 'riwayat' %}active{% endif %}"
+      title="Riwayat Analisis"
+    >
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span class="nav-text">Riwayat</span>
+    </a>
 
-        <a href="{{ url_for('riwayat') }}" class="nav-item {% if request.endpoint == 'riwayat' %}active{% endif %}" title="Riwayat Analisis">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span class="nav-text">Riwayat</span>
-        </a>
-        
-        <button id="theme-toggle" class="nav-item fab" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
-             <div id="theme-icon-container" class="relative">
-                <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
-                <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
-            </div>
-            </button>
-        
-        <a href="{{ url_for('penyakit') }}" class="nav-item {% if request.endpoint == 'penyakit' %}active{% endif %}" title="Informasi Penyakit">
-            <i class="fa-solid fa-book-medical"></i>
-            <span class="nav-text">Info</span>
-        </a>
+    <button
+      id="theme-toggle"
+      class="nav-item fab"
+      title="Ganti Tema"
+      aria-label="Ganti antara mode terang dan gelap"
+    >
+      <div id="theme-icon-container" class="relative">
+        <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
+        <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
+      </div>
+    </button>
 
-        <a href="{{ url_for('tentang') }}" class="nav-item {% if request.endpoint == 'tentang' %}active{% endif %}" title="Tentang Aplikasi">
-            <i class="fa-solid fa-circle-info"></i>
-            <span class="nav-text">Tentang</span>
-        </a>
-    </nav>
+    <a
+      href="{{ url_for('penyakit') }}"
+      class="nav-item {% if request.endpoint == 'penyakit' %}active{% endif %}"
+      title="Informasi Penyakit"
+    >
+      <i class="fa-solid fa-book-medical"></i>
+      <span class="nav-text">Info</span>
+    </a>
+
+    <a
+      href="{{ url_for('tentang') }}"
+      class="nav-item {% if request.endpoint == 'tentang' %}active{% endif %}"
+      title="Tentang Aplikasi"
+    >
+      <i class="fa-solid fa-circle-info"></i>
+      <span class="nav-text">Tentang</span>
+    </a>
+  </nav>
 </header>
