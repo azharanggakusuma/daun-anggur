@@ -479,23 +479,33 @@ html.dark .toast {
 
 /* --- GAYA UNTUK NAVIGASI BAWAH RESPONSif --- */
 
-/* Tampilan Desktop (sm dan lebih besar) - DESAIN "PILL" BARU */
+/* Tampilan Desktop (sm dan lebih besar) - DESAIN VERTIKAL BARU DI KIRI */
 @media (min-width: 640px) {
-  /* Kontainer "Pill" */
+  /* Aturan baru untuk memposisikan seluruh header di tengah-kiri */
+  #app-header {
+    top: 50%;
+    left: 1.5rem; /* 24px dari kiri */
+    right: auto;
+    bottom: auto;
+    transform: translateY(-50%); /* Trik untuk sentering vertikal */
+  }
+
+  /* Kontainer navigasi utama, sekarang vertikal */
   #app-nav {
     display: flex;
-    gap: 0.5rem; /* 8px */
+    flex-direction: column; /* Mengubah layout menjadi vertikal */
+    gap: 0.75rem; /* Jarak antar item (12px) */
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    padding: 0.5rem;
-    border-radius: 9999px;
+    padding: 0.75rem; /* Padding (12px) */
+    border-radius: 1rem; /* Sudut yang lebih kotak (16px) */
     box-shadow: var(--shadow-lg);
   }
 
-  /* Item di dalam "Pill" */
+  /* Item di dalam menu vertikal */
   .nav-item {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 9999px;
     color: var(--text-muted);
     background-color: transparent;
@@ -519,11 +529,11 @@ html.dark .toast {
   }
   
   .nav-item i {
-    font-size: 1.125rem; /* 18px */
+    font-size: 1.25rem; /* 20px */
   }
   
   .nav-item .nav-text {
-    display: none; /* Sembunyikan teks di desktop */
+    display: none; /* Tetap sembunyikan teks di desktop */
   }
   
   #app-nav #theme-toggle.fab {
@@ -537,9 +547,10 @@ html.dark .toast {
   }
   
   #app-nav #theme-toggle.fab .theme-icon {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
   }
 }
+
 
 /* Tampilan Mobile (di bawah 640px) */
 @media (max-width: 639px) {
