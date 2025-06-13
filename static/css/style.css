@@ -662,9 +662,9 @@ html.dark .toast {
     transition: color 0.2s ease;
   }
 
-  .nav-item i {
-    font-size: 1.25rem; /* Ukuran ikon disamakan agar layout stabil */
-    margin-bottom: 2px;
+ .nav-item i {
+    font-size: 1.25rem; 
+    margin-bottom: 4px;
     transition: font-size 0.2s ease;
   }
 
@@ -708,8 +708,6 @@ html.dark .toast {
   #app-nav #theme-toggle.fab .nav-text {
     display: none;
   }
-
-  /* --- Tambahkan kode ini di dalam blok @media (max-width: 639px) --- */
 
   #app-nav #theme-toggle.fab .theme-icon {
     font-size: 1.5rem;
