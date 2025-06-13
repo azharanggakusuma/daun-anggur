@@ -525,35 +525,43 @@ html.dark .toast {
     transform: scale(1.1);
   }
 
-  /* --- PENYEMPURNAAN #1: Indikator Aktif yang Lebih Jelas --- */
+  /* --- PENYEMPURNAAN ANIMASI: Indikator Aktif yang "Tumbuh" --- */
   .nav-item.active {
     color: var(--brand-color);
     background-color: var(--bg-primary);
   }
-  .nav-item.active::before {
+  /* Definisikan keadaan dasar indikator untuk semua item */
+  .nav-item::before {
     content: '';
     position: absolute;
-    left: -20px; /* Posisi di luar padding #app-nav */
+    left: -20px;
     top: 50%;
     transform: translateY(-50%);
     width: 4px;
-    height: 60%;
+    height: 0; /* Mulai dari tinggi 0 */
     background-color: var(--brand-color);
     border-radius: 4px;
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animasikan properti height */
+  }
+  /* Saat item aktif, animasikan tingginya */
+  .nav-item.active::before {
+    height: 60%; /* Tinggi akhir indikator */
   }
   
   .nav-item i {
     font-size: 1.25rem; /* 20px */
   }
   
-  /* --- PENYEMPURNAAN #2: Tooltip (Label) saat Hover --- */
+  /* --- PENYEMPURNAAN ANIMASI: Tooltip yang "Membal" --- */
   .nav-item .nav-text {
-    display: block; /* Menimpa display:none dari style mobile */
+    display: block;
     position: absolute;
     left: 100%;
     top: 50%;
-    transform: translateY(-50%) translateX(0);
-    margin-left: 16px; /* Jarak dari ikon */
+    transform: translateY(-50%) translateX(0) scale(0.95); /* Mulai dari sedikit kecil */
+    opacity: 0;
+    visibility: hidden;
+    margin-left: 16px;
     padding: 0.3rem 0.8rem;
     background-color: var(--bg-secondary);
     color: var(--text-primary);
@@ -563,15 +571,14 @@ html.dark .toast {
     white-space: nowrap;
     font-size: 0.8rem;
     font-weight: 600;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease;
-    pointer-events: none; /* Agar tidak mengganggu hover pada .nav-item */
+    pointer-events: none;
+    /* Ganti transisi dengan kurva cubic-bezier yang membal */
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .nav-item:hover .nav-text {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-50%) translateX(8px); /* Efek muncul ke kanan */
+    transform: translateY(-50%) translateX(8px) scale(1); /* Kembali ke ukuran normal */
   }
   
   /* Aturan lain yang sudah ada */
