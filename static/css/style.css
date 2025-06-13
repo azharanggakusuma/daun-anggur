@@ -640,6 +640,10 @@ html.dark .toast {
   #app-nav #theme-toggle.fab .theme-icon {
     font-size: 1.25rem;
   }
+
+  .nav-item.active i {
+    animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
 }
 
 /* Tampilan Mobile (di bawah 640px) */
