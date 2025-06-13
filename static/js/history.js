@@ -18,12 +18,16 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     function renderHistory() {
+        // Selalu kosongkan kontainer utama terlebih dahulu
         historyContainer.innerHTML = '';
         
         if (history.length === 0) {
+            // JIKA RIWAYAT KOSONG: Tampilkan pesan dan sembunyikan kontainer
             emptyHistoryMessage.classList.remove("hidden");
         } else {
+            // JIKA ADA RIWAYAT: Sembunyikan pesan
             emptyHistoryMessage.classList.add("hidden");
+            
             const fragment = document.createDocumentFragment();
 
             history.forEach((item, index) => {
