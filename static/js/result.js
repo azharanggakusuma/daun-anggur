@@ -107,6 +107,67 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // --- Logika untuk Tombol Bagikan ---
+    const shareButton = document.getElementById("shareButton");
+    if (shareButton && navigator.share) {
+        shareButton.addEventListener("click", async () => {
+            const shareData = {
+                title: `Hasil Analisis Daun Anggur - ${RESULT_DATA.label}`,
+                text: `Hasil analisis daun anggur saya adalah "${RESULT_DATA.label}" dengan keyakinan ${RESULT_DATA.confidence.toFixed(1)}%. Lihat laporannya di GrapeCheck.`,
+                url: window.location.href,
+            };
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.error("Gagal membagikan:", err);
+            }
+        });
+    } else if (shareButton) {
+        // Nonaktifkan tombol dan beri tooltip jika tidak didukung
+        shareButton.disabled = true;
+        shareButton.title = "Fitur 'Bagikan' hanya tersedia di browser mobile dan koneksi HTTPS.";
+        shareButton.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    // --- Logika untuk Tombol Feedback ---
+    const feedbackSection = document.getElementById('feedback-section');
+    if (feedbackSection) {
+        const btnCorrect = document.getElementById('feedback-correct');
+        const btnIncorrect = document.getElementById('feedback-incorrect');
+        const thanksMsg = document.getElementById('feedback-thanks');
+
+        const handleFeedback = (feedbackValue) => {
+            // Kirim data ke server
+            fetch('/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    filename: RESULT_DATA.image,
+                    feedback: feedbackValue
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Beri respon visual ke pengguna setelah berhasil
+                    btnCorrect.disabled = true;
+                    btnIncorrect.disabled = true;
+                    btnCorrect.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnIncorrect.classList.add('opacity-50', 'cursor-not-allowed');
+                    thanksMsg.classList.remove('hidden');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+
+        btnCorrect.addEventListener('click', () => handleFeedback('correct'));
+        btnIncorrect.addEventListener('click', () => handleFeedback('incorrect'));
+    }
+
     // --- Fungsi Unduh Laporan sebagai PDF ---
     const downloadButton = document.getElementById('downloadButton');
     if (downloadButton) {

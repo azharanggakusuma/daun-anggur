@@ -166,6 +166,18 @@ html.dark .button-danger-ghost {
   box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
+/* PENAMBAHAN: Gaya tombol ghost untuk kontras yang lebih baik */
+.button-ghost {
+  background-color: transparent;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-secondary);
+}
+.button-ghost:hover:not(:disabled) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-secondary);
+}
+
 
 /* --- Struktur & Layout Utama --- */
 .card-layout {
@@ -202,7 +214,7 @@ html.dark .button-danger-ghost {
   background-color: var(--bg-secondary);
 }
 
-/* PENAMBAHAN: Gaya untuk input form agar konsisten dengan tema */
+/* --- Form Elements --- */
 .form-input {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
