@@ -480,25 +480,27 @@ html.dark .toast {
 /* --- GAYA UNTUK NAVIGASI BAWAH RESPONSif --- */
 
 /* Tampilan Desktop (sm dan lebih besar) - DESAIN VERTIKAL BARU DI KIRI */
+/* Tampilan Desktop (sm dan lebih besar) - DESAIN VERTIKAL YANG DISEMPURNAKAN */
 @media (min-width: 640px) {
-  /* Aturan baru untuk memposisikan seluruh header di tengah-kiri */
+  /* Aturan untuk memposisikan seluruh header di tengah-kiri */
   #app-header {
     top: 50%;
     left: 1.5rem; /* 24px dari kiri */
     right: auto;
     bottom: auto;
-    transform: translateY(-50%); /* Trik untuk sentering vertikal */
+    transform: translateY(-50%);
+    z-index: 60; /* Pastikan menu selalu di atas konten lain */
   }
 
-  /* Kontainer navigasi utama, sekarang vertikal */
+  /* Kontainer navigasi utama, vertikal */
   #app-nav {
     display: flex;
-    flex-direction: column; /* Mengubah layout menjadi vertikal */
-    gap: 0.75rem; /* Jarak antar item (12px) */
+    flex-direction: column;
+    gap: 0.75rem; /* 12px */
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    padding: 0.75rem; /* Padding (12px) */
-    border-radius: 1rem; /* Sudut yang lebih kotak (16px) */
+    padding: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-lg);
   }
 
@@ -515,6 +517,7 @@ html.dark .toast {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative; /* Diperlukan untuk indikator aktif dan tooltip */
   }
   
   .nav-item:hover {
@@ -523,22 +526,59 @@ html.dark .toast {
     transform: scale(1.1);
   }
 
+  /* --- PENYEMPURNAAN #1: Indikator Aktif yang Lebih Jelas --- */
   .nav-item.active {
     color: var(--brand-color);
     background-color: var(--bg-primary);
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -20px; /* Posisi di luar padding #app-nav */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background-color: var(--brand-color);
+    border-radius: 4px;
   }
   
   .nav-item i {
     font-size: 1.25rem; /* 20px */
   }
   
+  /* --- PENYEMPURNAAN #2: Tooltip (Label) saat Hover --- */
   .nav-item .nav-text {
-    display: none; /* Tetap sembunyikan teks di desktop */
+    display: block; /* Menimpa display:none dari style mobile */
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(0);
+    margin-left: 16px; /* Jarak dari ikon */
+    padding: 0.3rem 0.8rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none; /* Agar tidak mengganggu hover pada .nav-item */
+  }
+  .nav-item:hover .nav-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(8px); /* Efek muncul ke kanan */
   }
   
+  /* Aturan lain yang sudah ada */
   #app-nav #theme-toggle.fab {
     order: 5;
-    transform: translateY(0); /* Reset transform mobile */
+    transform: translateY(0);
   }
   
   #app-nav #theme-toggle.fab #theme-icon-container {
@@ -550,7 +590,6 @@ html.dark .toast {
     font-size: 1.25rem;
   }
 }
-
 
 /* Tampilan Mobile (di bawah 640px) */
 @media (max-width: 639px) {
