@@ -76,6 +76,20 @@
                 updateChartsTheme(newTheme);
             });
         }
+        
+        // --- PENAMBAHAN: Haptic Feedback untuk Kontrol Navigasi ---
+        const triggerVibration = (duration = 1) => {
+            // Durasinya 1ms adalah getaran "tap" yang sangat halus
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(duration);
+            }
+        };
+
+        // Terapkan getaran pada semua tombol/link di dalam header/nav
+        document.querySelectorAll('header nav a, header nav button').forEach(button => {
+            button.addEventListener('click', () => triggerVibration());
+        });
+
 
         // --- Utilitas Tambahan ---
         // Atur tahun saat ini di footer.
