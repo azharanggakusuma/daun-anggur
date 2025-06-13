@@ -97,12 +97,16 @@ html.dark .bg-dots-pattern {
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease;
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+}
+
+.button-base:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.98);
 }
 
 .button-primary {
@@ -111,9 +115,9 @@ html.dark .bg-dots-pattern {
   box-shadow: var(--shadow-brand);
 }
 .button-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   background-color: var(--brand-color-hover);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-brand-glow);
 }
 .button-primary:disabled {
   background-color: var(--bg-tertiary);
@@ -131,7 +135,7 @@ html.dark .bg-dots-pattern {
 .button-secondary:hover:not(:disabled) {
     border-color: var(--border-secondary);
     background-color: var(--bg-tertiary);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
@@ -152,14 +156,14 @@ html.dark .bg-dots-pattern {
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: var(--shadow-lg);
-    transition: all 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @media (min-width: 640px) {
     .card-layout { padding: 2rem; }
 }
 
 .card-interactive:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px) scale(1.02);
     box-shadow: var(--shadow-brand-glow);
 }
 
@@ -172,10 +176,12 @@ html.dark .bg-dots-pattern {
 #dropzone:hover {
     border-color: var(--brand-color);
     background-color: var(--bg-secondary);
+    transform: scale(1.01);
 }
 #dropzone.dropzone-active {
   border-color: var(--brand-color) !important;
   border-style: solid;
+  background-color: var(--bg-secondary);
 }
 
 /* --- Elemen UI Lainnya --- */
@@ -186,10 +192,13 @@ html.dark .bg-dots-pattern {
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease-in-out;
   border-radius: 6px 6px 0 0;
+  position: relative;
+  transform: translateY(0);
 }
 .tab-button:hover:not(.active) {
   background-color: var(--bg-tertiary);
   color: var(--text-brand);
+  transform: translateY(-2px);
 }
 .tab-button.active {
   color: var(--text-brand);
@@ -228,31 +237,34 @@ html.dark .bg-dots-pattern {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  transition: transform 0.4s ease, opacity 0.3s ease;
+  /* PERUBAHAN: Menggunakan transisi yang lebih 'bouncy' untuk ikon */
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-in-out;
 }
-#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+/* PERUBAHAN: Menambahkan rotasi pada transisi ikon tema */
+#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-90deg); }
+html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(90deg); }
+html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
 
 
 /* --- Animasi --- */
+/* PERUBAHAN: Menyempurnakan animasi slide-in dengan efek scale */
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(25px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-slide-in-up {
-  animation: slide-in-up 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: slide-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* PERUBAHAN: Menyempurnakan animasi stagger dengan efek scale */
 @keyframes stagger-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(15px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-stagger-in {
   opacity: 0;
-  animation: stagger-in 0.4s ease-out forwards;
+  animation: stagger-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: var(--delay, 0s);
 }
 
@@ -265,11 +277,12 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   border-radius: 0.75rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-md);
-  transition: all 0.25s ease-in-out;
+  /* PERUBAHAN: Transisi yang lebih spesifik */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   padding: 1rem;
 }
 .history-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1.01);
   box-shadow: var(--shadow-lg);
   border-color: var(--border-secondary);
 }
