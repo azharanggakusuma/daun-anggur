@@ -268,6 +268,30 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   animation-delay: var(--delay, 0s);
 }
 
+/* PENAMBAHAN: Animasi baru "swoopIn" yang lebih dinamis */
+@keyframes swoopIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* PENAMBAHAN: Kelas utilitas untuk animasi swoopIn */
+.animate-swoop-in {
+  opacity: 0; /* Mulai dari tak terlihat */
+  animation-name: swoopIn;
+  animation-duration: 0.6s;
+  /* Kurva cubic-bezier "bouncy" untuk efek memantul */
+  animation-timing-function: cubic-bezier(0.23, 1.1, 0.32, 1);
+  animation-fill-mode: forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+
 /* --- Halaman Riwayat --- */
 .history-card {
   display: flex;

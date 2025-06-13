@@ -39,15 +39,19 @@
         <main>
             <div id="history-container" class="space-y-4"></div>
             
-            <div id="empty-history" class="text-center p-8 sm:p-16 card-layout hidden animate-slide-in-up">
-                <i class="fa-regular fa-clone text-6xl text-muted mb-6"></i>
+            <div id="empty-history" class="text-center p-8 sm:p-16 card-layout hidden">
+                <div class="animate-swoop-in" style="--delay: 100ms;">
+                    <i class="fa-regular fa-clone text-6xl text-muted mb-6"></i>
+                </div>
                 
-                <h3 class="text-2xl font-semibold text-primary">Riwayat Masih Kosong</h3>
-                <p class="mt-2 text-secondary">
-                    Mulai analisis baru dan hasilnya akan tersimpan di sini.
-                </p>
+                <div class="animate-swoop-in" style="--delay: 200ms;">
+                    <h3 class="text-2xl font-semibold text-primary">Riwayat Masih Kosong</h3>
+                    <p class="mt-2 text-secondary">
+                        Mulai analisis baru dan hasilnya akan tersimpan di sini.
+                    </p>
+                </div>
                 
-                <div class="mt-8">
+                <div class="mt-8 animate-swoop-in" style="--delay: 350ms;">
                     <a href="/" class="button-base button-secondary">
                         <i class="fa-solid fa-plus"></i>
                         <span>Lakukan Analisis</span>
