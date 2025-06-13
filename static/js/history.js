@@ -84,14 +84,35 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.classList.remove('visible');
     }
 
-    function deleteHistoryItem() {
-        if (!itemToDelete) return;
+    function deleteHistoryItem(filename) {
+        if (!filename) return;
 
-        history = history.filter(item => item.filename !== itemToDelete);
-        localStorage.setItem('analysisHistory', JSON.stringify(history));
+        // Cari elemen card yang akan dihapus
+        const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`).closest('.history-card');
         
+        if (cardToDelete) {
+            // Tambahkan kelas animasi keluar
+            cardToDelete.classList.add('animate-fade-out-shrink');
+
+            // Tunggu animasi selesai, baru hapus dari data dan DOM
+            setTimeout(() => {
+                history = history.filter(item => item.filename !== filename);
+                localStorage.setItem('analysisHistory', JSON.stringify(history));
+                
+                // Render ulang riwayat setelah data diperbarui
+                // Ini akan secara efektif menghapus elemen dari DOM
+                renderHistory(); 
+
+                // Jika container menjadi kosong, tampilkan pesan
+                if(history.length === 0) {
+                    emptyHistoryMessage.classList.remove("hidden");
+                    const managementPanel = document.querySelector('.mb-8.flex');
+                    if(managementPanel) managementPanel.classList.add('hidden');
+                }
+
+            }, 400); // Durasi harus cocok dengan durasi animasi CSS
+        }
         hideModal();
-        renderHistory();
     }
 
     // Event listener untuk semua tombol hapus
@@ -107,7 +128,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener untuk tombol di dalam modal
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
-        modalConfirmButton.addEventListener('click', deleteHistoryItem);
+        modalConfirmButton.addEventListener('click', () => {
+            deleteHistoryItem(itemToDelete);
+        });
     }
     
     // Event listener untuk pencarian

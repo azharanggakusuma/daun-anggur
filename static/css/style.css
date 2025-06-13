@@ -26,8 +26,7 @@
   /* Bayangan yang Lembut */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-brand: 0 4px 14px 0 rgba(22, 163, 74, 0.15);
   --shadow-brand-glow: 0 0 25px 0 rgba(22, 163, 74, 0.2);
 }
@@ -39,7 +38,7 @@ html.dark {
   --brand-color-hover: #16a34a; /* green-600 */
 
   /* Latar Belakang - Gelap */
-  --bg-primary: #111827; /* gray-900 */
+  --bg-primary: #111827;  /* gray-900 */
   --bg-secondary: #1f2937; /* gray-800 */
   --bg-tertiary: #374151; /* gray-700 */
 
@@ -56,11 +55,11 @@ html.dark {
   /* Bayangan - Gelap */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3),
-    0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
   --shadow-brand: 0 4px 14px 0 rgba(34, 197, 94, 0.2);
   --shadow-brand-glow: 0 0 25px 0 rgba(34, 197, 94, 0.25);
 }
+
 
 /* ---
   GAYA DASAR & KOMPONEN
@@ -78,17 +77,11 @@ body {
 }
 
 .bg-dots-pattern {
-  background-image: radial-gradient(
-    var(--border-secondary) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
+    background-image: radial-gradient(var(--border-secondary) 1px, transparent 1px);
+    background-size: 24px 24px;
 }
 html.dark .bg-dots-pattern {
-  background-image: radial-gradient(
-    var(--border-secondary) 0.5px,
-    transparent 0.5px
-  );
+    background-image: radial-gradient(var(--border-secondary) 0.5px, transparent 0.5px);
 }
 
 .text-brand-gradient {
@@ -98,14 +91,13 @@ html.dark .bg-dots-pattern {
   color: transparent;
 }
 
+
 /* --- Tombol --- */
 .button-base {
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease,
-    color 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
@@ -114,7 +106,7 @@ html.dark .bg-dots-pattern {
 }
 
 .button-base:active:not(:disabled) {
-  transform: translateY(-1px) scale(0.98);
+    transform: translateY(-1px) scale(0.98);
 }
 
 .button-primary {
@@ -135,25 +127,25 @@ html.dark .bg-dots-pattern {
 }
 
 .button-secondary {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
 }
 .button-secondary:hover:not(:disabled) {
-  border-color: var(--border-secondary);
-  background-color: var(--bg-tertiary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+    border-color: var(--border-secondary);
+    background-color: var(--bg-tertiary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .button-tertiary {
-  background-color: transparent;
-  color: var(--text-secondary);
+    background-color: transparent;
+    color: var(--text-secondary);
 }
 .button-tertiary:hover:not(:disabled) {
-  color: var(--text-primary);
-  background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
 }
 
 .button-danger-ghost {
@@ -174,37 +166,35 @@ html.dark .button-danger-ghost {
   box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
+
 /* --- Struktur & Layout Utama --- */
 .card-layout {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-lg);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @media (min-width: 640px) {
-  .card-layout {
-    padding: 2rem;
-  }
+    .card-layout { padding: 2rem; }
 }
 
 .card-interactive:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: var(--shadow-brand-glow);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: var(--shadow-brand-glow);
 }
 
 #dropzone {
-  border: 2px dashed var(--border-secondary);
-  background-color: var(--bg-primary);
-  border-radius: 0.75rem;
-  transition: all 0.2s ease-in-out;
+    border: 2px dashed var(--border-secondary);
+    background-color: var(--bg-primary);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
 }
 #dropzone:hover {
-  border-color: var(--brand-color);
-  background-color: var(--bg-secondary);
-  transform: scale(1.01);
+    border-color: var(--brand-color);
+    background-color: var(--bg-secondary);
+    transform: scale(1.01);
 }
 #dropzone.dropzone-active {
   border-color: var(--brand-color) !important;
@@ -214,17 +204,18 @@ html.dark .button-danger-ghost {
 
 /* --- Form Elements --- */
 .form-input {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  border-radius: 0.5rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .form-input:focus {
-  outline: none;
-  border-color: var(--brand-color);
-  box-shadow: 0 0 0 2px var(--brand-color);
+    outline: none;
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 2px var(--brand-color);
 }
+
 
 /* --- Elemen UI Lainnya --- */
 .tab-button {
@@ -244,7 +235,7 @@ html.dark .button-danger-ghost {
 }
 
 .tab-button::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -265,55 +256,50 @@ html.dark .button-danger-ghost {
   transform: translateX(-50%) scaleX(1);
 }
 
+
 /* --- Header & Tombol Tema --- */
 .theme-icon {
   position: absolute;
   top: 50%;
   left: 50%;
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-    opacity 0.3s ease-in-out;
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-in-out;
 }
-#theme-icon-sun {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1) rotate(0deg);
-}
-#theme-icon-moon {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0) rotate(-90deg);
-}
-html.dark #theme-icon-sun {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0) rotate(90deg);
-}
-html.dark #theme-icon-moon {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1) rotate(0deg);
-}
+#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-90deg); }
+html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(90deg); }
+html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+
 
 /* --- Animasi --- */
+@keyframes gojek-jiggle {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.85) rotate(-5deg);
+  }
+  60% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  80% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
 @keyframes slide-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(25px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(25px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-slide-in-up {
   animation: slide-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes stagger-in {
-  from {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(15px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-stagger-in {
   opacity: 0;
@@ -343,18 +329,69 @@ html.dark #theme-icon-moon {
 }
 
 @keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fade-in-zoom {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: var(--shadow-brand);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-brand-glow);
+  }
 }
+
+@keyframes fade-out-shrink {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+    margin-bottom: -75px; /* Menarik elemen bawah ke atas saat menghilang */
+  }
+}
+
+.animate-fade-in-zoom {
+    animation: fade-in-zoom 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-subtle-pulse {
+    /* Menjalankan animasi 'subtle-pulse' selama 1.5 detik, sekali saja */
+    animation: subtle-pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Tambahkan delay agar animasi berjalan setelah halaman dimuat */
+    animation-delay: 0.5s;
+}
+
+.animate-fade-out-shrink {
+    transition: opacity 0.4s ease, transform 0.4s ease, margin-bottom 0.4s ease;
+    animation: fade-out-shrink 0.4s ease-out forwards;
+}
+
 
 /* --- Halaman Riwayat --- */
 .history-card {
@@ -365,8 +402,7 @@ html.dark #theme-icon-moon {
   border-radius: 0.75rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-md);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease,
-    border-color 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   padding: 1rem;
 }
 .history-card:hover {
@@ -375,12 +411,12 @@ html.dark #theme-icon-moon {
   border-color: var(--border-secondary);
 }
 .history-card-link {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-  color: inherit;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
 }
 .history-delete-button {
   flex-shrink: 0;
@@ -408,33 +444,22 @@ html.dark .history-delete-button:hover {
 
 /* --- Kelas utilitas untuk warna berdasarkan hasil --- */
 .diagnosis-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  display: inline-block;
-  color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    display: inline-block;
+    color: white;
 }
-.bg-badge-green {
-  background-color: #16a34a;
-}
-.bg-badge-red {
-  background-color: #dc2626;
-}
-.bg-badge-orange {
-  background-color: #f97316;
-}
-.bg-badge-yellow {
-  background-color: #eab308;
-}
-.bg-badge-zinc {
-  background-color: #71717a;
-}
+.bg-badge-green { background-color: #16a34a; }
+.bg-badge-red { background-color: #dc2626; }
+.bg-badge-orange { background-color: #f97316; }
+.bg-badge-yellow { background-color: #eab308; }
+.bg-badge-zinc { background-color: #71717a; }
 
 /* PENYEMPURNAAN: Menambah jarak pada daftar untuk kenyamanan membaca */
-.prose ul,
-.prose ol {
-  line-height: 1.75;
+.prose ul, .prose ol {
+    line-height: 1.75;
 }
 
 /* GAYA TOAST NOTIFICATION YANG SEPENUHNYA RESPONSIF */
@@ -464,8 +489,8 @@ html.dark .history-delete-button:hover {
   pointer-events: auto;
 }
 html.dark .toast {
-  background-color: #f87171;
-  color: #450a0a;
+    background-color: #f87171;
+    color: #450a0a;
 }
 
 /* --- GAYA MODAL KONFIRMASI YANG DISEMPURNAKAN --- */
@@ -498,10 +523,8 @@ html.dark .toast {
   max-width: 400px; /* Sedikit lebih kecil agar pas */
   text-align: center;
 }
-@media (min-width: 640px) {
-  .modal-box {
-    padding: 2rem;
-  }
+@media(min-width: 640px) {
+    .modal-box { padding: 2rem; }
 }
 
 /* PERBAIKAN: Tombol modal sekarang di tengah */
@@ -511,15 +534,15 @@ html.dark .toast {
 
 /* PERBAIKAN: Tombol hapus (modal) */
 #modal-confirm-button {
-  background-color: #ef4444; /* red-500 */
-  border: 1px solid #ef4444;
-  box-shadow: none;
+    background-color: #ef4444; /* red-500 */
+    border: 1px solid #ef4444;
+    box-shadow: none;
 }
 #modal-confirm-button:hover {
-  background-color: #dc2626; /* red-600 */
-  border-color: #dc2626;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    background-color: #dc2626; /* red-600 */
+    border-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
 /* --- GAYA UNTUK NAVIGASI BAWAH RESPONSif --- */
@@ -563,7 +586,7 @@ html.dark .toast {
     justify-content: center;
     position: relative; /* Diperlukan untuk indikator aktif dan tooltip */
   }
-
+  
   .nav-item:hover {
     color: var(--text-primary);
     background-color: var(--bg-tertiary);
@@ -577,7 +600,7 @@ html.dark .toast {
   }
   /* Definisikan keadaan dasar indikator untuk semua item */
   .nav-item::before {
-    content: "";
+    content: '';
     position: absolute;
     left: -20px;
     top: 50%;
@@ -592,11 +615,11 @@ html.dark .toast {
   .nav-item.active::before {
     height: 60%; /* Tinggi akhir indikator */
   }
-
+  
   .nav-item i {
     font-size: 1.25rem; /* 20px */
   }
-
+  
   /* --- PENYEMPURNAAN ANIMASI: Tooltip yang "Membal" --- */
   .nav-item .nav-text {
     display: block;
@@ -625,22 +648,21 @@ html.dark .toast {
     visibility: visible;
     transform: translateY(-50%) translateX(8px) scale(1); /* Kembali ke ukuran normal */
   }
-
+  
   /* Aturan lain yang sudah ada */
   #app-nav #theme-toggle.fab {
     order: 5;
     transform: translateY(0);
   }
-
+  
   #app-nav #theme-toggle.fab #theme-icon-container {
     width: auto;
     height: auto;
   }
-
+  
   #app-nav #theme-toggle.fab .theme-icon {
     font-size: 1.25rem;
   }
-
   .nav-item.active i {
     animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
@@ -655,8 +677,6 @@ html.dark .toast {
     height: 100%;
   }
 
-  /* Ganti aturan .nav-item lama dengan yang ini di dalam @media (max-width: 639px) */
-
   .nav-item {
     display: flex;
     flex-direction: column;
@@ -667,33 +687,29 @@ html.dark .toast {
     flex-grow: 1;
     transition: color 0.2s ease-in-out;
   }
-
+  
   .nav-item i {
     font-size: 1.25rem;
     margin-bottom: 4px;
     /* Kita tidak lagi menggunakan transisi di sini, karena akan digantikan oleh keyframes */
   }
-
+  
   .nav-item .nav-text {
     font-size: 0.7rem;
     display: block;
     transition: transform 0.2s ease-in-out;
   }
-
-  /* --- Keadaan AKTIF dengan Animasi Baru --- */
   .nav-item.active {
     color: var(--brand-color);
   }
-
   .nav-item.active i {
     /* Menerapkan animasi 'jiggle' ke ikon yang aktif */
     animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
-
   .nav-item.active .nav-text {
     transform: translateY(-1px);
   }
-
+  
   #app-nav #theme-toggle.fab {
     background-color: var(--brand-color);
     color: white;
@@ -711,68 +727,18 @@ html.dark .toast {
   #app-nav #theme-toggle.fab:hover {
     transform: translateY(-24px) scale(1.1);
   }
-
+  
   #app-nav #theme-toggle.fab #theme-icon-container {
     width: 24px;
     height: 24px;
     position: relative;
   }
-
+  
   #app-nav #theme-toggle.fab .theme-icon {
     font-size: 1.5rem;
   }
-
+  
   #app-nav #theme-toggle.fab .nav-text {
     display: none;
-  }
-
-  #app-nav #theme-toggle.fab .theme-icon {
-    font-size: 1.5rem;
-
-    /* Properti yang ditambahkan untuk animasi */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-      opacity 0.3s ease-in-out;
-  }
-
-  #app-nav #theme-toggle.fab #theme-icon-sun {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-  }
-
-  #app-nav #theme-toggle.fab #theme-icon-moon {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0) rotate(-90deg);
-  }
-
-  html.dark #app-nav #theme-toggle.fab #theme-icon-sun {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0) rotate(90deg);
-  }
-
-  html.dark #app-nav #theme-toggle.fab #theme-icon-moon {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-  }
-}
-
-/* --- Definisi Animasi Ikon Gojek-Style --- */
-@keyframes gojek-jiggle {
-  0% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(0.85) rotate(-5deg);
-  }
-  60% {
-    transform: scale(1.15) rotate(5deg);
-  }
-  80% {
-    transform: scale(1.05) rotate(-2deg);
-  }
-  100% {
-    transform: scale(1) rotate(0);
   }
 }

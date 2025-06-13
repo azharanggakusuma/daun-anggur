@@ -56,7 +56,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const reader = new FileReader();
         reader.onload = function (e) {
             uploadPlaceholder.classList.add("opacity-0", "hidden");
+            
+            // Hapus kelas animasi lama jika ada, lalu tambahkan yang baru
+            imagePreview.classList.remove('animate-fade-in-zoom');
             imagePreview.innerHTML = `<img src="${e.target.result}" style="max-height: 160px; object-fit: cover;" class="rounded-lg mx-auto border border-secondary shadow-sm"><p class="text-sm text-muted mt-3 font-semibold truncate">${file.name}</p>`;
+            
+            // Tambahkan kelas animasi
+            imagePreview.classList.add('animate-fade-in-zoom');
+
             imagePreview.classList.remove("hidden");
             setTimeout(() => imagePreview.classList.remove("opacity-0"), 50);
             submitButton.disabled = false;
