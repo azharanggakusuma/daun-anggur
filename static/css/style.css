@@ -202,6 +202,21 @@ html.dark .button-danger-ghost {
   background-color: var(--bg-secondary);
 }
 
+/* PENAMBAHAN: Gaya untuk input form agar konsisten dengan tema */
+.form-input {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-input:focus {
+    outline: none;
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 2px var(--brand-color);
+}
+
+
 /* --- Elemen UI Lainnya --- */
 .tab-button {
   padding: 0.75rem 1rem;
@@ -218,16 +233,31 @@ html.dark .button-danger-ghost {
   color: var(--text-brand);
   transform: translateY(-2px);
 }
+
+.tab-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 60%;
+  height: 2px;
+  background-color: var(--text-brand);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
 .tab-button.active {
   color: var(--text-brand);
-  border-bottom-color: var(--text-brand);
   font-weight: 600;
+}
+
+.tab-button.active::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 
 /* --- Header & Tombol Tema --- */
-/* Gaya untuk tombol header sekarang diatur via utility class di HTML, blok ini tidak diperlukan lagi */
-
 .theme-icon {
   position: absolute;
   top: 50%;
@@ -278,6 +308,20 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   animation-timing-function: cubic-bezier(0.23, 1.1, 0.32, 1);
   animation-fill-mode: forwards;
   animation-delay: var(--delay, 0s);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 

@@ -63,12 +63,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.classList.remove('active');
                     btn.setAttribute('aria-selected', 'false');
                 });
-                tabPanes.forEach(pane => pane.classList.add('hidden'));
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                    pane.classList.remove('animate-fade-in'); // Hapus kelas animasi sebelumnya
+                });
 
                 // Aktifkan tombol yang diklik dan tampilkan panel yang sesuai
                 button.classList.add('active');
                 button.setAttribute('aria-selected', 'true');
-                if (targetPane) { targetPane.classList.remove('hidden'); }
+                if (targetPane) { 
+                    targetPane.classList.remove('hidden'); 
+                    // Tambahkan kelas animasi untuk efek fade-in
+                    targetPane.classList.add('animate-fade-in');
+                }
             });
         });
     }
@@ -82,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formatNumberedList = (title, list) => list && list.length ? `${title}:\n${list.map((item, index) => `${index + 1}. ${item}`).join('\n')}\n\n` : '';
             
             // Buat teks laporan yang rapi
-            const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDasi TINDAKAN', info.action)}----------------------------------`;
+            const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDASI TINDAKAN', info.action)}----------------------------------`;
             
             navigator.clipboard.writeText(reportText.trim()).then(() => {
                 // Beri feedback visual kepada pengguna
@@ -98,65 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 2500);
             });
         });
-    }
-
-    // --- Logika untuk Tombol Bagikan ---
-    const shareButton = document.getElementById("shareButton");
-    if (shareButton && navigator.share) {
-        shareButton.addEventListener("click", async () => {
-            const shareData = {
-                title: `Hasil Analisis Daun Anggur - ${RESULT_DATA.label}`,
-                text: `Hasil analisis daun anggur saya adalah "${RESULT_DATA.label}" dengan keyakinan ${RESULT_DATA.confidence.toFixed(1)}%. Lihat laporannya di GrapeCheck.`,
-                url: window.location.href,
-            };
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                console.error("Gagal membagikan:", err);
-            }
-        });
-    } else if (shareButton) {
-        // Sembunyikan tombol jika Web Share API tidak didukung
-        shareButton.style.display = "none";
-    }
-
-    // --- Logika untuk Tombol Feedback ---
-    const feedbackSection = document.getElementById('feedback-section');
-    if (feedbackSection) {
-        const btnCorrect = document.getElementById('feedback-correct');
-        const btnIncorrect = document.getElementById('feedback-incorrect');
-        const thanksMsg = document.getElementById('feedback-thanks');
-
-        const handleFeedback = (feedbackValue) => {
-            // Kirim data ke server
-            fetch('/feedback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    filename: RESULT_DATA.image,
-                    feedback: feedbackValue
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // Beri respon visual ke pengguna setelah berhasil
-                    btnCorrect.disabled = true;
-                    btnIncorrect.disabled = true;
-                    btnCorrect.classList.add('opacity-50', 'cursor-not-allowed');
-                    btnIncorrect.classList.add('opacity-50', 'cursor-not-allowed');
-                    thanksMsg.classList.remove('hidden');
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        };
-
-        btnCorrect.addEventListener('click', () => handleFeedback('correct'));
-        btnIncorrect.addEventListener('click', () => handleFeedback('incorrect'));
     }
 
     // --- Fungsi Unduh Laporan sebagai PDF ---
