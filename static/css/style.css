@@ -97,7 +97,7 @@ html.dark .bg-dots-pattern {
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
@@ -146,6 +146,25 @@ html.dark .bg-dots-pattern {
 .button-tertiary:hover:not(:disabled) {
     color: var(--text-primary);
     background-color: var(--bg-tertiary);
+}
+
+/* PENAMBAHAN: Gaya baru untuk tombol aksi berbahaya (semi-transparan) */
+.button-danger-ghost {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #b91c1c; /* red-700 */
+}
+html.dark .button-danger-ghost {
+  color: #fca5a5; /* red-400 */
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.button-danger-ghost:hover:not(:disabled) {
+  background-color: #ef4444; /* red-500 */
+  border-color: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
 
@@ -210,6 +229,7 @@ html.dark .bg-dots-pattern {
 /* --- Header & Tombol Tema --- */
 #home-button,
 #history-button,
+#info-button,
 #theme-toggle {
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
@@ -226,6 +246,7 @@ html.dark .bg-dots-pattern {
 }
 #home-button:hover,
 #history-button:hover,
+#info-button:hover,
 #theme-toggle:hover {
   color: var(--text-brand);
   border-color: var(--brand-color);
@@ -248,7 +269,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
 
 
 /* --- Animasi --- */
-/* PERUBAHAN: Menyempurnakan animasi slide-in dengan efek scale */
 @keyframes slide-in-up {
   from { opacity: 0; transform: translateY(25px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -257,7 +277,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   animation: slide-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* PERUBAHAN: Menyempurnakan animasi stagger dengan efek scale */
 @keyframes stagger-in {
   from { opacity: 0; transform: translateY(15px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -268,7 +287,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   animation-delay: var(--delay, 0s);
 }
 
-/* PENAMBAHAN: Animasi baru "swoopIn" yang lebih dinamis */
 @keyframes swoopIn {
   from {
     opacity: 0;
@@ -280,7 +298,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   }
 }
 
-/* PENAMBAHAN: Kelas utilitas untuk animasi swoopIn */
 .animate-swoop-in {
   opacity: 0; /* Mulai dari tak terlihat */
   animation-name: swoopIn;
@@ -301,7 +318,6 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   border-radius: 0.75rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-md);
-  /* PERUBAHAN: Transisi yang lebih spesifik */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   padding: 1rem;
 }
@@ -443,32 +459,4 @@ html.dark .toast {
     border-color: #dc2626;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-}
-
-/* --- Header & Tombol Tema --- */
-#home-button,
-#history-button,
-#info-button, /* Ditambahkan */
-#theme-toggle {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  color: var(--text-muted);
-  width: 44px;
-  height: 44px;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-md);
-}
-#home-button:hover,
-#history-button:hover,
-#info-button:hover, /* Ditambahkan */
-#theme-toggle:hover {
-  color: var(--text-brand);
-  border-color: var(--brand-color);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-lg);
 }

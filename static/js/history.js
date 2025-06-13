@@ -9,9 +9,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalConfirmButton = document.getElementById("modal-confirm-button");
     let itemToDelete = null;
     
-    // Elemen baru untuk manajemen riwayat
+    // Elemen manajemen riwayat
     const searchInput = document.getElementById('search-history');
     const clearHistoryButton = document.getElementById('clear-history-button');
+    
+    // Elemen baru untuk pesan "tidak ada hasil"
+    const noSearchResultsMessage = document.getElementById('no-search-results');
+    const searchQueryDisplay = document.getElementById('search-query-display');
 
     const diseaseInfo = {
         'Sehat': { color: 'green', icon: 'fa-leaf' },
@@ -26,6 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if (history.length === 0) {
             emptyHistoryMessage.classList.remove("hidden");
+            // Sembunyikan juga panel manajemen jika tidak ada riwayat
+            const managementPanel = document.querySelector('.mb-8.flex');
+            if(managementPanel) managementPanel.classList.add('hidden');
         } else {
             emptyHistoryMessage.classList.add("hidden");
             const fragment = document.createDocumentFragment();
@@ -107,14 +114,26 @@ document.addEventListener("DOMContentLoaded", function () {
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
-            document.querySelectorAll('.history-card').forEach(card => {
+            const cards = document.querySelectorAll('.history-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
                 const label = card.querySelector('.font-bold').textContent.toLowerCase();
                 if (label.includes(query)) {
                     card.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            // Logika untuk menampilkan/menyembunyikan pesan "tidak ada hasil"
+            if (visibleCount === 0 && query !== '') {
+                if(searchQueryDisplay) searchQueryDisplay.textContent = e.target.value;
+                if(noSearchResultsMessage) noSearchResultsMessage.classList.remove('hidden');
+            } else {
+                if(noSearchResultsMessage) noSearchResultsMessage.classList.add('hidden');
+            }
         });
     }
 
