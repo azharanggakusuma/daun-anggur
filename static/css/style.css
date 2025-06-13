@@ -444,3 +444,31 @@ html.dark .toast {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
+
+/* --- Header & Tombol Tema --- */
+#home-button,
+#history-button,
+#info-button, /* Ditambahkan */
+#theme-toggle {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-muted);
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+}
+#home-button:hover,
+#history-button:hover,
+#info-button:hover, /* Ditambahkan */
+#theme-toggle:hover {
+  color: var(--text-brand);
+  border-color: var(--brand-color);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}

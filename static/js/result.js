@@ -99,6 +99,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+    
+    // --- Logika untuk Tombol Bagikan ---
+    const shareButton = document.getElementById("shareButton");
+    if (shareButton && navigator.share) {
+        shareButton.addEventListener("click", async () => {
+            const shareData = {
+                title: `Hasil Analisis Daun Anggur - ${RESULT_DATA.label}`,
+                text: `Hasil analisis daun anggur saya adalah "${RESULT_DATA.label}" dengan keyakinan ${RESULT_DATA.confidence.toFixed(1)}%. Lihat laporannya di GrapeCheck.`,
+                url: window.location.href,
+            };
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.error("Gagal membagikan:", err);
+            }
+        });
+    } else if (shareButton) {
+        // Sembunyikan tombol jika Web Share API tidak didukung
+        shareButton.style.display = "none";
+    }
+
 
     // --- Fungsi Unduh Laporan sebagai PDF ---
     const downloadButton = document.getElementById('downloadButton');

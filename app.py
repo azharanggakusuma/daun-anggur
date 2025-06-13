@@ -159,6 +159,12 @@ def hasil(filename):
     
     return render_template('hasil.html', result=result_data, disease_info=disease_info)
 
+# Route baru untuk halaman informasi penyakit
+@app.route('/penyakit')
+def penyakit():
+    """Menampilkan halaman informasi semua penyakit."""
+    return render_template('penyakit.html', disease_info=disease_info)
+
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

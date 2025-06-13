@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Informasi Penyakit Daun Anggur{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16 sm:py-24">
+    <header class="text-center mb-12 animate-slide-in-up">
+        <h1 class="text-4xl md:text-5xl font-bold text-primary">Informasi Penyakit</h1>
+        <p class="mt-2 text-lg text-secondary">Pelajari lebih lanjut tentang penyakit yang dapat dideteksi oleh GrapeCheck.</p>
+    </header>
+    <main class="space-y-8">
+        {% for key, info in disease_info.items() %}
+            {% if key not in ['Sehat', 'Negative'] %}
+            <section class="card-layout animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
+                <h2 class="text-2xl font-bold text-brand-gradient mb-4">{{ key }}</h2>
+                <p class="mb-6 text-secondary leading-relaxed">{{ info.description }}</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-3 text-primary border-b border-primary/10 pb-2">Gejala Umum</h3>
+                        <ul class="space-y-2 list-inside text-secondary">
+                            {% for symptom in info.symptoms %}
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-3 text-primary border-b border-primary/10 pb-2">Rekomendasi Penanganan</h3>
+                        <ul class="space-y-2 list-inside text-secondary">
+                            {% for step in info.action %}
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        {% endfor %}
+    </main>
+</div>
+{% endblock %}
