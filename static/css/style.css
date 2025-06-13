@@ -611,24 +611,16 @@ html.dark .toast {
   }
   
   .nav-item i {
-    font-size: 1.5rem;
+    font-size: 1.25rem; /* Ukuran ikon disamakan agar layout stabil */
     margin-bottom: 2px;
     transition: font-size 0.2s ease;
   }
   
   .nav-item .nav-text {
     font-size: 0.7rem;
-    display: none; /* Sembunyikan semua teks secara default */
+    display: block; /* Selalu tampilkan teks menu */
   }
 
-  .nav-item.active .nav-text {
-    display: block; 
-  }
-
-  .nav-item.active i {
-    font-size: 1.25rem;
-  }
-  
   .nav-item.active {
     color: var(--brand-color);
   }
