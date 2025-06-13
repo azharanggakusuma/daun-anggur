@@ -25,7 +25,7 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
   </head>
-  <body class="antialiased">
+  <body class="antialiased flex flex-col min-h-screen">
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
 
     <header class="fixed z-50 top-4 right-4 flex items-center gap-3">
@@ -49,7 +49,7 @@
     </header>
 
     <div
-      class="relative min-h-screen flex flex-col items-center p-4 sm:p-6 pt-20 sm:pt-24 pb-10"
+      class="relative flex flex-col items-center p-4 sm:p-6 pt-20 sm:pt-24 pb-10 flex-grow"
     >
       <main class="w-full max-w-2xl mx-auto">
         <header class="text-center mb-8 animate-slide-in-up">
