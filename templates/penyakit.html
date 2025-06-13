@@ -14,23 +14,23 @@
             {% if key not in ['Sehat', 'Negative'] %}
             <details class="accordion-item group animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;" {% if loop.first %}open{% endif %}>
                 <summary class="accordion-summary">
-                    <span class="text-lg font-semibold text-primary group-hover:text-brand">{{ key }}</span>
+                    <span class="text-base md:text-lg font-semibold text-primary group-hover:text-brand">{{ key }}</span>
                     <i class="fa-solid fa-chevron-down accordion-chevron"></i>
                 </summary>
                 <div class="accordion-content">
-                    <p class="mb-6 text-secondary leading-relaxed border-b border-primary/10 pb-6">{{ info.description }}</p>
+                    <p class="mb-6 text-secondary leading-relaxed border-b border-primary/10 pb-6 text-sm md:text-base">{{ info.description }}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <div>
-                            <h3 class="font-semibold text-lg mb-3 text-primary">Gejala Umum</h3>
-                            <ul class="space-y-2 list-inside text-secondary">
+                            <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Gejala Umum</h3>
+                            <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
                                 {% for symptom in info.symptoms %}
                                 <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-3 text-primary">Rekomendasi Penanganan</h3>
-                            <ul class="space-y-2 list-inside text-secondary">
+                            <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Rekomendasi Penanganan</h3>
+                            <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
                                 {% for step in info.action %}
                                 <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
                                 {% endfor %}
