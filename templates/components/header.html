@@ -1,0 +1,19 @@
+<header class="fixed z-50 top-4 right-4 flex items-center gap-3">
+    {# Logika untuk menampilkan tombol yang berbeda tergantung halaman #}
+    {% if request.endpoint == 'riwayat' %}
+        <a href="{{ url_for('index') }}" id="home-button" title="Kembali ke Halaman Utama">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    {% else %}
+        <a href="{{ url_for('riwayat') }}" id="history-button" title="Lihat Riwayat Analisis">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </a>
+    {% endif %}
+
+    <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap">
+        <div class="relative w-5 h-5" id="theme-icon-container">
+            <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
+            <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
+        </div>
+    </button>
+</header>

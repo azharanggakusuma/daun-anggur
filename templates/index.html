@@ -1,144 +1,53 @@
-<!DOCTYPE html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GrapeCheck | Analisis Penyakit Daun Anggur</title>
+{% extends "base.html" %}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+{% block title %}GrapeCheck | Analisis Penyakit Daun Anggur{% endblock %}
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-  </head>
-  <body class="antialiased flex flex-col min-h-screen">
-    <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
-
-    <header class="fixed z-50 top-4 right-4 flex items-center gap-3">
-      <a
-        href="{{ url_for('riwayat') }}"
-        id="history-button"
-        title="Lihat Riwayat Analisis"
-      >
-        <i class="fa-solid fa-clock-rotate-left"></i>
-      </a>
-      <button
-        id="theme-toggle"
-        title="Ganti Tema"
-        aria-label="Ganti antara mode terang dan gelap"
-      >
-        <div class="relative w-5 h-5" id="theme-icon-container">
-          <i id="theme-icon-sun" class="theme-icon fa-solid fa-sun"></i>
-          <i id="theme-icon-moon" class="theme-icon fa-solid fa-moon"></i>
-        </div>
-      </button>
-    </header>
-
-    <div
-      class="relative flex flex-col items-center p-4 sm:p-6 pt-20 sm:pt-24 pb-10 flex-grow"
-    >
-      <main class="w-full max-w-2xl mx-auto">
+{% block content %}
+<div class="relative flex flex-col items-center p-4 sm:p-6 pt-20 sm:pt-24 pb-10 h-full">
+    <main class="w-full max-w-2xl mx-auto">
         <header class="text-center mb-8 animate-slide-in-up">
-          <h1
-            class="text-4xl sm:text-5xl font-black tracking-tighter text-brand-gradient"
-          >
-            <span class="text-primary">Grape</span>Check
-          </h1>
-          <p class="text-base sm:text-lg mt-3 max-w-xl mx-auto text-secondary">
-            Deteksi dini penyakit pada daun anggur melalui analisis gambar untuk
-            mendukung kesehatan tanaman Anda.
-          </p>
-          <p
-            class="flex items-center justify-center gap-2 text-base text-xs mt-3 max-w-xl mx-auto text-secondary"
-          >
-            <span>Didukung oleh Model Deep Learning (TensorFlow)</span>
-          </p>
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-brand-gradient">
+                <span class="text-primary">Grape</span>Check
+            </h1>
+            <p class="text-base sm:text-lg mt-3 max-w-xl mx-auto text-secondary">
+                Deteksi dini penyakit pada daun anggur melalui analisis gambar untuk
+                mendukung kesehatan tanaman Anda.
+            </p>
+            <p class="flex items-center justify-center gap-2 text-base text-xs mt-3 max-w-xl mx-auto text-secondary">
+                <span>Didukung oleh Model Deep Learning (TensorFlow)</span>
+            </p>
         </header>
 
-        <section
-          id="uploader-section"
-          class="card-layout animate-slide-in-up"
-          style="animation-delay: 150ms"
-        >
-          <form id="uploadForm" method="POST" enctype="multipart/form-data">
-            <div
-              id="dropzone"
-              class="relative border-2 border-dashed rounded-xl p-6 sm:p-10 text-center cursor-pointer"
-            >
-              <input
-                type="file"
-                name="file"
-                id="fileInput"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept="image/jpeg, image/png, image/jpg"
-                required
-              />
-
-              <div
-                id="uploadPlaceholder"
-                class="space-y-3 pointer-events-none transition-opacity duration-300"
-              >
-                <i
-                  class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"
-                ></i>
-                <p class="font-semibold text-primary text-sm sm:text-base">
-                  Seret & letakkan file, atau
-                  <span class="text-brand font-bold">jelajahi file</span>
-                </p>
-                <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
-              </div>
-
-              <div
-                id="imagePreview"
-                class="hidden text-center pointer-events-none transition-opacity duration-300 opacity-0"
-              ></div>
-            </div>
-
-            <button
-              type="submit"
-              id="submitButton"
-              class="button-base button-primary w-full mt-6"
-              disabled
-            >
-              <i class="fa-solid fa-magnifying-glass-chart"></i>
-              <span id="buttonText">Mulai Analisis</span>
-              <div
-                id="buttonSpinner"
-                class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"
-              ></div>
-            </button>
-          </form>
+        <section id="uploader-section" class="card-layout animate-slide-in-up" style="animation-delay: 150ms">
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                <div id="dropzone" class="relative border-2 border-dashed rounded-xl p-6 sm:p-10 text-center cursor-pointer">
+                    <input type="file" name="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/jpg" required />
+                    <div id="uploadPlaceholder" class="space-y-3 pointer-events-none transition-opacity duration-300">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"></i>
+                        <p class="font-semibold text-primary text-sm sm:text-base">
+                            Seret & letakkan file, atau
+                            <span class="text-brand font-bold">jelajahi file</span>
+                        </p>
+                        <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
+                    </div>
+                    <div id="imagePreview" class="hidden text-center pointer-events-none transition-opacity duration-300 opacity-0"></div>
+                </div>
+                <button type="submit" id="submitButton" class="button-base button-primary w-full mt-6" disabled>
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    <span id="buttonText">Mulai Analisis</span>
+                    <div id="buttonSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-t-2 border-r-2 border-white"></div>
+                </button>
+            </form>
         </section>
-      </main>
+    </main>
+</div>
 
-      <footer class="text-center mt-12 text-sm text-muted">
-        <p>
-          &copy; <span id="currentYear"></span> GrapeCheck. Seluruh hak cipta
-          dilindungi.
-        </p>
-      </footer>
-    </div>
+<div id="toast" class="toast">
+    <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
+    <p id="toast-message">Pesan error akan muncul di sini.</p>
+</div>
+{% endblock %}
 
-    <div id="toast" class="toast">
-      <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
-      <p id="toast-message">Pesan error akan muncul di sini.</p>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
-  </body>
-</html>
+{% block body_scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}
