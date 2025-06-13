@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Tentang GrapeCheck{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+    <header class="text-center mb-12 animate-slide-in-up">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">Tentang GrapeCheck</h1>
+        <p class="mt-2 text-lg sm:text-xl text-secondary">Mengenal lebih jauh misi dan teknologi di balik aplikasi ini.</p>
+    </header>
+
+    <main class="space-y-8">
+
+        <section class="card-layout animate-stagger-in" style="--delay: 100ms;">
+            <div class="flex items-center gap-4">
+                <i class="fa-solid fa-rocket text-2xl text-brand"></i>
+                <h2 class="text-2xl font-bold text-primary">Misi Kami</h2>
+            </div>
+            <p class="mt-4 text-secondary leading-relaxed">
+                Misi GrapeCheck adalah untuk memberdayakan petani anggur dan penghobi tanaman dengan menyediakan alat bantu yang mudah diakses dan berbasis teknologi untuk mendeteksi penyakit pada daun anggur secara dini. Kami percaya deteksi dini adalah kunci untuk menjaga kesehatan tanaman dan memastikan panen yang berkualitas.
+            </p>
+        </section>
+
+        <section class="card-layout animate-stagger-in" style="--delay: 200ms;">
+             <div class="flex items-center gap-4">
+                <i class="fa-solid fa-list-check text-2xl text-brand"></i>
+                <h2 class="text-2xl font-bold text-primary">Cara Penggunaan</h2>
+            </div>
+            <ol class="mt-4 space-y-4 list-none text-secondary">
+                <li class="flex items-start gap-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand text-white font-bold flex-shrink-0">1</span>
+                    <span><strong>Ambil Foto:</strong> Ambil foto satu helai daun anggur yang menunjukkan gejala dengan jelas. Pastikan pencahayaan cukup dan latar belakangnya polos.</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand text-white font-bold flex-shrink-0">2</span>
+                    <span><strong>Unggah Gambar:</strong> Gunakan tombol "Jelajahi File" atau seret dan letakkan file gambar Anda ke area yang disediakan di halaman utama.</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand text-white font-bold flex-shrink-0">3</span>
+                    <span><strong>Dapatkan Hasil:</strong> Aplikasi akan menganalisis gambar dan memberikan hasil diagnosis beserta tingkat keyakinan dan rekomendasi penanganan.</span>
+                </li>
+            </ol>
+        </section>
+
+        <section class="card-layout animate-stagger-in" style="--delay: 300ms;">
+            <div class="flex items-center gap-4">
+                <i class="fa-solid fa-microchip text-2xl text-brand"></i>
+                <h2 class="text-2xl font-bold text-primary">Tentang Teknologi</h2>
+            </div>
+            <p class="mt-4 text-secondary leading-relaxed">
+                GrapeCheck menggunakan model komputasi canggih yang telah dilatih dengan ribuan gambar daun anggur untuk dapat mengenali pola-pola penyakit secara visual. Teknologi ini memungkinkan aplikasi untuk memberikan estimasi diagnosis berdasarkan gambar yang Anda unggah.
+            </p>
+            <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/50 border-l-4 border-yellow-400 text-yellow-800 dark:text-yellow-200">
+                <p class="font-bold">Disclaimer:</p>
+                <p>Hasil dari aplikasi ini adalah alat bantu dan tidak dimaksudkan untuk menggantikan diagnosis maupun saran dari ahli pertanian profesional. Akurasi dapat bervariasi tergantung pada kualitas gambar dan kondisi lainnya.</p>
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}

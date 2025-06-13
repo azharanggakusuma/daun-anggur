@@ -122,14 +122,12 @@ def upload_file():
         return jsonify({'error': 'Jenis file tidak valid. Harap unggah file JPG, JPEG, atau PNG.'}), 400
         
     if file:
-        # Amankan nama file dan buat nama unik untuk menghindari konflik
         original_filename = secure_filename(file.filename)
         file_extension = original_filename.rsplit('.', 1)[1].lower()
         unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         file.save(save_path)
         
-        # Kembalikan URL untuk halaman hasil
         return jsonify({'success': True, 'redirect_url': url_for('hasil', filename=unique_filename)})
         
     return redirect(url_for('index'))
@@ -141,10 +139,8 @@ def hasil(filename):
     if not os.path.exists(save_path):
         return "File tidak ditemukan.", 404
         
-    # Proses gambar untuk mendapatkan diagnosis
     label, confidence, all_probs = process_prediction(save_path)
     
-    # Siapkan data untuk ditampilkan di template
     wib = pytz.timezone('Asia/Jakarta')
     timestamp = datetime.now(wib).isoformat()
     
@@ -164,7 +160,6 @@ def penyakit():
     """Menampilkan halaman informasi semua penyakit."""
     return render_template('penyakit.html', disease_info=disease_info)
 
-# Route baru untuk menangani feedback dari pengguna
 @app.route('/feedback', methods=['POST'])
 def feedback():
     """Menerima dan mencatat feedback akurasi dari pengguna."""
@@ -173,13 +168,18 @@ def feedback():
         return jsonify({'status': 'error', 'message': 'Data tidak lengkap'}), 400
     
     try:
-        # Simpan feedback ke dalam sebuah file log sederhana
         with open('feedback.log', 'a') as f:
             f.write(f"{datetime.now().isoformat()},{data['filename']},{data['feedback']}\n")
         return jsonify({'status': 'success'}), 200
     except Exception as e:
         print(f"Gagal menyimpan feedback: {e}")
         return jsonify({'status': 'error', 'message': 'Gagal menyimpan feedback'}), 500
+
+# Route baru untuk halaman Tentang
+@app.route('/tentang')
+def tentang():
+    """Menampilkan halaman Tentang Aplikasi."""
+    return render_template('tentang.html')
 
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':

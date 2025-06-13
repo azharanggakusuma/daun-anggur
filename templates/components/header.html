@@ -27,6 +27,14 @@
             <span class="sm:hidden">Info</span>
         </a>
 
+        <a href="{{ url_for('tentang') }}" title="Tentang Aplikasi"
+           class="flex h-full w-full flex-col items-center justify-center gap-1 text-xs transition-colors
+                  {% if request.endpoint == 'tentang' %} text-brand {% else %} text-muted hover:text-primary {% endif %}
+                  sm:h-11 sm:w-11 sm:rounded-full sm:bg-secondary sm:border sm:border-primary sm:shadow-md sm:hover:text-brand sm:hover:border-brand sm:hover:scale-110 sm:hover:shadow-lg sm:transition-all sm:duration-200">
+            <i class="fa-solid fa-circle-info text-xl sm:text-base"></i>
+            <span class="sm:hidden">Tentang</span>
+        </a>
+
         <button id="theme-toggle" title="Ganti Tema" aria-label="Ganti antara mode terang dan gelap"
                 class="flex h-full w-full flex-col items-center justify-center gap-1 text-xs text-muted transition-colors hover:text-primary
                        sm:h-11 sm:w-11 sm:rounded-full sm:bg-secondary sm:border sm:border-primary sm:shadow-md sm:hover:text-brand sm:hover:border-brand sm:hover:scale-110 sm:hover:shadow-lg sm:transition-all sm:duration-200">
