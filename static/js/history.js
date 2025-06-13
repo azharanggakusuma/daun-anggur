@@ -5,15 +5,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Elemen Modal
     const modal = document.getElementById("delete-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalText = document.getElementById("modal-text");
     const modalCancelButton = document.getElementById("modal-cancel-button");
     const modalConfirmButton = document.getElementById("modal-confirm-button");
-    let itemToDelete = null;
     
+    // Variabel untuk menyimpan aksi yang akan dijalankan
+    let currentAction = { type: null, data: null };
+
     // Elemen manajemen riwayat
     const searchInput = document.getElementById('search-history');
     const clearHistoryButton = document.getElementById('clear-history-button');
     
-    // Elemen baru untuk pesan "tidak ada hasil"
     const noSearchResultsMessage = document.getElementById('no-search-results');
     const searchQueryDisplay = document.getElementById('search-query-display');
 
@@ -27,16 +30,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderHistory() {
         historyContainer.innerHTML = '';
-        
+        const managementPanel = document.querySelector('.mb-8.flex');
+
         if (history.length === 0) {
             emptyHistoryMessage.classList.remove("hidden");
-            // Sembunyikan juga panel manajemen jika tidak ada riwayat
-            const managementPanel = document.querySelector('.mb-8.flex');
-            if(managementPanel) managementPanel.classList.add('hidden');
+            if (managementPanel) managementPanel.classList.add('hidden');
         } else {
             emptyHistoryMessage.classList.add("hidden");
+            if (managementPanel) managementPanel.classList.remove('hidden');
+            
             const fragment = document.createDocumentFragment();
-
             history.forEach((item, index) => {
                 const date = new Date(item.timestamp);
                 const desktopDate = new Intl.DateTimeFormat("id-ID", { year: "numeric", month: "long", day: "numeric" }).format(date);
@@ -74,62 +77,74 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function showModal(filename) {
-        itemToDelete = filename;
+    function showModal(type, data = null) {
+        currentAction = { type, data };
+        if (type === 'single') {
+            modalTitle.textContent = 'Konfirmasi Penghapusan';
+            modalText.textContent = 'Apakah Anda yakin ingin menghapus riwayat ini secara permanen? Tindakan ini tidak dapat dibatalkan.';
+            modalConfirmButton.textContent = 'Ya, Hapus';
+        } else if (type === 'all') {
+            modalTitle.textContent = 'Hapus Semua Riwayat?';
+            modalText.textContent = 'Apakah Anda yakin ingin menghapus SEMUA riwayat secara permanen? Tindakan ini tidak dapat dibatalkan.';
+            modalConfirmButton.textContent = 'Ya, Hapus Semua';
+        }
         modal.classList.add('visible');
     }
 
     function hideModal() {
-        itemToDelete = null;
+        currentAction = { type: null, data: null };
         modal.classList.remove('visible');
     }
 
-    function deleteHistoryItem(filename) {
-        if (!filename) return;
-
-        // Cari elemen card yang akan dihapus
-        const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`).closest('.history-card');
-        
+    function deleteSingleItem(filename) {
+        const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`)?.closest('.history-card');
         if (cardToDelete) {
-            // Tambahkan kelas animasi keluar
             cardToDelete.classList.add('animate-fade-out-shrink');
-
-            // Tunggu animasi selesai, baru hapus dari data dan DOM
             setTimeout(() => {
                 history = history.filter(item => item.filename !== filename);
                 localStorage.setItem('analysisHistory', JSON.stringify(history));
-                
-                // Render ulang riwayat setelah data diperbarui
-                // Ini akan secara efektif menghapus elemen dari DOM
-                renderHistory(); 
-
-                // Jika container menjadi kosong, tampilkan pesan
-                if(history.length === 0) {
-                    emptyHistoryMessage.classList.remove("hidden");
-                    const managementPanel = document.querySelector('.mb-8.flex');
-                    if(managementPanel) managementPanel.classList.add('hidden');
-                }
-
-            }, 400); // Durasi harus cocok dengan durasi animasi CSS
+                renderHistory();
+            }, 400);
         }
-        hideModal();
+    }
+    
+    function deleteAllHistory() {
+        localStorage.removeItem('analysisHistory');
+        history = [];
+        renderHistory();
     }
 
-    // Event listener untuk semua tombol hapus
+    // Event listener untuk tombol hapus tunggal
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
             event.preventDefault();
             const filename = deleteButton.dataset.filename;
-            showModal(filename);
+            showModal('single', filename);
         }
     });
+
+    // Event listener untuk tombol Hapus Semua
+    if (clearHistoryButton) {
+        clearHistoryButton.addEventListener('click', () => {
+            if (history.length > 0) {
+                showModal('all');
+            } else {
+                alert('Riwayat Anda sudah kosong.');
+            }
+        });
+    }
 
     // Event listener untuk tombol di dalam modal
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
         modalConfirmButton.addEventListener('click', () => {
-            deleteHistoryItem(itemToDelete);
+            if (currentAction.type === 'single') {
+                deleteSingleItem(currentAction.data);
+            } else if (currentAction.type === 'all') {
+                deleteAllHistory();
+            }
+            hideModal();
         });
     }
     
@@ -139,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const query = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.history-card');
             let visibleCount = 0;
-            
             cards.forEach(card => {
                 const label = card.querySelector('.font-bold').textContent.toLowerCase();
                 if (label.includes(query)) {
@@ -149,28 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     card.style.display = 'none';
                 }
             });
-
-            // Logika untuk menampilkan/menyembunyikan pesan "tidak ada hasil"
             if (visibleCount === 0 && query !== '') {
-                if(searchQueryDisplay) searchQueryDisplay.textContent = e.target.value;
-                if(noSearchResultsMessage) noSearchResultsMessage.classList.remove('hidden');
+                if (searchQueryDisplay) searchQueryDisplay.textContent = e.target.value;
+                if (noSearchResultsMessage) noSearchResultsMessage.classList.remove('hidden');
             } else {
-                if(noSearchResultsMessage) noSearchResultsMessage.classList.add('hidden');
-            }
-        });
-    }
-
-    // Event listener untuk tombol Hapus Semua
-    if (clearHistoryButton) {
-        clearHistoryButton.addEventListener('click', () => {
-            if (history.length > 0) {
-                if (confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat? Tindakan ini tidak dapat dibatalkan.')) {
-                    localStorage.removeItem('analysisHistory');
-                    history = [];
-                    renderHistory();
-                }
-            } else {
-                alert('Riwayat Anda sudah kosong.');
+                if (noSearchResultsMessage) noSearchResultsMessage.classList.add('hidden');
             }
         });
     }
