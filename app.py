@@ -159,11 +159,27 @@ def hasil(filename):
     
     return render_template('hasil.html', result=result_data, disease_info=disease_info)
 
-# Route baru untuk halaman informasi penyakit
 @app.route('/penyakit')
 def penyakit():
     """Menampilkan halaman informasi semua penyakit."""
     return render_template('penyakit.html', disease_info=disease_info)
+
+# Route baru untuk menangani feedback dari pengguna
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    """Menerima dan mencatat feedback akurasi dari pengguna."""
+    data = request.get_json()
+    if not data or 'filename' not in data or 'feedback' not in data:
+        return jsonify({'status': 'error', 'message': 'Data tidak lengkap'}), 400
+    
+    try:
+        # Simpan feedback ke dalam sebuah file log sederhana
+        with open('feedback.log', 'a') as f:
+            f.write(f"{datetime.now().isoformat()},{data['filename']},{data['feedback']}\n")
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        print(f"Gagal menyimpan feedback: {e}")
+        return jsonify({'status': 'error', 'message': 'Gagal menyimpan feedback'}), 500
 
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':

@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalCancelButton = document.getElementById("modal-cancel-button");
     const modalConfirmButton = document.getElementById("modal-confirm-button");
     let itemToDelete = null;
+    
+    // Elemen baru untuk manajemen riwayat
+    const searchInput = document.getElementById('search-history');
+    const clearHistoryButton = document.getElementById('clear-history-button');
 
     const diseaseInfo = {
         'Sehat': { color: 'green', icon: 'fa-leaf' },
@@ -18,16 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     function renderHistory() {
-        // Selalu kosongkan kontainer utama terlebih dahulu
         historyContainer.innerHTML = '';
         
         if (history.length === 0) {
-            // JIKA RIWAYAT KOSONG: Tampilkan pesan dan sembunyikan kontainer
             emptyHistoryMessage.classList.remove("hidden");
         } else {
-            // JIKA ADA RIWAYAT: Sembunyikan pesan
             emptyHistoryMessage.classList.add("hidden");
-            
             const fragment = document.createDocumentFragment();
 
             history.forEach((item, index) => {
@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const mobileDate = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(date);
                 const info = diseaseInfo[item.label] || diseaseInfo['Negative'];
 
-                // Kartu sekarang adalah DIV, bukan A, untuk menampung link dan tombol
                 const cardDiv = document.createElement('div');
                 cardDiv.className = `history-card animate-stagger-in`;
                 cardDiv.style.setProperty('--delay', `${index * 60}ms`);
@@ -102,6 +101,36 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
         modalConfirmButton.addEventListener('click', deleteHistoryItem);
+    }
+    
+    // Event listener untuk pencarian
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            document.querySelectorAll('.history-card').forEach(card => {
+                const label = card.querySelector('.font-bold').textContent.toLowerCase();
+                if (label.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Event listener untuk tombol Hapus Semua
+    if (clearHistoryButton) {
+        clearHistoryButton.addEventListener('click', () => {
+            if (history.length > 0) {
+                if (confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat? Tindakan ini tidak dapat dibatalkan.')) {
+                    localStorage.removeItem('analysisHistory');
+                    history = [];
+                    renderHistory();
+                }
+            } else {
+                alert('Riwayat Anda sudah kosong.');
+            }
+        });
     }
 
     // Render riwayat saat halaman pertama kali dimuat

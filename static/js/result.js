@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formatNumberedList = (title, list) => list && list.length ? `${title}:\n${list.map((item, index) => `${index + 1}. ${item}`).join('\n')}\n\n` : '';
             
             // Buat teks laporan yang rapi
-            const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDASI TINDAKAN', info.action)}----------------------------------`;
+            const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDasi TINDAKAN', info.action)}----------------------------------`;
             
             navigator.clipboard.writeText(reportText.trim()).then(() => {
                 // Beri feedback visual kepada pengguna
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     // --- Logika untuk Tombol Bagikan ---
     const shareButton = document.getElementById("shareButton");
     if (shareButton && navigator.share) {
@@ -120,6 +120,44 @@ document.addEventListener('DOMContentLoaded', function() {
         shareButton.style.display = "none";
     }
 
+    // --- Logika untuk Tombol Feedback ---
+    const feedbackSection = document.getElementById('feedback-section');
+    if (feedbackSection) {
+        const btnCorrect = document.getElementById('feedback-correct');
+        const btnIncorrect = document.getElementById('feedback-incorrect');
+        const thanksMsg = document.getElementById('feedback-thanks');
+
+        const handleFeedback = (feedbackValue) => {
+            // Kirim data ke server
+            fetch('/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    filename: RESULT_DATA.image,
+                    feedback: feedbackValue
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Beri respon visual ke pengguna setelah berhasil
+                    btnCorrect.disabled = true;
+                    btnIncorrect.disabled = true;
+                    btnCorrect.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnIncorrect.classList.add('opacity-50', 'cursor-not-allowed');
+                    thanksMsg.classList.remove('hidden');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+
+        btnCorrect.addEventListener('click', () => handleFeedback('correct'));
+        btnIncorrect.addEventListener('click', () => handleFeedback('incorrect'));
+    }
 
     // --- Fungsi Unduh Laporan sebagai PDF ---
     const downloadButton = document.getElementById('downloadButton');
