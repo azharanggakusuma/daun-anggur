@@ -651,6 +651,8 @@ html.dark .toast {
     height: 100%;
   }
 
+  /* Ganti aturan .nav-item lama dengan yang ini di dalam @media (max-width: 639px) */
+
   .nav-item {
     display: flex;
     flex-direction: column;
@@ -659,22 +661,33 @@ html.dark .toast {
     color: var(--text-muted);
     height: 100%;
     flex-grow: 1;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease-in-out;
   }
 
- .nav-item i {
-    font-size: 1.25rem; 
+  .nav-item i {
+    font-size: 1.25rem;
     margin-bottom: 4px;
-    transition: font-size 0.2s ease;
+    /* Kita tidak lagi menggunakan transisi di sini, karena akan digantikan oleh keyframes */
   }
 
   .nav-item .nav-text {
     font-size: 0.7rem;
-    display: block; /* Selalu tampilkan teks menu */
+    display: block;
+    transition: transform 0.2s ease-in-out;
   }
 
+  /* --- Keadaan AKTIF dengan Animasi Baru --- */
   .nav-item.active {
     color: var(--brand-color);
+  }
+
+  .nav-item.active i {
+    /* Menerapkan animasi 'jiggle' ke ikon yang aktif */
+    animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .nav-item.active .nav-text {
+    transform: translateY(-1px);
   }
 
   #app-nav #theme-toggle.fab {
@@ -738,5 +751,24 @@ html.dark .toast {
   html.dark #app-nav #theme-toggle.fab #theme-icon-moon {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+/* --- Definisi Animasi Ikon Gojek-Style --- */
+@keyframes gojek-jiggle {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.85) rotate(-5deg);
+  }
+  60% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  80% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
   }
 }
