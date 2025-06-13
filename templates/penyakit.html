@@ -11,7 +11,7 @@
     <main class="space-y-8">
         {% for key, info in disease_info.items() %}
             {% if key not in ['Sehat', 'Negative'] %}
-            <section class="card-layout animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
+            <section class="card-layout card-interactive animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
                 <h2 class="text-2xl font-bold text-brand-gradient mb-4">{{ key }}</h2>
                 <p class="mb-6 text-secondary leading-relaxed">{{ info.description }}</p>
                 

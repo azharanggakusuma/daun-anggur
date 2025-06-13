@@ -82,20 +82,20 @@
                     <div id="tab-desc" class="tab-pane prose prose-sm max-w-none text-secondary leading-relaxed" role="tabpanel"><p>{{ result.info.description }}</p></div>
                     <div id="tab-symptoms" class="tab-pane hidden" role="tabpanel">
                         <h4 class="font-bold text-lg mb-3 text-primary">Gejala Umum</h4>
-                        <ul class="space-y-3 list-inside text-secondary mb-6 leading-relaxed">
+                        <ul class="stagger-list space-y-3 list-inside text-secondary mb-6 leading-relaxed">
                             {% for symptom in result.info.symptoms %}
                             <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
                             {% endfor %}
                         </ul>
                         <h4 class="font-bold text-lg mb-3 text-primary">Faktor Pemicu</h4>
-                        <ul class="space-y-3 list-inside text-secondary leading-relaxed">
+                        <ul class="stagger-list space-y-3 list-inside text-secondary leading-relaxed">
                             {% for trigger in result.info.triggers %}
                             <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-yellow-500 text-xs"></i><span>{{ trigger }}</span></li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div id="tab-action" class="tab-pane hidden" role="tabpanel">
-                        <ul class="space-y-3 list-inside text-secondary leading-relaxed">
+                        <ul class="stagger-list space-y-3 list-inside text-secondary leading-relaxed">
                             {% for step in result.info.action %}
                             <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
                             {% endfor %}

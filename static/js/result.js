@@ -47,12 +47,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100); // Beri sedikit jeda agar transisi terlihat
     }
 
-    // --- Logika Kontrol Tab ---
+    // --- Logika Kontrol Tab dengan Animasi List ---
     const tabContainer = document.getElementById('tab-buttons');
     if (tabContainer) {
         const tabButtons = tabContainer.querySelectorAll('.tab-button');
         const tabPanes = document.getElementById('tab-content').querySelectorAll('.tab-pane');
-        
+
+        const animateListItems = (pane) => {
+            const lists = pane.querySelectorAll('.stagger-list');
+            lists.forEach(list => {
+                const items = list.querySelectorAll('li');
+                items.forEach((item, index) => {
+                    // Hapus animasi sebelumnya agar bisa diputar lagi
+                    item.classList.remove('animate-stagger-in');
+                    item.style.animationDelay = '0s';
+
+                    // Terapkan animasi baru
+                    setTimeout(() => {
+                        item.classList.add('animate-stagger-in');
+                        item.style.animationDelay = `${index * 80}ms`;
+                    }, 10);
+                });
+            });
+        };
+
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetId = button.getAttribute('data-tab');
@@ -65,19 +83,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 tabPanes.forEach(pane => {
                     pane.classList.add('hidden');
-                    pane.classList.remove('animate-fade-in'); // Hapus kelas animasi sebelumnya
+                    pane.classList.remove('animate-fade-in');
                 });
 
                 // Aktifkan tombol yang diklik dan tampilkan panel yang sesuai
                 button.classList.add('active');
                 button.setAttribute('aria-selected', 'true');
-                if (targetPane) { 
-                    targetPane.classList.remove('hidden'); 
-                    // Tambahkan kelas animasi untuk efek fade-in
+                if (targetPane) {
+                    targetPane.classList.remove('hidden');
                     targetPane.classList.add('animate-fade-in');
+                    // Panggil fungsi untuk menganimasikan item list di dalam panel
+                    animateListItems(targetPane);
                 }
             });
         });
+
+        // Animasikan daftar di tab pertama yang aktif saat halaman dimuat
+        const initialActivePane = document.querySelector('.tab-pane:not(.hidden)');
+        if(initialActivePane) {
+            animateListItems(initialActivePane);
+        }
     }
 
     // --- Fungsi Salin Laporan ke Clipboard ---
