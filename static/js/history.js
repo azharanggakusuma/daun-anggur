@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const historyContainer = document.getElementById("history-container");
     const emptyHistoryMessage = document.getElementById("empty-history");
-    const skeletonContainer = document.getElementById("history-skeleton"); // KODE BARU
+    const skeletonContainer = document.getElementById("history-skeleton");
     let history = JSON.parse(localStorage.getItem("analysisHistory")) || [];
 
     const modal = document.getElementById("delete-modal");
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalConfirmButton = document.getElementById("modal-confirm-button");
     
     let currentAction = { type: null, data: null };
+    let lastFocusedElement; // KODE BARU: Untuk menyimpan elemen yang terakhir fokus
 
     const searchInput = document.getElementById('search-history');
     const clearHistoryButton = document.getElementById('clear-history-button');
@@ -27,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     function renderHistory() {
-        // KODE BARU: Logika untuk menyembunyikan skeleton dan menampilkan konten
         if (skeletonContainer) skeletonContainer.classList.add('hidden');
         if (historyContainer) historyContainer.classList.remove('hidden');
 
@@ -80,7 +80,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function showModal(type, data = null) {
+        lastFocusedElement = document.activeElement; // KODE BARU: Simpan fokus saat ini
         currentAction = { type, data };
+
         if (type === 'single') {
             modalTitle.textContent = 'Konfirmasi Penghapusan';
             modalText.textContent = 'Apakah Anda yakin ingin menghapus riwayat ini secara permanen? Tindakan ini tidak dapat dibatalkan.';
@@ -90,12 +92,17 @@ document.addEventListener("DOMContentLoaded", function () {
             modalText.textContent = 'Apakah Anda yakin ingin menghapus SEMUA riwayat secara permanen? Tindakan ini tidak dapat dibatalkan.';
             modalConfirmButton.textContent = 'Ya, Hapus Semua';
         }
+
         modal.classList.add('visible');
+        modalCancelButton.focus(); // KODE BARU: Pindahkan fokus ke tombol Batal
     }
 
     function hideModal() {
         currentAction = { type: null, data: null };
         modal.classList.remove('visible');
+        if (lastFocusedElement) {
+            lastFocusedElement.focus(); // KODE BARU: Kembalikan fokus
+        }
     }
 
     function deleteSingleItem(filename) {
@@ -170,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // KODE BARU: Logika untuk menampilkan skeleton sebelum render
     if (historyContainer) {
         setTimeout(() => {
             renderHistory();

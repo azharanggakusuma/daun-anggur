@@ -58,11 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
             lists.forEach(list => {
                 const items = list.querySelectorAll('li');
                 items.forEach((item, index) => {
-                    // Hapus animasi sebelumnya agar bisa diputar lagi
                     item.classList.remove('animate-stagger-in');
                     item.style.animationDelay = '0s';
 
-                    // Terapkan animasi baru
                     setTimeout(() => {
                         item.classList.add('animate-stagger-in');
                         item.style.animationDelay = `${index * 80}ms`;
@@ -76,29 +74,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 const targetId = button.getAttribute('data-tab');
                 const targetPane = document.getElementById(targetId);
 
-                // Non-aktifkan semua tombol dan sembunyikan semua panel
                 tabButtons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.setAttribute('aria-selected', 'false');
                 });
                 tabPanes.forEach(pane => {
                     pane.classList.add('hidden');
-                    pane.classList.remove('animate-fade-in');
+                    pane.classList.remove('animate-fade-in'); // KODE BARU: Hapus kelas animasi
                 });
 
-                // Aktifkan tombol yang diklik dan tampilkan panel yang sesuai
                 button.classList.add('active');
                 button.setAttribute('aria-selected', 'true');
                 if (targetPane) {
                     targetPane.classList.remove('hidden');
-                    targetPane.classList.add('animate-fade-in');
-                    // Panggil fungsi untuk menganimasikan item list di dalam panel
+                    
+                    // KODE BARU: Beri jeda kecil sebelum memutar animasi lagi
+                    setTimeout(() => {
+                        targetPane.classList.add('animate-fade-in');
+                    }, 10);
+                    
                     animateListItems(targetPane);
                 }
             });
         });
 
-        // Animasikan daftar di tab pertama yang aktif saat halaman dimuat
         const initialActivePane = document.querySelector('.tab-pane:not(.hidden)');
         if(initialActivePane) {
             animateListItems(initialActivePane);
@@ -113,11 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const formatList = (title, list) => list && list.length ? `${title}:\n${list.map(item => `• ${item}`).join('\n')}\n\n` : '';
             const formatNumberedList = (title, list) => list && list.length ? `${title}:\n${list.map((item, index) => `${index + 1}. ${item}`).join('\n')}\n\n` : '';
             
-            // Buat teks laporan yang rapi
             const reportText = `--- Laporan Analisis Daun Anggur ---\nTanggal: ${formattedTimestamp}\n\nDIAGNOSIS: ${label} (Tingkat Keyakinan: ${confidence.toFixed(2)}%)\n\nDESKRIPSI:\n${info.description}\n\n${formatList('GEJALA UMUM', info.symptoms)}${formatList('FAKTOR PEMICU', info.triggers)}${formatNumberedList('REKOMENDASI TINDAKAN', info.action)}----------------------------------`;
             
             navigator.clipboard.writeText(reportText.trim()).then(() => {
-                // Beri feedback visual kepada pengguna
                 const copyButtonText = document.getElementById('copyButtonText');
                 const copyIcon = document.getElementById('copyIcon');
                 copyButtonText.innerText = 'Tersalin!';
@@ -148,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     } else if (shareButton) {
-        // Nonaktifkan tombol dan beri tooltip jika tidak didukung
         shareButton.disabled = true;
         shareButton.title = "Fitur 'Bagikan' hanya tersedia di browser mobile dan koneksi HTTPS.";
         shareButton.classList.add('opacity-50', 'cursor-not-allowed');
@@ -161,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnIncorrect = document.getElementById('feedback-incorrect');
         const thanksMsg = document.getElementById('feedback-thanks');
 
-        // Fungsi untuk mengubah UI ke state "sudah disubmit"
         const setFeedbackSubmittedState = () => {
             btnCorrect.disabled = true;
             btnIncorrect.disabled = true;
@@ -170,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
             thanksMsg.classList.remove('hidden');
         };
 
-        // Fungsi untuk menangani klik tombol feedback
         const handleFeedback = (feedbackValue) => {
             fetch('/feedback', {
                 method: 'POST',
@@ -188,22 +182,17 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 if (data.status === 'success') {
-                    // Simpan status feedback ke localStorage
                     let feedbackHistory = JSON.parse(localStorage.getItem('feedbackHistory')) || {};
                     feedbackHistory[RESULT_DATA.image] = feedbackValue;
                     localStorage.setItem('feedbackHistory', JSON.stringify(feedbackHistory));
-
-                    // Update UI
                     setFeedbackSubmittedState();
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
-                // Mungkin tampilkan pesan error kepada pengguna
             });
         };
         
-        // Cek saat halaman dimuat apakah feedback sudah pernah diberikan
         const checkInitialFeedbackState = () => {
             let feedbackHistory = JSON.parse(localStorage.getItem('feedbackHistory')) || {};
             if (feedbackHistory[RESULT_DATA.image]) {
@@ -214,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btnCorrect.addEventListener('click', () => handleFeedback('correct'));
         btnIncorrect.addEventListener('click', () => handleFeedback('incorrect'));
 
-        // Jalankan pengecekan status awal saat halaman selesai dimuat
         checkInitialFeedbackState();
     }
 
@@ -227,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
             downloadButtonText.innerText = 'Membuat...';
             downloadButton.disabled = true;
 
-            setTimeout(() => { // Beri jeda agar UI bisa update
+            setTimeout(() => { 
                 try {
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -241,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const colorMap = { 'green': '#16a34a', 'red': '#dc2626', 'orange': '#f97316', 'yellow': '#eab308', 'zinc': '#71717a' };
                     const diagnosisColor = colorMap[info.color] || '#71717a';
 
-                    // Fungsi untuk menambah header di setiap halaman
                     const addHeader = () => {
                         pdf.setFillColor(primaryColor);
                         pdf.rect(0, 0, pageWidth, 25, 'F');
@@ -252,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         yPosition = 35;
                     };
 
-                    // Fungsi untuk menambah footer di setiap halaman
                     const addFooter = (pageNumber, pageCount) => {
                         pdf.setFontSize(8);
                         pdf.setTextColor(lightTextColor);
@@ -262,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         pdf.text('© GrapeCheck', margin, 285);
                     };
 
-                    // Cek jika butuh halaman baru
                     const checkPageBreak = () => {
                         if (yPosition > 260) {
                             pdf.addPage();
@@ -270,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     };
                     
-                    // Fungsi untuk menambah bagian (judul + konten)
                     const addSection = (title, content, options = {}) => {
                         checkPageBreak();
                         pdf.setFontSize(options.size || 12);
@@ -288,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     };
 
-                    // Fungsi untuk menambah daftar (list)
                     const addList = (title, list, isNumbered) => {
                         if (!list || list.length === 0) return;
                         addSection(title, null);
@@ -306,7 +289,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         yPosition += 6;
                     };
 
-                    // --- Mulai Membuat Konten PDF ---
                     addHeader();
 
                     pdf.setFontSize(9);
@@ -338,7 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
                            Object.entries(all_probs).sort(([, a], [, b]) => b - a).map(([disease, prob]) => `${disease}: ${prob.toFixed(2)}%`), false);
                     }
 
-                    // Tambahkan footer ke semua halaman yang ada
                     const pageCount = pdf.internal.getNumberOfPages();
                     for (let i = 1; i <= pageCount; i++) {
                         pdf.setPage(i);

@@ -17,5 +17,21 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Analisis Baru",
+      "short_name": "Analisis",
+      "description": "Mulai analisis penyakit daun anggur baru",
+      "url": "/",
+      "icons": [{ "src": "/static/images/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Lihat Riwayat",
+      "short_name": "Riwayat",
+      "description": "Lihat riwayat analisis sebelumnya",
+      "url": "/riwayat",
+      "icons": [{ "src": "/static/images/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
   ]
 }
