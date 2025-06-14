@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Panduan & Informasi{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12 md:py-16 animate-page-in">
+    <header class="text-center mb-16 animate-slide-in-up">
+        <h1 class="text-3xl sm:text-4xl font-bold text-primary">Panduan & Informasi</h1>
+        <p class="mt-2 text-lg sm:text-xl text-secondary">Semua yang Anda butuhkan untuk kebun anggur yang sehat.</p>
+    </header>
+
+    <section id="informasi-penyakit" class="mb-20">
+        <h2 class="text-2xl font-bold text-primary mb-8 text-center sm:text-left">Informasi Penyakit</h2>
+        <main class="space-y-4">
+            {% for key, info in disease_info.items() %}
+                {% if key not in ['Sehat', 'Negative'] %}
+                <details class="accordion-item group animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;" {% if loop.first %}open{% endif %}>
+                    <summary class="accordion-summary">
+                        <span class="text-base md:text-lg font-semibold text-primary group-hover:text-brand">{{ key }}</span>
+                        <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+                    </summary>
+                    <div class="accordion-content">
+                        <p class="mb-6 text-secondary leading-relaxed border-b border-primary/10 pb-6 text-sm md:text-base">{{ info.description }}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            <div>
+                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Gejala Umum</h3>
+                                <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
+                                    {% for symptom in info.symptoms %}
+                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Rekomendasi Penanganan</h3>
+                                <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
+                                    {% for step in info.action %}
+                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+                {% endif %}
+            {% endfor %}
+        </main>
+    </section>
+
+    <section id="tips-perawatan" class="border-t border-primary/20 pt-16">
+        <h2 class="text-2xl font-bold text-primary mb-8 text-center sm:text-left">Tips Perawatan Umum</h2>
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {% for tip in tips %}
+            <div class="card-layout card-interactive flex flex-col animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
+                <div class="flex-shrink-0 mb-4">
+                    <div class="flex items-center justify-center h-14 w-14 rounded-full bg-brand/10 text-brand">
+                        <i class="fa-solid {{ tip.icon }} text-2xl"></i>
+                    </div>
+                </div>
+                <div class="flex-grow">
+                    <h2 class="text-lg md:text-xl font-bold text-primary mb-2">{{ tip.title }}</h2>
+                    <p class="text-secondary leading-relaxed text-sm md:text-base">{{ tip.summary }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </main>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ url_for('static', filename='js/accordion.js') }}"></script>
+{% endblock %}

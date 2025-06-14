@@ -155,10 +155,34 @@ def hasil(filename):
     
     return render_template('hasil.html', result=result_data, disease_info=disease_info)
 
-@app.route('/penyakit')
-def penyakit():
-    """Menampilkan halaman informasi semua penyakit."""
-    return render_template('penyakit.html', disease_info=disease_info)
+# PERUBAHAN: Nama route diubah dari /penyakit menjadi /panduan
+@app.route('/panduan')
+def panduan():
+    """Menampilkan halaman panduan informasi penyakit dan tips."""
+    tips_data = [
+        {
+            "title": "Pencegahan Jamur di Musim Hujan",
+            "summary": "Pastikan sirkulasi udara yang baik dengan pemangkasan rutin dan hindari genangan air di sekitar akar untuk menekan pertumbuhan jamur.",
+            "icon": "fa-cloud-showers-heavy"
+        },
+        {
+            "title": "Pemupukan yang Tepat",
+            "summary": "Gunakan pupuk NPK seimbang pada fase vegetatif dan tingkatkan Kalium (K) saat memasuki fase pembuahan untuk hasil yang maksimal.",
+            "icon": "fa-seedling"
+        },
+        {
+            "title": "Waktu Terbaik Menyiram",
+            "summary": "Lakukan penyiraman di pagi hari untuk memberi waktu daun mengering sebelum malam, mengurangi risiko penyakit akibat kelembapan.",
+            "icon": "fa-tint"
+        },
+        {
+            "title": "Pentingnya Sanitasi Kebun",
+            "summary": "Bersihkan daun dan ranting yang gugur secara teratur. Sisa tanaman dapat menjadi tempat berkembang biak bagi hama dan penyakit.",
+            "icon": "fa-broom"
+        }
+    ]
+    # PERUBAHAN: Nama file template diubah menjadi panduan.html
+    return render_template('panduan.html', disease_info=disease_info, tips=tips_data)
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
@@ -175,7 +199,6 @@ def feedback():
         print(f"Gagal menyimpan feedback: {e}")
         return jsonify({'status': 'error', 'message': 'Gagal menyimpan feedback'}), 500
 
-# Route baru untuk halaman Tentang
 @app.route('/tentang')
 def tentang():
     """Menampilkan halaman Tentang Aplikasi."""
