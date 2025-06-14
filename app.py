@@ -28,35 +28,43 @@ except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
     model = None
 
-# Detail informasi untuk setiap penyakit
+# PERUBAHAN: Menambahkan 'risk_level' dan 'risk_color'
 disease_info = {
     'Sehat': {
         'description': 'Daun tidak menunjukkan tanda-tanda visual penyakit atau kekurangan nutrisi. Ini menandakan kesehatan tanaman yang baik dan praktik perawatan yang efektif.',
-        'symptoms': ['Warna daun hijau merata dan cerah, sesuai dengan varietasnya.', 'Tidak ada bercak, lubang, atau perubahan warna yang tidak biasa.', 'Bentuk dan ukuran daun normal, tidak keriput atau kerdil.'],
-        'triggers': ['Kondisi ini dipertahankan oleh nutrisi yang seimbang.', 'Penyiraman yang konsisten dan drainase yang baik.', 'Sirkulasi udara yang memadai di sekitar tanaman.'],
-        'action': ['Pertahankan praktik perawatan yang sudah baik dan terjadwal.', 'Lanjutkan pemantauan rutin untuk deteksi dini masalah di kemudian hari.', 'Lakukan pemupukan lanjutan sesuai dengan fase pertumbuhan tanaman.'],
-        'color': 'green'
+        'symptoms': ['Warna daun hijau merata dan cerah.', 'Tidak ada bercak, lubang, atau perubahan warna.', 'Bentuk dan ukuran daun normal.'],
+        'triggers': ['Nutrisi seimbang.', 'Penyiraman konsisten.', 'Sirkulasi udara memadai.'],
+        'action': ['Pertahankan praktik perawatan yang sudah baik.', 'Lanjutkan pemantauan rutin untuk deteksi dini.', 'Lakukan pemupukan lanjutan sesuai fase pertumbuhan.'],
+        'color': 'green',
+        'risk_level': 'Aman',
+        'risk_color': 'green'
     },
     'Busuk': {
         'description': 'Juga dikenal sebagai "Black Rot", penyakit ini disebabkan oleh jamur Guignardia bidwellii dan dapat merusak daun, batang, hingga buah anggur.',
-        'symptoms': ['Bercak kecil berwarna keputihan atau kuning pada daun.', 'Bercak membesar dengan cepat, menjadi coklat kemerahan dengan tepi hitam.', 'Pada tahap lanjut, titik-titik hitam kecil (piknidia) muncul di tengah bercak.'],
-        'triggers': ['Kondisi cuaca yang hangat dan lembab, terutama di musim semi dan panas.', 'Kelembapan yang bertahan lama pada permukaan daun (lebih dari 6 jam).', 'Sisa-sisa tanaman dari musim sebelumnya yang terinfeksi.'],
-        'action': ['Segera buang dan musnahkan semua bagian tanaman yang terinfeksi.', 'Aplikasikan fungisida yang efektif untuk Black Rot, terutama sebelum dan sesudah periode hujan.', 'Lakukan pemangkasan untuk meningkatkan sirkulasi udara dan mempercepat pengeringan daun.'],
-        'color': 'red'
+        'symptoms': ['Bercak kecil keputihan/kuning pada daun.', 'Bercak membesar menjadi coklat kemerahan dengan tepi hitam.', 'Titik-titik hitam kecil (piknidia) muncul di tengah bercak.'],
+        'triggers': ['Cuaca hangat dan lembab.', 'Kelembapan pada daun > 6 jam.', 'Sisa tanaman terinfeksi dari musim lalu.'],
+        'action': ['Segera musnahkan semua bagian tanaman yang terinfeksi.', 'Aplikasikan fungisida yang efektif untuk Black Rot.', 'Lakukan pemangkasan untuk meningkatkan sirkulasi udara.'],
+        'color': 'red',
+        'risk_level': 'Tinggi',
+        'risk_color': 'red'
     },
     'Esca': {
         'description': 'Penyakit kayu kompleks yang disebabkan oleh beberapa jenis jamur patogen. Penyakit ini menyerang sistem vaskular tanaman dan seringkali kronis.',
-        'symptoms': ['Munculnya corak "garis harimau" (tiger stripes) berwarna kuning atau merah di antara tulang daun.', 'Daun bisa terlihat layu secara tiba-tiba di siang hari yang panas.', 'Dalam kasus akut (apoplexy), seluruh bagian tanaman bisa mati dengan cepat.'],
-        'triggers': ['Luka pemangkasan yang besar dan tidak terlindungi menjadi jalur masuk jamur.', 'Tanaman anggur yang sudah tua dan lebih rentan terhadap stres.', 'Kondisi cuaca ekstrem, seperti kekeringan yang diikuti hujan lebat.'],
-        'action': ['Pangkas bagian kayu yang terinfeksi jauh di bawah area bergejala (minimal 20-30 cm).', 'Gunakan cat pelindung luka pangkas untuk mencegah infeksi baru.', 'Belum ada fungisida yang sepenuhnya kuratif, fokus utama adalah pencegahan dan sanitasi.'],
-        'color': 'orange'
+        'symptoms': ['Corak "garis harimau" (tiger stripes) pada daun.', 'Daun terlihat layu tiba-tiba di siang hari.', 'Dalam kasus akut, seluruh tanaman bisa mati cepat.'],
+        'triggers': ['Luka pemangkasan yang besar dan tidak terlindungi.', 'Tanaman anggur yang sudah tua dan rentan stres.', 'Kondisi cuaca ekstrem (kekeringan & hujan lebat).'],
+        'action': ['Pangkas bagian kayu yang terinfeksi jauh di bawah area bergejala.', 'Gunakan cat pelindung luka pangkas.', 'Fokus utama pada pencegahan dan sanitasi.'],
+        'color': 'orange',
+        'risk_level': 'Sangat Tinggi',
+        'risk_color': 'red'
     },
     'Hawar': {
         'description': 'Disebabkan oleh bakteri Xanthomonas ampelina. Penyakit ini dapat menyebabkan kerusakan signifikan pada daun dan pucuk muda tanaman anggur.',
-        'symptoms': ['Bercak kecil kebasahan (water-soaked) pada daun.', 'Bercak membesar, menjadi nekrotik (jaringan mati), dan seringkali menyebabkan daun robek atau berlubang.', 'Pada pucuk, dapat menyebabkan retakan dan kanker berwarna hitam.'],
-        'triggers': ['Kelembapan tinggi dan suhu yang sejuk hingga sedang.', 'Percikan air hujan atau irigasi sprinkler yang menyebarkan bakteri.', 'Sirkulasi udara yang buruk di antara tajuk tanaman.'],
-        'action': ['Gunakan semprotan bakterisida berbasis tembaga sesuai anjuran, terutama di awal musim tanam.', 'Hindari irigasi dari atas yang membasahi daun; gunakan irigasi tetes jika memungkinkan.', 'Pangkas dan buang bagian tanaman yang terinfeksi selama periode cuaca kering.'],
-        'color': 'yellow'
+        'symptoms': ['Bercak kecil kebasahan (water-soaked) pada daun.', 'Bercak membesar dan nekrotik (jaringan mati).', 'Pucuk mengalami retakan dan kanker berwarna hitam.'],
+        'triggers': ['Kelembapan tinggi dan suhu sejuk.', 'Percikan air hujan atau irigasi sprinkler.', 'Sirkulasi udara yang buruk di antara tajuk.'],
+        'action': ['Gunakan semprotan bakterisida berbasis tembaga.', 'Hindari irigasi dari atas yang membasahi daun.', 'Pangkas bagian yang terinfeksi saat cuaca kering.'],
+        'color': 'yellow',
+        'risk_level': 'Sedang',
+        'risk_color': 'yellow'
     },
     'Negative': {
         'description': 'Gambar yang diunggah tidak dapat diidentifikasi sebagai daun anggur atau kualitasnya tidak cukup untuk analisis.',
