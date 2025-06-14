@@ -31,7 +31,7 @@
   --shadow-brand-glow: 0 0 25px 0 rgba(22, 163, 74, 0.2);
 }
 
-/* PERUBAHAN GAYA PRELOADER BARU */
+/* PERUBAHAN GAYA PRELOADER BARU YANG DISEMPURNAKAN */
 #preloader {
   position: fixed;
   top: 0;
@@ -53,8 +53,8 @@
 
 .preloader-animation {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,56 +63,88 @@
 .leaf-icon {
     font-size: 80px;
     color: var(--brand-color);
-    opacity: 0.7;
-    animation: pulse-leaf 2s infinite ease-in-out;
+    text-shadow: 0 0 15px rgba(22, 163, 74, 0.3);
+    animation: pulse-leaf-subtle 2.5s infinite ease-in-out;
 }
 
 .scanner-icon {
     position: absolute;
-    font-size: 50px;
+    font-size: 60px;
     color: var(--text-primary);
-    animation: scan-animation 3s infinite cubic-bezier(0.65, 0, 0.35, 1);
+    animation: scan-smooth 3.5s infinite ease-in-out;
+}
+
+/* Efek kilau pada kaca pembesar */
+.scanner-icon::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 25%;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0));
+    border-radius: 50%;
+    transform: rotate(45deg);
+    opacity: 0;
+    animation: scanner-glint 3.5s infinite ease-in-out;
 }
 
 .preloader-text {
     position: absolute;
-    bottom: -10px;
+    bottom: 10px;
     font-weight: 600;
     font-size: 14px;
     color: var(--text-secondary);
     letter-spacing: 0.5px;
+    animation: text-fade 3.5s infinite ease-in-out;
 }
 
-@keyframes scan-animation {
+@keyframes scan-smooth {
   0% {
-    transform: translate(-40px, -40px) rotate(-45deg);
+    transform: translate(-50px, 50px) rotate(-60deg) scale(0.9);
+    opacity: 0;
   }
-  40% {
-    transform: translate(40px, 40px) rotate(-45deg);
+  20% {
+    transform: translate(-30px, -30px) rotate(-45deg) scale(1);
+    opacity: 1;
   }
-  50% {
-    transform: translate(40px, 40px) rotate(-45deg);
-  }
-  90% {
-    transform: translate(-40px, -40px) rotate(-45deg);
+  80% {
+    transform: translate(30px, 30px) rotate(-45deg) scale(1);
+    opacity: 1;
   }
   100% {
-    transform: translate(-40px, -40px) rotate(-45deg);
+    transform: translate(50px, -50px) rotate(-30deg) scale(0.9);
+    opacity: 0;
   }
 }
 
-@keyframes pulse-leaf {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0.7;
+@keyframes scanner-glint {
+    0%, 20%, 80%, 100% {
+        opacity: 0;
     }
     50% {
-        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse-leaf-subtle {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+@keyframes text-fade {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
         opacity: 1;
     }
 }
 /* Akhir Perubahan Gaya Preloader */
-
 
 html.dark {
   /* Warna Merek - Gelap */
