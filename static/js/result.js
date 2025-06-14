@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Jangan jalankan skrip jika data hasil tidak ada (untuk halaman lain)
+    // KODE BARU: Kontrol Skeleton dan Konten Asli
+    const skeleton = document.getElementById('result-skeleton');
+    const content = document.getElementById('result-content');
+
+    if (skeleton && content) {
+        // Tunda penampilan konten asli untuk memberikan efek loading
+        setTimeout(() => {
+            skeleton.style.display = 'none';
+            content.classList.remove('hidden');
+        }, 500); // Delay 500ms
+    }
+
     if (typeof RESULT_DATA === 'undefined' || !RESULT_DATA) return;
 
     // --- Logika Pemformatan Waktu Terpusat ---

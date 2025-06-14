@@ -31,6 +31,43 @@
   --shadow-brand-glow: 0 0 25px 0 rgba(22, 163, 74, 0.2);
 }
 
+/* KODE BARU: Gaya Pre-loader Global */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#preloader .spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--border-primary);
+  border-top-color: var(--brand-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+#preloader.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Akhir Kode Baru */
+
+
 html.dark {
   /* Warna Merek - Gelap */
   --brand-gradient: linear-gradient(to right, #22c55e, #4ade80);

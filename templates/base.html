@@ -22,6 +22,10 @@
 </head>
 <body class="antialiased flex flex-col min-h-screen">
     
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
     
     {% include 'components/header.html' %}
@@ -33,8 +37,7 @@
     {% include 'components/footer.html' %}
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    
-    <script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script> <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
