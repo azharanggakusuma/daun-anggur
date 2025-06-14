@@ -3,7 +3,7 @@
 {% block title %}Informasi Penyakit Daun Anggur{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+<div class="max-w-4xl mx-auto px-4 py-12 md:py-16 animate-page-in">
     <header class="text-center mb-12 animate-slide-in-up">
         <h1 class="text-3xl sm:text-4xl font-bold text-primary">Informasi Penyakit</h1>
         <p class="mt-2 text-lg sm:text-xl text-secondary">Pelajari lebih lanjut tentang penyakit yang dapat dideteksi oleh GrapeCheck.</p>
@@ -43,4 +43,8 @@
         {% endfor %}
     </main>
 </div>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ url_for('static', filename='js/accordion.js') }}"></script>
 {% endblock %}

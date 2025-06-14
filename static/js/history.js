@@ -1,19 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
     const historyContainer = document.getElementById("history-container");
     const emptyHistoryMessage = document.getElementById("empty-history");
+    const skeletonContainer = document.getElementById("history-skeleton"); // KODE BARU
     let history = JSON.parse(localStorage.getItem("analysisHistory")) || [];
 
-    // Elemen Modal
     const modal = document.getElementById("delete-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalText = document.getElementById("modal-text");
     const modalCancelButton = document.getElementById("modal-cancel-button");
     const modalConfirmButton = document.getElementById("modal-confirm-button");
     
-    // Variabel untuk menyimpan aksi yang akan dijalankan
     let currentAction = { type: null, data: null };
 
-    // Elemen manajemen riwayat
     const searchInput = document.getElementById('search-history');
     const clearHistoryButton = document.getElementById('clear-history-button');
     
@@ -29,6 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     function renderHistory() {
+        // KODE BARU: Logika untuk menyembunyikan skeleton dan menampilkan konten
+        if (skeletonContainer) skeletonContainer.classList.add('hidden');
+        if (historyContainer) historyContainer.classList.remove('hidden');
+
         historyContainer.innerHTML = '';
         const managementPanel = document.querySelector('.mb-8.flex');
 
@@ -114,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
         renderHistory();
     }
 
-    // Event listener untuk tombol hapus tunggal
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
@@ -124,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Event listener untuk tombol Hapus Semua
     if (clearHistoryButton) {
         clearHistoryButton.addEventListener('click', () => {
             if (history.length > 0) {
@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Event listener untuk tombol di dalam modal
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
         modalConfirmButton.addEventListener('click', () => {
@@ -148,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     
-    // Event listener untuk pencarian
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
@@ -172,8 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Render riwayat saat halaman pertama kali dimuat
+    // KODE BARU: Logika untuk menampilkan skeleton sebelum render
     if (historyContainer) {
-        renderHistory();
+        setTimeout(() => {
+            renderHistory();
+        }, 300);
     }
 });

@@ -382,6 +382,15 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   }
 }
 
+/* KODE BARU: Animasi transisi halaman */
+@keyframes page-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-page-in {
+    animation: page-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 .animate-fade-in-zoom {
     animation: fade-in-zoom 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }

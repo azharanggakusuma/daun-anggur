@@ -8,34 +8,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadPlaceholder = document.getElementById("uploadPlaceholder");
     const imagePreview = document.getElementById("imagePreview");
     
-    // Elemen Toast Baru
     const toast = document.getElementById("toast");
     const toastMessage = document.getElementById("toast-message");
     let toastTimeout;
 
     let selectedFile = null;
 
-    /**
-     * Menampilkan notifikasi toast.
-     * @param {string} message - Pesan yang akan ditampilkan.
-     */
     function showAlert(message) {
-        // Hapus timeout sebelumnya jika ada
         clearTimeout(toastTimeout);
-
         toastMessage.textContent = message;
         toast.classList.add("toast-visible");
-
-        // Sembunyikan toast setelah 4 detik
         toastTimeout = setTimeout(() => {
             toast.classList.remove("toast-visible");
         }, 4000);
     }
 
-    /**
-     * Menampilkan pratinjau gambar yang dipilih oleh pengguna.
-     * @param {File} file - Objek file gambar.
-     */
     function displayImagePreview(file) {
         const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
         if (!allowedTypes.includes(file.type)) {
@@ -57,13 +44,26 @@ document.addEventListener("DOMContentLoaded", function () {
         reader.onload = function (e) {
             uploadPlaceholder.classList.add("opacity-0", "hidden");
             
-            // Hapus kelas animasi lama jika ada, lalu tambahkan yang baru
             imagePreview.classList.remove('animate-fade-in-zoom');
-            imagePreview.innerHTML = `<img src="${e.target.result}" style="max-height: 160px; object-fit: cover;" class="rounded-lg mx-auto border border-secondary shadow-sm"><p class="text-sm text-muted mt-3 font-semibold truncate">${file.name}</p>`;
             
-            // Tambahkan kelas animasi
+            // KODE BARU: Menambahkan div wrapper dan tombol hapus
+            imagePreview.innerHTML = `
+                <div class="relative group inline-block">
+                    <img src="${e.target.result}" style="max-height: 160px; object-fit: cover;" class="rounded-lg mx-auto border border-secondary shadow-sm">
+                    <button id="removeImageBtn" type="button" class="absolute -top-2 -right-2 h-7 w-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 focus:outline-none" title="Hapus Gambar">
+                        <i class="fa-solid fa-times text-sm"></i>
+                    </button>
+                    <p class="text-sm text-muted mt-3 font-semibold truncate max-w-[200px] mx-auto">${file.name}</p>
+                </div>
+            `;
+            
+            // KODE BARU: Event listener untuk tombol hapus
+            document.getElementById('removeImageBtn').addEventListener('click', (event) => {
+                event.stopPropagation();
+                resetDropzone();
+            });
+            
             imagePreview.classList.add('animate-fade-in-zoom');
-
             imagePreview.classList.remove("hidden");
             setTimeout(() => imagePreview.classList.remove("opacity-0"), 50);
             submitButton.disabled = false;
@@ -71,9 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         reader.readAsDataURL(file);
     }
 
-    /**
-     * Mengembalikan dropzone ke keadaan semula.
-     */
     function resetDropzone() {
         uploadPlaceholder.classList.remove("hidden");
         setTimeout(() => uploadPlaceholder.classList.remove("opacity-0"), 50);
@@ -85,16 +82,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (uploadForm) {
-        /**
-         * Fungsi terpusat untuk menangani kegagalan unggah.
-         * @param {string} errorMessage - Pesan error yang akan ditampilkan.
-         */
         function handleUploadFailure(errorMessage) {
             showAlert(errorMessage);
             buttonText.textContent = "Mulai Analisis";
             buttonSpinner.classList.add("hidden");
-            submitButton.disabled = false; // Aktifkan lagi tombolnya
-            // Jangan reset dropzone jika file sudah ada, agar pengguna tidak perlu upload ulang
+            submitButton.disabled = false;
         }
 
         uploadForm.addEventListener("submit", function (e) {
@@ -113,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append('file', selectedFile, selectedFile.name);
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // Timeout 30 detik
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
 
             fetch("/upload", {
                 method: "POST",
@@ -155,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (dropzone) {
-        // Event listener untuk drag-and-drop
         ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
             dropzone.addEventListener(eventName, (e) => {
                 e.preventDefault();
@@ -180,7 +171,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Event listener untuk input file
         fileInput.addEventListener("change", () => {
             if (fileInput.files.length) {
                 displayImagePreview(fileInput.files[0]);
