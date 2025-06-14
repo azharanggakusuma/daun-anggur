@@ -23,7 +23,11 @@
 <body class="antialiased flex flex-col min-h-screen">
     
     <div id="preloader">
-        <div class="spinner"></div>
+        <div class="preloader-animation">
+            <i class="fa-solid fa-leaf leaf-icon"></i>
+            <i class="fa-solid fa-magnifying-glass scanner-icon"></i>
+            <p class="preloader-text">Loading...</p>
+        </div>
     </div>
 
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-dots-pattern"></div>
@@ -37,7 +41,9 @@
     {% include 'components/footer.html' %}
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script> <script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    
+    <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
