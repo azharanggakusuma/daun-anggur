@@ -689,6 +689,7 @@ html.dark .toast {
     justify-content: space-around;
     align-items: center;
     height: 100%;
+    position: relative;
   }
 
   .nav-item {
@@ -723,6 +724,15 @@ html.dark .toast {
   .nav-item.active .nav-text {
     transform: translateY(-1px);
   }
+
+  /* Beri jarak untuk menu di samping tombol tengah */
+  #app-nav > :nth-child(2) {
+      padding-right: 35px;
+  }
+
+  #app-nav > :nth-child(4) {
+      padding-left: 35px;
+  }
   
   #app-nav #theme-toggle.fab {
     background-color: var(--brand-color);
@@ -730,16 +740,22 @@ html.dark .toast {
     width: 64px;
     height: 64px;
     border-radius: 9999px;
-    transform: translateY(-24px);
     box-shadow: var(--shadow-lg);
     border: 4px solid var(--bg-secondary);
     transition: transform 0.2s ease;
     flex-grow: 0;
     flex-shrink: 0;
+
+    /* --- LOGIKA PEMUSATAN BARU --- */
+    position: absolute;
+    top: 0; /* Posisikan dari atas bar navigasi */
+    left: 50%; /* Geser 50% dari kiri */
+    transform: translate(-50%, -24px); /* Tarik kembali 50% dari lebarnya SENDIRI & geser ke atas */
   }
 
   #app-nav #theme-toggle.fab:hover {
-    transform: translateY(-24px) scale(1.1);
+    /* Sesuaikan juga transform untuk hover */
+    transform: translate(-50%, -24px) scale(1.1);
   }
   
   #app-nav #theme-toggle.fab #theme-icon-container {
