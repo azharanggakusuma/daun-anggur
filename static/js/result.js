@@ -1,4 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
+  /**
+   * Fungsi untuk menganimasikan angka dari 0 ke nilai akhir.
+   * @param {HTMLElement} element - Elemen DOM yang akan dianimasikan.
+   * @param {number} finalValue - Nilai angka terakhir yang akan ditampilkan.
+   * @param {number} duration - Durasi animasi dalam milidetik.
+   */
+  function animateCounter(element, finalValue, duration = 1200) { // Durasi disamakan dengan bar
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const currentValue = progress * finalValue;
+      element.textContent = `${currentValue.toFixed(1)}%`;
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        // Memastikan nilai akhir akurat
+        element.textContent = `${finalValue.toFixed(1)}%`;
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
   // Kontrol Skeleton dan Konten Asli
   const skeleton = document.getElementById("result-skeleton");
   const content = document.getElementById("result-content");
@@ -9,16 +32,26 @@ document.addEventListener("DOMContentLoaded", function () {
       if (skeleton) skeleton.style.display = "none";
       if (content) content.classList.remove("hidden");
 
-      // Jalankan animasi bar setelah konten terlihat
+      // ---- PERUBAHAN DI SINI: Mengembalikan logika animasi transisi ----
       const confidenceBar = document.getElementById("confidence-bar");
       if (confidenceBar) {
         const confidenceValue = confidenceBar.getAttribute("data-confidence");
+        // Langsung atur width untuk memicu transisi CSS
         confidenceBar.style.width = `${confidenceValue}%`;
+      }
+      
+      const confidenceText = document.getElementById("confidence-text");
+      if (confidenceText && typeof RESULT_DATA !== "undefined") {
+        const finalConfidence = parseFloat(RESULT_DATA.confidence);
+        animateCounter(confidenceText, finalConfidence);
       }
     }, 500); // Delay 500ms
   }
 
   if (typeof RESULT_DATA === "undefined" || !RESULT_DATA) return;
+
+  // --- Sisa kode di result.js tetap sama ---
+  // ... (Pemformatan Waktu, Riwayat, Kontrol Tab, Chart, dll) ...
 
   // --- Pemformatan Waktu ---
   const date = new Date(RESULT_DATA.timestamp);
