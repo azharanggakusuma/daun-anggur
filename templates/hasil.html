@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Laporan Analisis | {{ result.label }}{% endblock %}
+{% block title %}Hasil Analisis | {{ result.label }}{% endblock %}
 
 {% block head_extra %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    {# Blok <style> untuk animasi bounce telah dihapus dari sini #}
 {% endblock %}
 
 {% block content %}
@@ -50,7 +49,6 @@
     
     <section id="result-content" class="hidden">
         {% if result.label == 'Negative' %}
-        {# Tampilan jika hasil Negatif - Responsif #}
         <div class="card-layout text-center py-10 border-2 border-dashed animate-slide-in-up">
             <div class="text-5xl text-muted mb-4"><i class="fa-regular fa-folder-open"></i></div>
             <h3 class="mt-4 text-2xl font-bold text-primary">Gambar Tidak Teridentifikasi</h3>
@@ -67,7 +65,6 @@
         </div>
 
         {% else %}
-        {# Desain dengan Animasi dan Layout Responsif #}
         <div class="space-y-8">
             <div class="animate-stagger-in" style="--delay: 150ms;">
                 <div class="card-layout">
@@ -79,12 +76,10 @@
                             <p class="text-sm font-semibold text-brand tracking-wider uppercase">Hasil Diagnosis</p>
                             <h2 class="text-4xl lg:text-5xl font-bold text-primary mt-1">{{ result.label }}</h2>
                             <p class="text-secondary leading-relaxed mt-4">{{ result.info.description }}</p>
-                            
                             <div class="mt-5">
                                 <p class="text-sm font-semibold text-muted mb-2">Tingkat Keyakinan</p>
                                 <div class="flex items-center gap-3">
                                     <div class="w-full bg-tertiary dark:bg-slate-700 rounded-full h-2.5">
-                                        {# ---- PERUBAHAN DI SINI: Mengembalikan style transisi ---- #}
                                         <div id="confidence-bar" class="bg-{{ result.info.color }}-500 h-2.5 rounded-full" style="width: 0%; transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);" data-confidence="{{ '%.2f'|format(result.confidence) }}"></div>
                                     </div>
                                     <p id="confidence-text" class="text-lg font-semibold w-16 text-right text-primary">0.0%</p>
@@ -92,9 +87,7 @@
                             </div>
                         </div>
                     </div>
-
                     <hr class="my-6 border-primary/10">
-
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6 text-center sm:text-left">
                         <div>
                             <h4 class="text-sm font-semibold text-muted uppercase tracking-wider">Status</h4>
