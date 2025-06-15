@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Hasil Analisis | {{ result.label }}{% endblock %}
+{% block title %}Laporan Analisis | {{ result.label }}{% endblock %}
 
 {% block head_extra %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -80,6 +80,7 @@
                                 <p class="text-sm font-semibold text-muted mb-2">Tingkat Keyakinan</p>
                                 <div class="flex items-center gap-3">
                                     <div class="w-full bg-tertiary dark:bg-slate-700 rounded-full h-2.5">
+                                        {# ---- PERUBAHAN DI SINI: Memastikan style transisi ada ---- #}
                                         <div id="confidence-bar" class="bg-{{ result.info.color }}-500 h-2.5 rounded-full" style="width: 0%; transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);" data-confidence="{{ '%.2f'|format(result.confidence) }}"></div>
                                     </div>
                                     <p id="confidence-text" class="text-lg font-semibold w-16 text-right text-primary">0.0%</p>

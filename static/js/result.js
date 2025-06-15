@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (skeleton) skeleton.style.display = "none";
       if (content) content.classList.remove("hidden");
 
-      // ---- PERUBAHAN DI SINI: Mengembalikan logika animasi transisi ----
+      // ---- PERUBAHAN DI SINI: Logika untuk menganimasikan bar dan teks ----
       const confidenceBar = document.getElementById("confidence-bar");
       if (confidenceBar) {
         const confidenceValue = confidenceBar.getAttribute("data-confidence");
-        // Langsung atur width untuk memicu transisi CSS
+        // Atur style.width untuk memicu transisi CSS yang sudah didefinisikan di HTML
         confidenceBar.style.width = `${confidenceValue}%`;
       }
       
