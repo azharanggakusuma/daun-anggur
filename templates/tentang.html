@@ -45,7 +45,32 @@
         </div>
     </main>
 
-    <footer class="text-center animate-stagger-in" style="--delay: 600ms;">
+    <section class="border-t border-primary/20 pt-16 mb-16 space-y-12">
+        <div class="animate-stagger-in" style="--delay: 550ms;">
+            <h2 class="text-2xl sm:text-3xl font-bold text-primary text-center mb-8">Teknologi di Balik GrapeCheck</h2>
+            <div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-secondary">
+                <p class="leading-relaxed">
+                    Aplikasi ini menggunakan model <strong class="text-primary">Deep Learning</strong> dengan arsitektur <strong class="text-primary">Convolutional Neural Network (CNN)</strong>. Model ini secara khusus dirancang untuk melakukan tugas klasifikasi gambar.
+                </p>
+                <p class="leading-relaxed">
+                    Model kami dilatih menggunakan <strong class="text-primary">TensorFlow</strong> pada dataset yang terdiri dari ribuan gambar daun anggur, mencakup kondisi sehat dan tiga jenis penyakit utama. Setiap gambar dianalisis untuk mengekstrak fitur visual seperti bentuk bercak, warna, dan tekstur untuk memberikan diagnosis yang akurat.
+                </p>
+            </div>
+        </div>
+
+        <div class="animate-stagger-in" style="--delay: 650ms;">
+            <h2 class="text-2xl sm:text-3xl font-bold text-primary text-center mb-8">Roadmap Pengembangan</h2>
+            <div class="max-w-lg mx-auto">
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500 text-white flex-shrink-0"><i class="fa-solid fa-check"></i></div><div><h3 class="font-semibold text-primary">Versi Saat Ini</h3><p class="text-secondary text-sm">Deteksi 4 kelas (3 penyakit + sehat) dengan rekomendasi.</p></div></li>
+                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white flex-shrink-0"><i class="fa-solid fa-flask"></i></div><div><h3 class="font-semibold text-primary">Selanjutnya</h3><p class="text-secondary text-sm">Menambahkan deteksi untuk lebih banyak jenis penyakit dan hama.</p></div></li>
+                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-slate-400 dark:bg-slate-600 text-white flex-shrink-0"><i class="fa-solid fa-users"></i></div><div><h3 class="font-semibold text-primary">Masa Depan</h3><p class="text-secondary text-sm">Fitur komunitas untuk berbagi tips dan foto antar pengguna.</p></div></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center animate-stagger-in" style="--delay: 750ms;">
          <div class="max-w-3xl mx-auto p-4 bg-yellow-50 dark:bg-yellow-900/50 border-t-4 border-yellow-400 rounded-b-lg text-yellow-800 dark:text-yellow-200 text-sm">
             <p><strong class="font-semibold">Disclaimer:</strong> Hasil dari aplikasi ini adalah alat bantu dan tidak dimaksudkan untuk menggantikan diagnosis maupun saran dari ahli pertanian profesional.</p>
         </div>
