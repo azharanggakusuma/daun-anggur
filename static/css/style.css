@@ -1213,3 +1213,63 @@ html.dark .toast.toast-success {
     background-color: #4ade80; /* green-400 */
     color: #052e16; /* green-950 */
 }
+
+/* --- GAYA UNTUK FITUR BARU DI HALAMAN RIWAYAT --- */
+.summary-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.summary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.summary-card-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.summary-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.filter-button {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.filter-button:hover:not(.active) {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+    transform: translateY(-2px);
+}
+.filter-button.active {
+    background-color: var(--brand-color);
+    color: white;
+    border-color: var(--brand-color);
+    box-shadow: var(--shadow-brand);
+}
+
+html.dark .filter-button.active {
+    color: var(--bg-primary);
+}

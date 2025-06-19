@@ -3,17 +3,52 @@
 {% block title %}Riwayat Analisis | GrapeCheck{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12 md:py-16 animate-page-in">
+<div class="max-w-5xl mx-auto px-4 py-12 md:py-16 animate-page-in">
     <header class="text-center mb-12 animate-slide-in-up">
         <h1 class="text-3xl sm:text-4xl font-bold text-primary">Riwayat Analisis</h1>
-        <p class="mt-2 text-lg sm:text-xl text-secondary">Kelola semua hasil analisis yang pernah Anda lakukan.</p>
+        <p class="mt-2 text-lg sm:text-xl text-secondary">Kelola dan lihat wawasan dari semua hasil analisis Anda.</p>
     </header>
 
+    <section id="history-summary-section" class="mb-10 animate-slide-in-up" style="animation-delay: 100ms;">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="summary-card">
+                <h4 class="summary-card-title">Total Analisis</h4>
+                <p id="total-analyses" class="summary-card-value">-</p>
+            </div>
+            <div class="summary-card">
+                <h4 class="summary-card-title">Diagnosis Umum</h4>
+                <p id="common-diagnosis" class="summary-card-value">-</p>
+            </div>
+            <div class="summary-card">
+                <h4 class="summary-card-title">Rata-rata Keyakinan</h4>
+                <p id="average-confidence" class="summary-card-value">-</p>
+            </div>
+            <div class="summary-card">
+                <h4 class="summary-card-title">Sehat Terdeteksi</h4>
+                <p id="healthy-detected" class="summary-card-value">-</p>
+            </div>
+        </div>
+        <div id="filter-buttons" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+            <button class="filter-button active" data-filter="*">Semua</button>
+            <button class="filter-button" data-filter="Sehat">
+                <i class="fa-solid fa-leaf text-green-500"></i> Sehat
+            </button>
+            <button class="filter-button" data-filter="Busuk">
+                <i class="fa-solid fa-virus text-red-500"></i> Busuk
+            </button>
+            <button class="filter-button" data-filter="Esca">
+                <i class="fa-solid fa-disease text-orange-500"></i> Esca
+            </button>
+            <button class="filter-button" data-filter="Hawar">
+                <i class="fa-solid fa-bacterium text-yellow-500"></i> Hawar
+            </button>
+        </div>
+    </section>
     <main>
-        <div class="mb-8 flex flex-col sm:flex-row gap-4 items-center animate-slide-in-up" style="animation-delay: 150ms;">
+        <div class="mb-8 flex flex-col sm:flex-row gap-4 items-center animate-slide-in-up" style="animation-delay: 250ms;">
             <div class="relative flex-grow w-full">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none"></i>
-                <input type="search" id="search-history" placeholder="Cari riwayat..." class="form-input w-full pl-12 pr-4 py-2.5">
+                <input type="search" id="search-history" placeholder="Cari riwayat berdasarkan nama..." class="form-input w-full pl-12 pr-4 py-2.5">
             </div>
             <button id="clear-history-button" class="button-base button-danger-ghost w-full sm:w-auto flex-shrink-0">
                 <i class="fa-solid fa-trash-can"></i>
@@ -44,7 +79,7 @@
             <div class="animate-swoop-in">
                 <i class="fa-solid fa-magnifying-glass-plus text-4xl text-muted mb-4"></i>
                 <p class="text-xl font-semibold text-primary">Hasil Tidak Ditemukan</p>
-                <p class="text-secondary">Tidak ada riwayat yang cocok dengan kata kunci "<span id="search-query-display" class="font-bold"></span>".</p>
+                <p class="text-secondary">Tidak ada riwayat yang cocok dengan filter dan kata kunci yang dipilih.</p>
             </div>
         </div>
         
