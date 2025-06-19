@@ -1047,3 +1047,38 @@ details[open] > summary .accordion-chevron {
     padding-right: 0 !important;
   }
 }
+
+/* ===== PENAMBAHAN GAYA UNTUK FITUR UPLOAD BARU ===== */
+.upload-tab-button {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: -1px; /* Agar border menyatu dengan border container */
+}
+.upload-tab-button:hover:not(.active) {
+  color: var(--text-primary);
+}
+.upload-tab-button.active {
+  color: var(--brand-color);
+  border-bottom-color: var(--brand-color);
+}
+
+#pane-camera, #pane-file {
+  transition: opacity 0.3s ease;
+}
+#pane-camera.hidden, #pane-file.hidden {
+  display: none;
+}
+#camera-container {
+    background-color: var(--bg-tertiary);
+}
+html.dark #camera-container {
+    background-color: #000;
+}

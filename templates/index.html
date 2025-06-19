@@ -27,38 +27,76 @@
           class="card-layout animate-slide-in-up"
           style="animation-delay: 150ms"
         >
+          <div id="upload-tabs" class="flex items-center border-b border-primary/20 mb-6">
+              <button id="tab-file" class="upload-tab-button active">
+                  <i class="fa-solid fa-file-arrow-up"></i>
+                  <span>Unggah File</span>
+              </button>
+              <button id="tab-camera" class="upload-tab-button">
+                  <i class="fa-solid fa-camera"></i>
+                  <span>Gunakan Kamera</span>
+              </button>
+          </div>
+
           <form id="uploadForm" method="POST" enctype="multipart/form-data">
-            <div
-              id="dropzone"
-              class="relative border-2 border-dashed rounded-xl p-6 sm:p-10 text-center cursor-pointer"
-            >
-              <input
-                type="file"
-                name="file"
-                id="fileInput"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept="image/jpeg, image/png, image/jpg"
-                required
-              />
-
+            
+            <div id="pane-file" class="upload-pane">
               <div
-                id="uploadPlaceholder"
-                class="space-y-3 pointer-events-none transition-opacity duration-300"
+                id="dropzone"
+                class="relative border-2 border-dashed rounded-xl p-6 sm:p-10 text-center cursor-pointer"
               >
-                <i
-                  class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"
-                ></i>
-                <p class="font-semibold text-primary text-sm sm:text-base">
-                  Seret & letakkan file, atau
-                  <span class="text-brand font-bold">jelajahi file</span>
-                </p>
-                <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
-              </div>
+                <input
+                  type="file"
+                  name="file"
+                  id="fileInput"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  accept="image/jpeg, image/png, image/jpg"
+                />
 
-              <div
-                id="imagePreview"
-                class="hidden text-center pointer-events-none transition-opacity duration-300 opacity-0"
-              ></div>
+                <div
+                  id="uploadPlaceholder"
+                  class="space-y-3 pointer-events-none transition-opacity duration-300"
+                >
+                  <i
+                    class="fa-solid fa-cloud-arrow-up text-3xl sm:text-4xl mx-auto text-muted"
+                  ></i>
+                  <p class="font-semibold text-primary text-sm sm:text-base">
+                    Seret & letakkan file, atau
+                    <span class="text-brand font-bold">jelajahi file</span>
+                  </p>
+                  <p class="text-xs text-muted">JPG, JPEG, PNG (Maks. 10MB)</p>
+                </div>
+              </div>
+            </div>
+            
+            <div id="pane-camera" class="upload-pane hidden">
+                <div id="camera-container" class="relative bg-tertiary rounded-xl overflow-hidden aspect-video flex items-center justify-center">
+                    <video id="video-feed" class="w-full h-full object-cover" playsinline autoplay muted></video>
+                    <div id="camera-permission-prompt" class="absolute inset-0 p-4 text-center flex-col items-center justify-center space-y-3 hidden">
+                        <i class="fa-solid fa-video-slash text-4xl text-muted"></i>
+                        <p class="font-semibold text-primary">Kamera Tidak Dapat Diakses</p>
+                        <p class="text-sm text-muted">Harap izinkan akses kamera di browser Anda untuk menggunakan fitur ini.</p>
+                    </div>
+                    <div id="camera-controls" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
+                        <button id="capture-button" type="button" class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/30 hover:scale-105 transition-transform" title="Ambil Gambar">
+                            <div class="h-12 w-12 bg-white rounded-full ring-2 ring-inset ring-slate-800"></div>
+                        </button>
+                        <button id="switch-camera-button" type="button" class="absolute -right-20 top-1/2 -translate-y-1/2 h-10 w-10 bg-slate-800/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-slate-800 transition-colors hidden" title="Ganti Kamera">
+                           <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imagePreviewContainer" class="hidden mt-6">
+                <p class="text-sm font-semibold text-muted mb-2 text-center">Pratinjau Gambar:</p>
+                <div class="relative group w-fit mx-auto">
+                    <img id="image-preview-img" class="max-h-60 rounded-lg mx-auto border-2 border-brand shadow-lg" />
+                    <button id="remove-image-button" type="button" class="absolute -top-3 -right-3 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 focus:outline-none" title="Hapus Gambar">
+                        <i class="fa-solid fa-times text-md"></i>
+                    </button>
+                </div>
+                <p id="image-preview-filename" class="text-sm text-muted mt-2 font-semibold truncate max-w-xs mx-auto text-center"></p>
             </div>
 
             <button
