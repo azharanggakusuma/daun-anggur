@@ -9,19 +9,49 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreview = document.getElementById("imagePreview");
     
     const toast = document.getElementById("toast");
+    const toastIcon = document.getElementById("toast-icon");
     const toastMessage = document.getElementById("toast-message");
     let toastTimeout;
 
     let selectedFile = null;
 
-    function showAlert(message) {
+    // #### PERUBAHAN & PENAMBAHAN ####
+    /**
+     * Menampilkan notifikasi toast.
+     * @param {string} message - Pesan yang akan ditampilkan.
+     * @param {'success' | 'error'} type - Jenis notifikasi ('success' atau 'error').
+     */
+    function showNotification(message, type = 'error') {
         clearTimeout(toastTimeout);
+
+        // Atur pesan
         toastMessage.textContent = message;
+
+        // Atur ikon dan warna berdasarkan tipe
+        if (type === 'success') {
+            toast.classList.remove('toast-error'); // Hapus kelas error jika ada
+            toast.classList.add('toast-success');
+            toastIcon.className = 'fa-solid fa-circle-check';
+        } else { // 'error'
+            toast.classList.remove('toast-success'); // Hapus kelas sukses jika ada
+            toast.classList.add('toast-error'); // Pastikan kelas error ada
+            toastIcon.className = 'fa-solid fa-circle-exclamation';
+        }
+
+        // Tampilkan toast
         toast.classList.add("toast-visible");
+
+        // Sembunyikan setelah beberapa detik
         toastTimeout = setTimeout(() => {
             toast.classList.remove("toast-visible");
         }, 4000);
     }
+
+    // Menggunakan fungsi notifikasi yang baru untuk menampilkan error
+    function showAlert(message) {
+        showNotification(message, 'error');
+    }
+    // #### AKHIR PERUBAHAN & PENAMBAHAN ####
 
     function displayImagePreview(file) {
         const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
@@ -46,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
             
             imagePreview.classList.remove('animate-fade-in-zoom');
             
-            // KODE BARU: Menambahkan div wrapper dan tombol hapus
             imagePreview.innerHTML = `
                 <div class="relative group inline-block">
                     <img src="${e.target.result}" style="max-height: 160px; object-fit: cover;" class="rounded-lg mx-auto border border-secondary shadow-sm">
@@ -57,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
             
-            // KODE BARU: Event listener untuk tombol hapus
             document.getElementById('removeImageBtn').addEventListener('click', (event) => {
                 event.stopPropagation();
                 resetDropzone();
@@ -67,6 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
             imagePreview.classList.remove("hidden");
             setTimeout(() => imagePreview.classList.remove("opacity-0"), 50);
             submitButton.disabled = false;
+
+            // #### PENAMBAHAN: Panggil notifikasi sukses di sini! ####
+            showNotification('Gambar berhasil dipilih!', 'success');
         };
         reader.readAsDataURL(file);
     }
@@ -83,7 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (uploadForm) {
         function handleUploadFailure(errorMessage) {
-            showAlert(errorMessage);
+            // Menggunakan fungsi notifikasi yang baru
+            showNotification(errorMessage, 'error');
             buttonText.textContent = "Mulai Analisis";
             buttonSpinner.classList.add("hidden");
             submitButton.disabled = false;
@@ -93,7 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
 
             if (!selectedFile) {
-                showAlert("Tidak ada file yang dipilih. Harap unggah sebuah gambar.");
+                // Menggunakan fungsi notifikasi yang baru
+                showNotification("Tidak ada file yang dipilih. Harap unggah sebuah gambar.", 'error');
                 return;
             }
 

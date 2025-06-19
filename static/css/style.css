@@ -600,6 +600,8 @@ html.dark .history-delete-button:hover {
     line-height: 1.75;
 }
 
+/* #### PENAMBAHAN GAYA NOTIFIKASI SUKSES & ERROR #### */
+
 /* GAYA TOAST NOTIFICATION YANG SEPENUHNYA RESPONSIF */
 .toast {
   position: fixed;
@@ -610,7 +612,6 @@ html.dark .history-delete-button:hover {
   max-width: 400px;
   margin: 0 auto;
   transform: translateY(200%);
-  background-color: #ef4444;
   color: white;
   padding: 1rem 1.25rem;
   border-radius: 0.75rem;
@@ -619,17 +620,33 @@ html.dark .history-delete-button:hover {
   gap: 0.75rem;
   box-shadow: var(--shadow-lg);
   font-weight: 600;
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease;
   pointer-events: none;
 }
 .toast.toast-visible {
   transform: translateY(0);
   pointer-events: auto;
 }
-html.dark .toast {
-    background-color: #f87171;
-    color: #450a0a;
+
+/* Gaya default untuk Error */
+.toast.toast-error {
+    background-color: #ef4444; /* red-500 */
 }
+html.dark .toast.toast-error {
+    background-color: #f87171; /* red-400 */
+    color: #450a0a; /* red-950 */
+}
+
+/* Gaya baru untuk Sukses */
+.toast.toast-success {
+    background-color: var(--brand-color); /* Menggunakan warna merek (hijau) */
+}
+html.dark .toast.toast-success {
+    background-color: #4ade80; /* green-400 */
+    color: #052e16; /* green-950 */
+}
+
+/* #### AKHIR PENAMBAHAN #### */
 
 /* --- GAYA MODAL KONFIRMASI YANG DISEMPURNAKAN --- */
 .modal-overlay {
