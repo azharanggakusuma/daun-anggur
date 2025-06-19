@@ -78,7 +78,7 @@
                         <p class="text-sm text-muted">Harap izinkan akses kamera di browser Anda untuk menggunakan fitur ini.</p>
                     </div>
                     <div id="camera-controls" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
-                        <button id="capture-button" type="button" class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/30 hover:scale-105 transition-transform" title="Ambil Gambar">
+                        <button id="capture-button" type="button" class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg" title="Ambil Gambar">
                             <div class="h-12 w-12 bg-white rounded-full ring-2 ring-inset ring-slate-800"></div>
                         </button>
                         <button id="switch-camera-button" type="button" class="absolute -right-20 top-1/2 -translate-y-1/2 h-10 w-10 bg-slate-800/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-slate-800 transition-colors hidden" title="Ganti Kamera">
@@ -89,14 +89,16 @@
             </div>
 
             <div id="imagePreviewContainer" class="hidden mt-6">
-                <p class="text-sm font-semibold text-muted mb-2 text-center">Pratinjau Gambar:</p>
-                <div class="relative group w-fit mx-auto">
-                    <img id="image-preview-img" class="max-h-60 rounded-lg mx-auto border-2 border-brand shadow-lg" />
-                    <button id="remove-image-button" type="button" class="absolute -top-3 -right-3 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 focus:outline-none" title="Hapus Gambar">
-                        <i class="fa-solid fa-times text-md"></i>
+                <div class="preview-card">
+                    <img id="image-preview-img" class="preview-image" alt="Pratinjau Gambar"/>
+                    <div class="preview-info">
+                        <p id="image-preview-filename" class="preview-filename"></p>
+                        <p id="image-preview-size" class="preview-filesize"></p>
+                    </div>
+                    <button id="remove-image-button" type="button" class="preview-remove-button" title="Ganti Gambar">
+                        <i class="fa-solid fa-rotate-left"></i>
                     </button>
                 </div>
-                <p id="image-preview-filename" class="text-sm text-muted mt-2 font-semibold truncate max-w-xs mx-auto text-center"></p>
             </div>
 
             <button

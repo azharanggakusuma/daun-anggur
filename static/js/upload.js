@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Elemen Upload File
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("fileInput");
-    const uploadPlaceholder = document.getElementById("uploadPlaceholder");
     
     // Elemen Kamera
     const videoFeed = document.getElementById("video-feed");
@@ -26,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreviewContainer = document.getElementById("imagePreviewContainer");
     const imagePreviewImg = document.getElementById("image-preview-img");
     const imagePreviewFilename = document.getElementById("image-preview-filename");
+    const imagePreviewSize = document.getElementById("image-preview-size"); // Elemen baru
     const removeImageButton = document.getElementById("remove-image-button");
 
     // Notifikasi Toast
@@ -41,6 +41,16 @@ document.addEventListener("DOMContentLoaded", function () {
     let availableCameras = [];
     let currentCameraIndex = 0;
 
+    // --- Fungsi Bantuan ---
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+    }
+
     // --- Fungsi Notifikasi ---
     function showNotification(message, type = 'error') {
         clearTimeout(toastTimeout);
@@ -54,26 +64,26 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // --- Logika Kamera ---
     async function startCamera(deviceId = undefined) {
-        stopCamera(); // Hentikan stream yang ada sebelum memulai yang baru
+        stopCamera();
         cameraPermissionPrompt.classList.add('hidden');
         try {
             const constraints = {
                 video: { 
                     deviceId: deviceId ? { exact: deviceId } : undefined,
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    facingMode: 'environment' // Prioritaskan kamera belakang
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                    facingMode: 'environment'
                 }
             };
             videoStream = await navigator.mediaDevices.getUserMedia(constraints);
             videoFeed.srcObject = videoStream;
-            videoFeed.classList.remove('hidden');
-            captureButton.classList.remove('hidden');
+            videoFeed.style.display = 'block';
+            captureButton.style.display = 'flex';
         } catch (err) {
             console.error("Error accessing camera:", err);
             cameraPermissionPrompt.classList.remove('hidden');
-            videoFeed.classList.add('hidden');
-            captureButton.classList.add('hidden');
+            videoFeed.style.display = 'none';
+            captureButton.style.display = 'none';
             switchCameraButton.classList.add('hidden');
         }
     }
@@ -90,11 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
             availableCameras = devices.filter(device => device.kind === 'videoinput');
-            if (availableCameras.length > 1) {
-                switchCameraButton.classList.remove('hidden');
-            } else {
-                switchCameraButton.classList.add('hidden');
-            }
+            switchCameraButton.classList.toggle('hidden', availableCameras.length <= 1);
         } catch (err) {
             console.error("Error enumerating devices:", err);
         }
@@ -111,9 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const canvas = document.createElement('canvas');
         canvas.width = videoFeed.videoWidth;
         canvas.height = videoFeed.videoHeight;
-        const context = canvas.getContext('2d');
-        context.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
-
+        canvas.getContext('2d').drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
             selectedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
             stopCamera();
@@ -128,8 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const objectURL = URL.createObjectURL(file);
         imagePreviewImg.src = objectURL;
         imagePreviewFilename.textContent = file.name;
+        imagePreviewSize.textContent = formatBytes(file.size); // Set ukuran file
 
-        // Sembunyikan input, tampilkan pratinjau
         paneFile.classList.add('hidden');
         paneCamera.classList.add('hidden');
         imagePreviewContainer.classList.remove('hidden');
@@ -142,11 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedFile = null;
         fileInput.value = "";
         
-        // Sembunyikan pratinjau
         imagePreviewContainer.classList.add('hidden');
         imagePreviewImg.src = '';
         
-        // Tampilkan pane yang sesuai dengan tab aktif
         if (activeTab === 'file') {
             paneFile.classList.remove('hidden');
             paneCamera.classList.add('hidden');
@@ -156,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
             paneCamera.classList.remove('hidden');
             startCamera(availableCameras.length > 0 ? availableCameras[currentCameraIndex].deviceId : undefined);
         }
-
         submitButton.disabled = true;
     }
 
@@ -165,12 +166,10 @@ document.addEventListener("DOMContentLoaded", function () {
         activeTab = targetTab;
         resetToInitialState();
 
-        if (targetTab === 'file') {
-            tabFile.classList.add('active');
-            tabCamera.classList.remove('active');
-        } else {
-            tabCamera.classList.add('active');
-            tabFile.classList.remove('active');
+        tabFile.classList.toggle('active', targetTab === 'file');
+        tabCamera.classList.toggle('active', targetTab === 'camera');
+        
+        if (targetTab === 'camera') {
             getAvailableCameras().then(() => {
                 startCamera(availableCameras.length > 0 ? availableCameras[currentCameraIndex].deviceId : undefined);
             });
@@ -183,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     removeImageButton.addEventListener('click', resetToInitialState);
     
-    // Listener untuk upload file
     dropzone.addEventListener("dragenter", (e) => e.preventDefault());
     dropzone.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -205,11 +203,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Listener untuk kamera
     captureButton.addEventListener('click', captureImage);
     switchCameraButton.addEventListener('click', switchCamera);
 
-    // Listener untuk form submit
     uploadForm.addEventListener("submit", function (e) {
         e.preventDefault();
         if (!selectedFile) {
