@@ -745,7 +745,9 @@ html.dark .toast {
     transform: translateY(-50%);
     width: 4px;
     height: 0; /* Mulai dari tinggi 0 */
-    background-color: var(--brand-color);
+    /* #### PERUBAHAN DI SINI #### */
+    background-image: var(--brand-gradient);
+    /* #### AKHIR PERUBAHAN #### */
     border-radius: 4px;
     transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animasikan properti height */
   }
@@ -903,8 +905,17 @@ html.dark .toast {
   border: 1px solid var(--border-primary);
   border-radius: 0.75rem;
   overflow: hidden;
+  /* #### PERUBAHAN DI SINI #### */
   transition: all 0.3s ease;
 }
+
+/* #### PENAMBAHAN ATURAN BARU #### */
+details[open].accordion-item {
+    background-color: var(--bg-tertiary);
+    border-color: var(--brand-color);
+}
+/* #### AKHIR PENAMBAHAN #### */
+
 .accordion-item:hover {
   border-color: var(--brand-color);
   box-shadow: var(--shadow-brand-glow);

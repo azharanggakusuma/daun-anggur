@@ -3,7 +3,7 @@ const CACHE_NAME = 'grapecheck-cache-v1';
 const URLS_TO_CACHE = [
   '/',
   '/riwayat',
-  '/penyakit',
+  '/panduan',
   '/tentang',
   '/static/css/style.css',
   '/static/js/theme.js',
