@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreviewContainer = document.getElementById("imagePreviewContainer");
     const imagePreviewImg = document.getElementById("image-preview-img");
     const imagePreviewFilename = document.getElementById("image-preview-filename");
-    const imagePreviewSize = document.getElementById("image-preview-size"); // Elemen baru
+    const imagePreviewSize = document.getElementById("image-preview-size");
     const removeImageButton = document.getElementById("remove-image-button");
 
     // Notifikasi Toast
@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let videoStream = null;
     let availableCameras = [];
     let currentCameraIndex = 0;
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
 
     // --- Fungsi Bantuan ---
     function formatBytes(bytes, decimals = 2) {
@@ -119,20 +120,37 @@ document.addEventListener("DOMContentLoaded", function () {
         canvas.height = videoFeed.videoHeight;
         canvas.getContext('2d').drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
-            selectedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
-            stopCamera();
-            displayImagePreview(selectedFile);
+            const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+            handleFileSelection(file); // Menggunakan handler utama
         }, 'image/jpeg', 0.95);
     }
 
     // --- Logika Penanganan UI & File ---
-    function displayImagePreview(file) {
+
+    /**
+     * Memvalidasi dan memproses file yang dipilih.
+     * @param {File} file - File yang akan divalidasi.
+     */
+    function handleFileSelection(file) {
         if (!file) return;
 
+        // Validasi tipe file
+        if (!ALLOWED_TYPES.includes(file.type)) {
+            showNotification('Format file tidak valid. Harap pilih JPG, JPEG, atau PNG.', 'error');
+            fileInput.value = ""; // Reset input file untuk mencegah submit ulang file yang sama
+            return;
+        }
+
+        selectedFile = file;
+        stopCamera(); // Hentikan kamera jika aktif
+        displayImagePreview(selectedFile);
+    }
+
+    function displayImagePreview(file) {
         const objectURL = URL.createObjectURL(file);
         imagePreviewImg.src = objectURL;
         imagePreviewFilename.textContent = file.name;
-        imagePreviewSize.textContent = formatBytes(file.size); // Set ukuran file
+        imagePreviewSize.textContent = formatBytes(file.size);
 
         paneFile.classList.add('hidden');
         paneCamera.classList.add('hidden');
@@ -192,14 +210,12 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         dropzone.classList.remove("dropzone-active");
         if (e.dataTransfer.files.length) {
-            selectedFile = e.dataTransfer.files[0];
-            displayImagePreview(selectedFile);
+            handleFileSelection(e.dataTransfer.files[0]);
         }
     });
     fileInput.addEventListener("change", () => {
         if (fileInput.files.length) {
-            selectedFile = fileInput.files[0];
-            displayImagePreview(selectedFile);
+            handleFileSelection(fileInput.files[0]);
         }
     });
 
