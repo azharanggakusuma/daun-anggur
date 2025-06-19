@@ -1169,3 +1169,47 @@ html.dark .preview-remove-button:hover {
   background-color: #7f1d1d; /* red-900 */
   color: #fca5a5; /* red-400 */
 }
+
+/* GAYA TOAST NOTIFICATION YANG SEPENUHNYA RESPONSIF */
+.toast {
+  position: fixed;
+  z-index: 100;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+  transform: translateY(200%);
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-lg);
+  font-weight: 600;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease;
+  pointer-events: none;
+}
+.toast.toast-visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Gaya default untuk Error */
+.toast.toast-error {
+    background-color: #ef4444; /* red-500 */
+}
+html.dark .toast.toast-error {
+    background-color: #f87171; /* red-400 */
+    color: #450a0a; /* red-950 */
+}
+
+/* Gaya baru untuk Sukses */
+.toast.toast-success {
+    background-color: var(--brand-color); /* Menggunakan warna merek (hijau) */
+}
+html.dark .toast.toast-success {
+    background-color: #4ade80; /* green-400 */
+    color: #052e16; /* green-950 */
+}
