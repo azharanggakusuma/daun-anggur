@@ -92,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
             cardDiv.className = `history-card animate-stagger-in`;
             cardDiv.style.setProperty('--delay', `${index * 60}ms`);
             
-            // --- STRUKTUR HTML DIKEMBALIKAN KE VERSI AWAL ---
             cardDiv.innerHTML = `
                 <a href="/hasil/${item.filename}" class="history-card-link group">
                     <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
@@ -159,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
         renderHistory();
     }
     
-    // --- EVENT LISTENER DIKEMBALIKAN KE VERSI AWAL ---
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
