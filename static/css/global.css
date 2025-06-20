@@ -4,28 +4,20 @@
   PALET WARNA & VARIABEL UTAMA
 --- */
 :root {
-  /* Warna Merek (Aksi Utama) */
+  /* ... (variabel tetap sama) ... */
   --brand-gradient: linear-gradient(to right, #16a34a, #22c55e);
   --brand-color: #16a34a; /* green-600 */
   --brand-color-hover: #15803d; /* green-700 */
-
-  /* Latar Belakang */
   --bg-primary: #f8fafc; /* slate-50 */
   --bg-secondary: #ffffff; /* white */
   --bg-tertiary: #f1f5f9; /* slate-100 */
-
-  /* Teks */
   --text-primary: #1e293b; /* slate-800 */
   --text-secondary: #475569; /* slate-600 */
   --text-muted: #64748b; /* slate-500 */
   --text-inverted: #ffffff;
   --text-brand: #16a34a;
-
-  /* Border */
   --border-primary: #e2e8f0; /* slate-200 */
   --border-secondary: #cbd5e1; /* slate-300 */
-
-  /* Bayangan yang Lembut */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -34,27 +26,19 @@
 }
 
 html.dark {
-  /* Warna Merek - Gelap */
+  /* ... (variabel mode gelap tetap sama) ... */
   --brand-gradient: linear-gradient(to right, #22c55e, #4ade80);
   --brand-color: #22c55e; /* green-500 */
   --brand-color-hover: #16a34a; /* green-600 */
-
-  /* Latar Belakang - Gelap */
   --bg-primary: #111827;  /* gray-900 */
   --bg-secondary: #1f2937; /* gray-800 */
   --bg-tertiary: #374151; /* gray-700 */
-
-  /* Teks - Gelap */
   --text-primary: #f3f4f6; /* gray-100 */
   --text-secondary: #9ca3af; /* gray-400 */
   --text-muted: #6b7280; /* gray-500 */
   --text-brand: #4ade80; /* green-400 */
-
-  /* Border - Gelap */
   --border-primary: #374151; /* gray-700 */
   --border-secondary: #4b5563; /* gray-600 */
-
-  /* Bayangan - Gelap */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
@@ -200,11 +184,6 @@ html.dark .button-danger-ghost {
     outline: none;
     border-color: var(--brand-color);
     box-shadow: 0 0 0 2px var(--brand-color);
-}
-
-/* PENYEMPURNAAN: Menambah jarak pada daftar untuk kenyamanan membaca */
-.prose ul, .prose ol {
-    line-height: 1.75;
 }
 
 /* Tambahkan di akhir file static/css/global.css */

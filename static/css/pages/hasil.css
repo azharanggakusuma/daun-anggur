@@ -1,16 +1,5 @@
 /* static/css/pages/hasil.css */
 
-.diagnosis-badge {
-    padding: 0.5rem 1rem; border-radius: 9999px;
-    font-weight: 700; font-size: 1.125rem;
-    display: inline-block; color: white;
-}
-.bg-badge-green { background-color: #16a34a; }
-.bg-badge-red { background-color: #dc2626; }
-.bg-badge-orange { background-color: #f97316; }
-.bg-badge-yellow { background-color: #eab308; }
-.bg-badge-zinc { background-color: #71717a; }
-
 .tab-button {
   padding: 0.75rem 1rem; font-weight: 500;
   color: var(--text-muted); border-bottom: 2px solid transparent;
