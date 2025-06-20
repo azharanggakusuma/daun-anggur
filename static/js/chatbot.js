@@ -38,14 +38,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Fungsi Pesan & Quick Reply ---
+    // +++ PENAMBAHAN BARU: Fungsi untuk menangani Markdown +++
+    const renderMarkdown = (text) => {
+        // 1. Ubah **teks tebal** menjadi <strong>
+        let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // 2. Proses item daftar yang diawali dengan '-' atau '*'
+        const lines = html.split('\n');
+        let inList = false;
+        const processedLines = lines.map(line => {
+            const trimmedLine = line.trim();
+            // Cek apakah baris ini adalah item daftar
+            if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                const listItemContent = trimmedLine.substring(2); // Ambil teks setelah '- '
+                const listItem = `<li>${listItemContent}</li>`;
+                // Jika kita belum berada di dalam <ul>, mulai satu
+                if (!inList) {
+                    inList = true;
+                    return `<ul>${listItem}`;
+                }
+                return listItem;
+            } else {
+                // Jika baris ini bukan item daftar dan kita sebelumnya di dalam <ul>, tutup <ul>
+                if (inList) {
+                    inList = false;
+                    return `</ul>${line}`; // Kembalikan tag penutup dan baris saat ini
+                }
+                return line; // Kembalikan baris seperti biasa
+            }
+        });
+
+        // Gabungkan kembali semua baris yang telah diproses
+        html = processedLines.join('\n');
+        
+        // 3. Jika pesan diakhiri dengan daftar, pastikan tag <ul> ditutup
+        if (inList) {
+            html += '</ul>';
+        }
+
+        // 4. Ganti sisa baris baru dengan <br> untuk paragraf
+        return html.replace(/\n/g, '<br>');
+    };
+
+
+    // --- Fungsi Pesan & Quick Reply (Dengan Modifikasi Kecil) ---
     const addMessage = (text, sender, replies = []) => {
         const oldReplies = messagesContainer.querySelector('.quick-replies-container');
         if (oldReplies) oldReplies.remove();
 
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
-        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+
+        // +++ MODIFIKASI DI SINI +++
+        if (sender === 'bot') {
+            // Gunakan renderMarkdown untuk pesan dari bot agar formatnya rapi
+            messageDiv.innerHTML = renderMarkdown(text);
+        } else {
+            // Untuk pesan dari pengguna, gunakan textContent agar lebih aman
+            messageDiv.textContent = text;
+        }
+        // +++ AKHIR MODIFIKASI +++
+
         messagesContainer.insertBefore(messageDiv, typingIndicator);
 
         if (replies.length > 0 && sender === 'bot') {
@@ -137,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             meta: {
                 creator: {
                     keywords: ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh', 'siapa yang buat', 'azharangga kusuma', 'azhar'],
-                    text: "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur seperti Anda.",
+                    text: "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh **Azharangga Kusuma** untuk membantu para petani dan penghobi anggur seperti Anda.",
                     replies: ["Kamu bisa apa saja?", "Info Penyakit"]
                 },
                 thanks: {
@@ -157,12 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 listDiseases: {
                     keywords: ['daftar penyakit', 'semua penyakit'],
-                    text: "Tentu, saya bisa memberi info tentang: Busuk, Esca, dan Hawar. Penyakit mana yang ingin Anda ketahui lebih dulu?",
+                    text: "Tentu, saya bisa memberi info tentang: **Busuk**, **Esca**, dan **Hawar**. Penyakit mana yang ingin Anda ketahui lebih dulu?",
                     replies: ["Info Busuk", "Info Esca", "Info Hawar"]
                 },
                 listTips: {
                     keywords: ['tips perawatan', 'semua tips'],
-                    text: "Saya punya beberapa tips perawatan umum: Pencegahan Jamur, Pemupukan, Penyiraman, dan Sanitasi Kebun. Mau tahu yang mana?",
+                    text: "Saya punya beberapa tips perawatan umum: **Pencegahan Jamur**, **Pemupukan**, **Penyiraman**, dan **Sanitasi Kebun**. Mau tahu yang mana?",
                     replies: ["Pencegahan Jamur", "Pemupukan", "Penyiraman"]
                 }
             }
@@ -188,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const topicToGet = foundTopicKey || 'description';
             const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[foundDiseaseName][topicToGet];
             const topicName = Object.keys(staticKnowledge.topics).find(key => staticKnowledge.topics[key] === topicToGet) || "info";
-            response.text = `Tentu, ini ${topicName} untuk penyakit ${foundDiseaseName}:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
+            response.text = `Tentu, ini ${topicName} untuk penyakit **${foundDiseaseName}**:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
             response.replies = [`Gejala ${foundDiseaseName}`, `Penanganan ${foundDiseaseName}`, `Penyebab ${foundDiseaseName}`];
             return response;
         }
@@ -196,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (foundTopicKey && conversationContext) {
             const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[conversationContext][foundTopicKey];
             const topicName = Object.keys(staticKnowledge.topics).find(key => staticKnowledge.topics[key] === foundTopicKey) || "info";
-            response.text = `Berikut ${topicName} untuk penyakit ${conversationContext} yang tadi kita bahas:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
+            response.text = `Berikut ${topicName} untuk penyakit **${conversationContext}** yang tadi kita bahas:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
             response.replies = [`Gejala ${conversationContext}`, `Penanganan ${conversationContext}`, `Kembali`];
             return response;
         }
@@ -204,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Cek Pertanyaan tentang Tips
         const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k)) || text.includes(tip.title.toLowerCase()));
         if (foundTip) {
-            response.text = `Ini tips terkait "${foundTip.title}":\n${foundTip.summary}`;
+            response.text = `Ini tips terkait "**${foundTip.title}**":\n${foundTip.summary}`;
             response.replies = ["Tips Pemupukan", "Tips Penyiraman", "Pencegahan Jamur"];
             return response;
         }
