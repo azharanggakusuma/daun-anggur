@@ -85,17 +85,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const showTypingIndicator = () => typingIndicator.classList.remove('hidden');
     const hideTypingIndicator = () => typingIndicator.classList.add('hidden');
 
-    // --- LOGIKA CHATBOT PINTAR (v4) ---
+    // --- LOGIKA CHATBOT PINTAR (v5 - Dengan Persona) ---
     const getSmarterResponse = (userInput) => {
         const text = userInput.toLowerCase().trim();
         let response = { text: "Maaf, saya belum mengerti. Coba tanyakan hal lain tentang penyakit atau perawatan anggur.", replies: ["Daftar Penyakit", "Tips Perawatan"] };
         
+        // --- PENAMBAHAN BARU: Logika Persona & Interaksi Sosial ---
+        // 1. Mengenali pertanyaan tentang pencipta/developer
+        const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh'];
+        if (creatorKeywords.some(keyword => text.includes(keyword))) {
+            response.text = "Saya adalah aplikasi GrapeCheck, sebuah asisten cerdas yang dikembangkan oleh Azharngga Kusuma untuk membantu para petani dan penghobi anggur.";
+            response.replies = ["Kamu bisa apa saja?", "Info Penyakit"];
+            return response;
+        }
+
+        // 2. Merespons ucapan terima kasih
+        const thanksKeywords = ['terima kasih', 'makasih', 'thanks', 'terimakasih'];
+        if (thanksKeywords.some(keyword => text.includes(keyword))) {
+            response.text = "Sama-sama! Senang jika saya bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?";
+            response.replies = ["Daftar Penyakit", "Tips Perawatan"];
+            return response;
+        }
+
+        // 3. Menjelaskan kemampuan diri sendiri
+        const capabilityKeywords = ['bisa apa', 'kemampuanmu', 'fiturmu', 'apa yang bisa kamu lakukan'];
+        if (capabilityKeywords.some(keyword => text.includes(keyword))) {
+            response.text = "Tentu! Saya bisa membantu Anda dengan beberapa hal:\n- Mengidentifikasi penyakit dari deskripsi gejala.\n- Memberikan informasi detail tentang penyakit (gejala, penyebab, penanganan).\n- Menawarkan tips umum perawatan tanaman anggur.";
+            response.replies = ["Info Penyakit Busuk", "Tips Pemupukan", "Penyebab Esca"];
+            return response;
+        }
+        // --- AKHIR PENAMBAHAN ---
+
         // Kata Kunci & Topik
         const diseases = { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' };
         const topics = { 'gejala': 'symptoms', 'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'pemicu': 'triggers', 'penyebab': 'triggers', 'deskripsi': 'description', 'info': 'description' };
         
-        // --- PENAMBAHAN BARU: Logika untuk menebak penyakit dari gejala ---
-        // Kata kunci unik dari gejala untuk identifikasi
+        // Logika untuk menebak penyakit dari gejala
         const symptomKeywords = {
             'Busuk': ['keputihan', 'kuning', 'coklat kemerahan', 'tepi hitam', 'titik-titik hitam'],
             'Esca': ['garis harimau', 'tiger stripes', 'layu tiba-tiba'],
@@ -105,18 +130,17 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const diseaseName in symptomKeywords) {
             const keywords = symptomKeywords[diseaseName];
             if (keywords.some(keyword => text.includes(keyword))) {
-                conversationContext = diseaseName; // Set konteks ke penyakit yang teridentifikasi
+                conversationContext = diseaseName; 
                 response.text = `Gejala yang Anda sebutkan mirip dengan penyakit ${diseaseName}. Apakah Anda ingin informasi lebih lanjut tentang penyakit ini?`;
                 response.replies = [`Info ${diseaseName}`, `Penanganan ${diseaseName}`, `Bukan ini`];
                 return response;
             }
         }
-        // --- AKHIR PENAMBAHAN ---
         
         let foundDisease = Object.keys(diseases).find(d => text.includes(d));
         let foundTopic = Object.keys(topics).find(t => text.includes(t));
         
-        // 1. Menangani pertanyaan tentang Penyakit
+        // ... (sisa logika untuk menangani penyakit dan tips tetap sama persis) ...
         if (foundDisease) {
             const diseaseName = diseases[foundDisease];
             conversationContext = diseaseName; // SET KONTEKS
@@ -128,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        // 2. Menangani pertanyaan KONTEKSTUAL (jika tidak ada nama penyakit di input)
         if (foundTopic && conversationContext) {
             const topicKey = topics[foundTopic];
             const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[conversationContext][topicKey];
@@ -137,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        // 3. Menangani pertanyaan tentang Tips Perawatan
         const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k) || tip.title.toLowerCase().includes(text)));
         if (foundTip) {
             response.text = `Berikut tips tentang ${foundTip.title}:\n${foundTip.summary}`;
@@ -145,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        // 4. Perintah Umum
         if (text.includes('daftar penyakit') || text.includes('info penyakit')) {
             response.text = "Tentu, saya bisa memberi info tentang: Busuk, Esca, dan Hawar. Penyakit mana yang ingin Anda ketahui?";
             response.replies = ["Info Busuk", "Info Esca", "Info Hawar"];
@@ -163,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        return response; // Return default response
+        return response; 
     };
 
     // --- Event Listeners ---
