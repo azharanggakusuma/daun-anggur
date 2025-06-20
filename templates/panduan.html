@@ -3,41 +3,78 @@
 {% block title %}Panduan & Informasi{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12 md:py-16 animate-page-in">
+<div class="max-w-5xl mx-auto px-4 py-12 md:py-16 animate-page-in">
     <header class="text-center mb-16 animate-slide-in-up">
-        <h1 class="text-3xl sm:text-4xl font-bold text-primary">Panduan & Informasi</h1>
-        <p class="mt-2 text-lg sm:text-xl text-secondary">Semua yang Anda butuhkan untuk kebun anggur yang sehat.</p>
+        <h1 class="text-3xl sm:text-4xl font-bold text-primary">Panduan Penyakit & Perawatan</h1>
+        <p class="mt-3 text-lg sm:text-xl text-secondary max-w-3xl mx-auto">Bekali diri Anda dengan pengetahuan untuk mengidentifikasi penyakit dan menerapkan praktik perawatan terbaik untuk kebun anggur Anda.</p>
     </header>
 
-    <section id="informasi-penyakit" class="mb-20">
-        <h2 class="text-2xl font-bold text-primary mb-8 text-center sm:text-left">Informasi Penyakit</h2>
+    <section class="mb-20">
+        <h2 class="text-2xl font-bold text-primary mb-8 text-center">Sekilas Jenis Penyakit</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {% for key, info in disease_info.items() %}
+                {% if key not in ['Sehat', 'Negative'] %}
+                <div class="card-layout card-interactive text-center p-6 animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
+                    <img src="{{ url_for('static', filename='images/stock/' + key|lower + '.jpg') }}" alt="Ilustrasi penyakit {{ key }}" class="w-full h-40 object-cover rounded-lg mb-4 border border-primary/10">
+                    <h3 class="text-xl font-bold text-primary">{{ key }}</h3>
+                    <p class="text-sm text-secondary mt-1">Disebabkan oleh {{ 'jamur' if key in ['Busuk', 'Esca'] else 'bakteri' }}</p>
+                    <a href="#penyakit-{{ key|lower }}" class="button-base button-secondary text-sm mt-4 w-full">Lihat Detail</a>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="informasi-penyakit" class="mb-20 scroll-mt-20">
+        <h2 class="text-2xl font-bold text-primary mb-8 text-center sm:text-left">Informasi Detail Penyakit</h2>
         <main class="space-y-4">
             {% for key, info in disease_info.items() %}
                 {% if key not in ['Sehat', 'Negative'] %}
-                <details class="accordion-item group animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;" {% if loop.first %}open{% endif %}>
+                <details id="penyakit-{{ key|lower }}" class="accordion-item group animate-stagger-in" style="--delay: {{ (loop.index + 3) * 100 }}ms;" {% if loop.index == 1 %}open{% endif %}>
                     <summary class="accordion-summary">
-                        <span class="text-base md:text-lg font-semibold text-primary group-hover:text-brand">{{ key }}</span>
+                        <div class="flex items-center gap-4">
+                             <div class="flex items-center justify-center h-10 w-10 rounded-full bg-{{ info.color }}-500/10 text-{{ info.color }}-500 flex-shrink-0">
+                                <i class="fa-solid {{ 'fa-virus' if key == 'Busuk' else 'fa-disease' if key == 'Esca' else 'fa-bacterium' }} text-xl"></i>
+                            </div>
+                            <span class="text-base md:text-lg font-semibold text-primary group-hover:text-brand">{{ key }}</span>
+                        </div>
                         <i class="fa-solid fa-chevron-down accordion-chevron"></i>
                     </summary>
                     <div class="accordion-content">
-                        <p class="mb-6 text-secondary leading-relaxed border-b border-primary/10 pb-6 text-sm md:text-base">{{ info.description }}</p>
+                        <div class="border-b border-primary/10 pb-6 mb-6">
+                            <p class="mb-4 text-secondary leading-relaxed text-sm md:text-base">{{ info.description }}</p>
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-sm text-muted">Tingkat Risiko:</span>
+                                <span class="inline-block px-3 py-1 text-xs font-bold rounded-full text-white bg-{{info.risk_color}}-500">
+                                    {{ info.risk_level }}
+                                </span>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                             <div>
-                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Gejala Umum</h3>
+                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary flex items-center gap-2"><i class="fa-solid fa-eye text-red-500"></i>Gejala Umum</h3>
                                 <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
                                     {% for symptom in info.symptoms %}
-                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500 text-xs"></i><span>{{ symptom }}</span></li>
+                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-red-500/50 text-xs"></i><span>{{ symptom }}</span></li>
                                     {% endfor %}
                                 </ul>
                             </div>
-                            <div>
-                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary">Rekomendasi Penanganan</h3>
+                             <div>
+                                <h3 class="font-semibold text-base md:text-lg mb-3 text-primary flex items-center gap-2"><i class="fa-solid fa-wind text-yellow-500"></i>Faktor Pemicu</h3>
                                 <ul class="space-y-2 list-inside text-secondary text-sm md:text-base">
-                                    {% for step in info.action %}
-                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1.5 text-green-500"></i><span>{{ step }}</span></li>
+                                    {% for trigger in info.triggers %}
+                                    <li class="flex items-start gap-3"><i class="fa-solid fa-circle-dot mt-1.5 text-yellow-500/50 text-xs"></i><span>{{ trigger }}</span></li>
                                     {% endfor %}
                                 </ul>
                             </div>
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-primary/10">
+                             <h3 class="font-semibold text-base md:text-lg mb-3 text-primary flex items-center gap-2"><i class="fa-solid fa-shield-halved text-green-500"></i>Rekomendasi Penanganan</h3>
+                            <ul class="space-y-3 list-inside text-secondary text-sm md:text-base">
+                                {% for step in info.action %}
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check mt-1 text-green-500"></i><span>{{ step }}</span></li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </details>
@@ -46,18 +83,57 @@
         </main>
     </section>
 
-    <section id="tips-perawatan" class="border-t border-primary/20 pt-16">
-        <h2 class="text-2xl font-bold text-primary mb-8 text-center sm:text-left">Tips Perawatan Umum</h2>
+    <section class="mb-20">
+        <h2 class="text-2xl font-bold text-primary mb-8 text-center">Tabel Perbandingan Gejala</h2>
+        <div class="card-layout overflow-x-auto animate-slide-in-up" style="animation-delay: 200ms;">
+            <table class="w-full text-sm text-left text-secondary">
+                <thead class="text-xs text-primary uppercase bg-tertiary/50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 rounded-l-lg">Penyakit</th>
+                        <th scope="col" class="px-6 py-3">Gejala Kunci</th>
+                        <th scope="col" class="px-6 py-3">Tampilan Bercak</th>
+                        <th scope="col" class="px-6 py-3 rounded-r-lg">Lokasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-secondary border-b border-primary/10">
+                        <th scope="row" class="px-6 py-4 font-bold text-primary whitespace-nowrap">Busuk (Black Rot)</th>
+                        <td class="px-6 py-4">Bercak melingkar dengan titik hitam di tengah.</td>
+                        <td class="px-6 py-4">Coklat kemerahan dengan tepi gelap.</td>
+                        <td class="px-6 py-4">Daun, batang, dan buah.</td>
+                    </tr>
+                    <tr class="bg-secondary border-b border-primary/10">
+                        <th scope="row" class="px-6 py-4 font-bold text-primary whitespace-nowrap">Esca</th>
+                        <td class="px-6 py-4">Pola "garis harimau" di antara tulang daun.</td>
+                        <td class="px-6 py-4">Klorosis (menguning) lalu nekrosis (kering).</td>
+                        <td class="px-6 py-4">Daun (gejala), namun aslinya infeksi pada kayu.</td>
+                    </tr>
+                    <tr class="bg-secondary">
+                        <th scope="row" class="px-6 py-4 font-bold text-primary whitespace-nowrap">Hawar</th>
+                        <td class="px-6 py-4">Bercak kebasahan yang menjadi nekrotik.</td>
+                        <td class="px-6 py-4">Awalnya seperti terendam air, lalu menghitam.</td>
+                        <td class="px-6 py-4">Daun dan pucuk muda.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="tips-perawatan" class="border-t border-primary/20 pt-16 mb-20">
+        <header class="text-center mb-12">
+            <h2 class="text-2xl font-bold text-primary">Strategi Pencegahan Holistik</h2>
+            <p class="mt-2 text-secondary max-w-2xl mx-auto">Pencegahan adalah kunci. Terapkan praktik berikut untuk meminimalkan risiko serangan penyakit.</p>
+        </header>
         <main class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {% for tip in tips_data %}
-            <div class="card-layout card-interactive flex flex-col animate-stagger-in" style="--delay: {{ loop.index * 100 }}ms;">
+            <div class="card-layout card-interactive flex flex-col animate-stagger-in" style="--delay: {{ (loop.index + 2) * 100 }}ms;">
                 <div class="flex-shrink-0 mb-4">
                     <div class="flex items-center justify-center h-14 w-14 rounded-full bg-brand/10 text-brand">
                         <i class="fa-solid {{ tip.icon }} text-2xl"></i>
                     </div>
                 </div>
                 <div class="flex-grow">
-                    <h2 class="text-lg md:text-xl font-bold text-primary mb-2">{{ tip.title }}</h2>
+                    <h3 class="text-lg md:text-xl font-bold text-primary mb-2">{{ tip.title }}</h3>
                     <p class="text-secondary leading-relaxed text-sm md:text-base">{{ tip.summary }}</p>
                 </div>
             </div>
@@ -65,9 +141,37 @@
         </main>
     </section>
 
+    <section class="text-center bg-brand/10 dark:bg-brand/20 border-t-4 border-brand rounded-lg p-8 md:p-12">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-3">Punya Daun yang Mencurigakan?</h2>
+        <p class="text-secondary max-w-xl mx-auto mb-8">Jangan menunggu gejala memburuk. Gunakan GrapeCheck sekarang untuk mendapatkan analisis instan.</p>
+        <a href="{{ url_for('index') }}" class="button-base button-primary">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            Mulai Analisis Sekarang
+        </a>
+    </section>
+
 </div>
 {% endblock %}
 
 {% block body_scripts %}
 <script src="{{ url_for('static', filename='js/accordion.js') }}"></script>
+<script>
+    // Script untuk smooth scroll ke anchor
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Buka details jika targetnya adalah accordion
+                if(targetElement.tagName === 'DETAILS') {
+                    targetElement.open = true;
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
