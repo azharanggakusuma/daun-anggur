@@ -1214,6 +1214,15 @@ html.dark .toast.toast-success {
     color: #052e16; /* green-950 */
 }
 
+/* Gaya baru untuk Sukses */
+.toast.toast-success {
+    background-color: var(--brand-color); /* Menggunakan warna merek (hijau) */
+}
+html.dark .toast.toast-success {
+    background-color: #4ade80; /* green-400 */
+    color: #052e16; /* green-950 */
+}
+
 /* --- GAYA UNTUK FITUR BARU DI HALAMAN RIWAYAT --- */
 .summary-card {
     background-color: var(--bg-secondary);
