@@ -24,19 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(welcomeTimeout);
         if (isOpen) {
             input.focus();
-            welcomeTimeout = setTimeout(() => {
-                showTypingIndicator();
-                setTimeout(() => {
-                    hideTypingIndicator();
-                    addBotMessage("Halo! Saya Asisten AI GrapeCheck. Tanya saya tentang penyakit atau tips perawatan anggur.", ["Info Penyakit Busuk", "Tips Pemupukan"]);
-                }, 1200);
-            }, 500);
+            // Hanya tampilkan pesan selamat datang jika belum ada pesan
+            if (messagesContainer.querySelectorAll('.message').length === 0) {
+                welcomeTimeout = setTimeout(() => {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addBotMessage("Halo! Saya Asisten AI GrapeCheck. Tanya saya tentang penyakit atau tips perawatan anggur.", ["Info Penyakit Busuk", "Tips Pemupukan"]);
+                    }, 1200);
+                }, 500);
+            }
         } else {
-            conversationContext = null; // Reset konteks saat chat ditutup
+            // Konteks tidak di-reset agar percakapan bisa dilanjutkan nanti
+            // conversationContext = null; 
         }
     };
     
-    // --- Fungsi Pesan & Quick Reply ---
+    // --- Fungsi Pesan & Quick Reply (diperbarui) ---
     const addMessage = (text, sender, replies = []) => {
         // Hapus quick replies yang lama sebelum menambah pesan baru
         const oldReplies = messagesContainer.querySelector('.quick-replies-container');
@@ -45,9 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
         messageDiv.textContent = text;
+        // Sisipkan pesan sebelum indikator ketik
         messagesContainer.insertBefore(messageDiv, typingIndicator);
 
-        if (replies.length > 0) {
+        // Jika ada quick replies, buat tombolnya
+        if (replies.length > 0 && sender === 'bot') {
             const repliesContainer = document.createElement('div');
             repliesContainer.className = 'quick-replies-container';
             replies.forEach(replyText => {
@@ -56,8 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.textContent = replyText;
                 repliesContainer.appendChild(button);
             });
+            // Sisipkan kontainer tombol setelah pesan bot
             messagesContainer.insertBefore(repliesContainer, typingIndicator);
         }
+        // Scroll ke bawah
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
 
@@ -106,12 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const topicKey = topics[foundTopic];
             const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[conversationContext][topicKey];
             response.text = Array.isArray(diseaseData) ? `Tentu, ini ${foundTopic} untuk ${conversationContext}:\n- ${diseaseData.join('\n- ')}` : diseaseData;
-            response.replies = [`Gejala ${conversationContext}`, `Penanganan ${conversationContext}`];
+            response.replies = [`Gejala ${conversationContext}`, `Penanganan ${conversationContext}`, `Kembali`];
             return response;
         }
 
         // 3. Menangani pertanyaan tentang Tips Perawatan
-        const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k)));
+        const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k) || tip.title.toLowerCase().includes(text)));
         if (foundTip) {
             response.text = `Berikut tips tentang ${foundTip.title}:\n${foundTip.summary}`;
             response.replies = ["Tips Pemupukan", "Tips Penyiraman", "Info Penyakit"];
@@ -119,14 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 4. Perintah Umum
-        if (text.includes('daftar penyakit')) {
+        if (text.includes('daftar penyakit') || text.includes('info penyakit')) {
             response.text = "Tentu, saya bisa memberi info tentang: Busuk, Esca, dan Hawar. Penyakit mana yang ingin Anda ketahui?";
             response.replies = ["Info Busuk", "Info Esca", "Info Hawar"];
             return response;
         }
-        if (text.includes('tips perawatan')) {
+        if (text.includes('tips') && text.includes('perawatan')) {
             response.text = "Saya punya beberapa tips perawatan umum: Pencegahan Jamur, Pemupukan, Penyiraman, dan Sanitasi Kebun. Mau tahu yang mana?";
-            response.replies = ["Tips Jamur", "Tips Pupuk", "Tips Siram"];
+            response.replies = ["Pencegahan Jamur", "Pemupukan", "Penyiraman"];
+            return response;
+        }
+        if (text.includes('kembali')) {
+            conversationContext = null;
+            response.text = "Baik, ada lagi yang bisa saya bantu?";
+            response.replies = ["Daftar Penyakit", "Tips Perawatan"];
             return response;
         }
 
@@ -143,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = '';
     });
 
+    // Event listener untuk tombol quick reply (diperbarui)
     messagesContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('quick-reply-button')) {
             processAndRespond(e.target.textContent);

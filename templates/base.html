@@ -61,13 +61,13 @@
                     <p class="text-xs text-secondary">Siap membantu Anda!</p>
                 </div>
             </div>
-            {# ---- PERUBAHAN: Menghapus `sm:hidden` ---- #}
             <button id="chat-close-button" title="Tutup">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </header>
         <main id="chat-messages">
-            <div id="typing-indicator" class="message bot hidden">
+            {# ---- PERBAIKAN: Menghapus kelas 'message' dan 'bot' dari indikator ---- #}
+            <div id="typing-indicator" class="hidden">
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>

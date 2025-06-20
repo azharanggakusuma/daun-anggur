@@ -1430,8 +1430,23 @@ body.chat-is-open #chat-widget {
     border-bottom-right-radius: 0.25rem; align-self: flex-end;
 }
 
-#typing-indicator { padding: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-#typing-indicator.hidden { display: none; }
+/* PENYEMPURNAAN: Animasi indikator ketik */
+#typing-indicator { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    align-self: flex-start;
+    padding: 0.6rem 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 1rem;
+    border-bottom-left-radius: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+/* PERBAIKAN: Menggunakan display: none untuk menyembunyikan sepenuhnya */
+#typing-indicator.hidden { 
+    display: none;
+}
 #typing-indicator .dot {
     width: 8px; height: 8px; background-color: var(--text-muted);
     border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out both;
