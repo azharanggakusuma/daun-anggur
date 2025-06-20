@@ -45,43 +45,44 @@
 
 
     <div id="chatbot-container">
-        <button id="chat-fab" title="Tanya Asisten AI">
-            <i class="fa-solid fa-robot icon-closed"></i>
-            <i class="fa-solid fa-comments icon-opened"></i>
-        </button>
+    <button id="chat-fab" title="Tanya Asisten AI">
+        <i class="fa-solid fa-robot icon-closed"></i>
+        <i class="fa-solid fa-comments icon-opened"></i>
+    </button>
 
-        <div id="chat-widget">
-            <header id="chat-header">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-brand/10 text-brand">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
-                        <p class="text-xs text-secondary">Siap membantu Anda!</p>
-                    </div>
+    <div id="chat-widget">
+        <header id="chat-header">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-brand/10 text-brand">
+                    <i class="fa-solid fa-robot"></i>
                 </div>
-                <button id="chat-close-button" class="sm:hidden" title="Tutup">
-                    <i class="fa-solid fa-xmark"></i>
+                <div>
+                    <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
+                    <p class="text-xs text-secondary">Siap membantu Anda!</p>
+                </div>
+            </div>
+            {# ---- PERUBAHAN: Menghapus `sm:hidden` ---- #}
+            <button id="chat-close-button" title="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </header>
+        <main id="chat-messages">
+            <div id="typing-indicator" class="message bot hidden">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </main>
+        <footer id="chat-footer">
+            <form id="chat-form" class="flex items-center gap-2">
+                <input type="text" id="chat-input" placeholder="Ketik pertanyaan..." autocomplete="off">
+                <button type="submit" id="chat-send-button" title="Kirim">
+                    <i class="fa-solid fa-paper-plane"></i>
                 </button>
-            </header>
-            <main id="chat-messages">
-                <div id="typing-indicator" class="message bot hidden">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                </div>
-            </main>
-            <footer id="chat-footer">
-                <form id="chat-form" class="flex items-center gap-2">
-                    <input type="text" id="chat-input" placeholder="Ketik pertanyaan..." autocomplete="off">
-                    <button type="submit" id="chat-send-button" title="Kirim">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
-            </footer>
-        </div>
+            </form>
+        </footer>
     </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
