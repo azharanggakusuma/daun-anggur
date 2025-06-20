@@ -1,0 +1,45 @@
+/* static/css/pages/hasil.css */
+
+.diagnosis-badge {
+    padding: 0.5rem 1rem; border-radius: 9999px;
+    font-weight: 700; font-size: 1.125rem;
+    display: inline-block; color: white;
+}
+.bg-badge-green { background-color: #16a34a; }
+.bg-badge-red { background-color: #dc2626; }
+.bg-badge-orange { background-color: #f97316; }
+.bg-badge-yellow { background-color: #eab308; }
+.bg-badge-zinc { background-color: #71717a; }
+
+.tab-button {
+  padding: 0.75rem 1rem; font-weight: 500;
+  color: var(--text-muted); border-bottom: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+  border-radius: 6px 6px 0 0; position: relative;
+  transform: translateY(0);
+}
+.tab-button:hover:not(.active) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-brand);
+  transform: translateY(-2px);
+}
+.tab-button::after {
+  content: ''; position: absolute; bottom: 0; left: 50%;
+  width: 60%; height: 2px;
+  background-color: var(--text-brand);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.tab-button.active {
+  color: var(--text-brand); font-weight: 600;
+}
+.tab-button.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+.tab-button i {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tab-button:hover:not(.active) i {
+  transform: scale(1.2) rotate(15deg);
+}

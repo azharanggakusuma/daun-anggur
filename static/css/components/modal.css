@@ -1,0 +1,33 @@
+/* static/css/components/modal.css */
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 110; padding: 1rem;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.visible {
+  opacity: 1; visibility: visible;
+}
+.modal-box {
+  background-color: var(--bg-secondary); padding: 1.5rem;
+  border-radius: 1rem; box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 400px; text-align: center;
+}
+@media(min-width: 640px) {
+    .modal-box { padding: 2rem; }
+}
+.modal-box .flex {
+  justify-content: center;
+}
+#modal-confirm-button {
+    background-color: #ef4444; border: 1px solid #ef4444;
+    box-shadow: none;
+}
+#modal-confirm-button:hover {
+    background-color: #dc2626; border-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
