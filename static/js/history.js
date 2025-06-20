@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </a>
                 <button class="history-delete-button" data-filename="${item.filename}" title="Hapus riwayat ini">
-                    <i class="fa-solid fa-trash-can"></i>
+                    <i class="fa-solid fa-trash-can-xmark"></i>
                 </button>
             `;
             fragment.appendChild(cardDiv);
