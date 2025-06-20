@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const noSearchResultsMessage = document.getElementById('no-search-results');
     const filterButtonsContainer = document.getElementById('filter-buttons');
     const managementPanel = document.querySelector('.mb-8.flex');
-    const summarySection = document.getElementById('history-summary-section');
 
     // Modal Elements
     const modal = document.getElementById("delete-modal");
@@ -30,38 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
         'Hawar': { color: 'yellow', icon: 'fa-bacterium' },
         'Negative': { color: 'zinc', icon: 'fa-question-circle' }
     };
-
-    function calculateSummary() {
-        const totalAnalysesEl = document.getElementById('total-analyses');
-        const commonDiagnosisEl = document.getElementById('common-diagnosis');
-        const avgConfidenceEl = document.getElementById('average-confidence');
-        const healthyDetectedEl = document.getElementById('healthy-detected');
-
-        if (history.length === 0) {
-            if (summarySection) summarySection.classList.add('hidden');
-            return;
-        }
-
-        if (summarySection) summarySection.classList.remove('hidden');
-
-        totalAnalysesEl.textContent = history.length;
-
-        const labelCounts = history.reduce((acc, item) => {
-            if (item.label !== 'Sehat') {
-                acc[item.label] = (acc[item.label] || 0) + 1;
-            }
-            return acc;
-        }, {});
-        const commonDiagnosis = Object.keys(labelCounts).length > 0 ? Object.keys(labelCounts).reduce((a, b) => labelCounts[a] > labelCounts[b] ? a : b) : 'N/A';
-        commonDiagnosisEl.textContent = commonDiagnosis;
-        
-        const totalConfidence = history.reduce((sum, item) => sum + parseFloat(item.confidence), 0);
-        const avgConfidence = (history.length > 0 ? totalConfidence / history.length : 0).toFixed(1) + '%';
-        avgConfidenceEl.textContent = avgConfidence;
-
-        const healthyCount = history.filter(item => item.label === 'Sehat').length;
-        healthyDetectedEl.textContent = healthyCount;
-    }
 
     function renderHistory() {
         if (skeletonContainer) skeletonContainer.classList.add('hidden');
@@ -92,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cardDiv.className = `history-card animate-stagger-in`;
             cardDiv.style.setProperty('--delay', `${index * 60}ms`);
             
+            // --- STRUKTUR HTML DIKEMBALIKAN KE VERSI AWAL ---
             cardDiv.innerHTML = `
                 <a href="/hasil/${item.filename}" class="history-card-link group">
                     <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
@@ -146,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
             history = history.filter(item => item.filename !== filename);
             localStorage.setItem('analysisHistory', JSON.stringify(history));
-            calculateSummary();
             renderHistory();
         }, 400);
     }
@@ -154,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function deleteAllHistory() {
         localStorage.removeItem('analysisHistory');
         history = [];
-        calculateSummary();
         renderHistory();
     }
     
@@ -200,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initialize() {
         setTimeout(() => {
-            calculateSummary();
             renderHistory();
         }, 300);
     }

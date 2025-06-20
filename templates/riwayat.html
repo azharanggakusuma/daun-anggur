@@ -9,25 +9,7 @@
         <p class="mt-2 text-lg sm:text-xl text-secondary">Kelola dan lihat wawasan dari semua hasil analisis Anda.</p>
     </header>
 
-    <section id="history-summary-section" class="mb-10 animate-slide-in-up" style="animation-delay: 100ms;">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="summary-card">
-                <h4 class="summary-card-title">Total Analisis</h4>
-                <p id="total-analyses" class="summary-card-value">-</p>
-            </div>
-            <div class="summary-card">
-                <h4 class="summary-card-title">Diagnosis Umum</h4>
-                <p id="common-diagnosis" class="summary-card-value">-</p>
-            </div>
-            <div class="summary-card">
-                <h4 class="summary-card-title">Rata-rata Keyakinan</h4>
-                <p id="average-confidence" class="summary-card-value">-</p>
-            </div>
-            <div class="summary-card">
-                <h4 class="summary-card-title">Sehat Terdeteksi</h4>
-                <p id="healthy-detected" class="summary-card-value">-</p>
-            </div>
-        </div>
+    <section class="mb-10 animate-slide-in-up" style="animation-delay: 100ms;">
         <div id="filter-buttons" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
             <button class="filter-button active" data-filter="*">Semua</button>
             <button class="filter-button" data-filter="Sehat">
