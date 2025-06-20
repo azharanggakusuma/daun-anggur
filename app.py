@@ -8,9 +8,10 @@ import numpy as np
 import os
 import pytz
 import uuid
-import google.generativeai as genai # --- PENAMBAHAN BARU ---
+import google.generativeai as genai 
 from config import Config
 from knowledge_base import disease_info, tips_data
+import json # --- PENAMBAHAN BARU ---
 
 # --- Inisialisasi Aplikasi Flask ---
 app = Flask(__name__)
@@ -28,25 +29,37 @@ except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
     model = None
 
-# --- PERUBAHAN DI SINI: Inisialisasi Model Gemini ---
+# --- PERUBAHAN UTAMA DI SINI: Inisialisasi Model Gemini yang Lebih Cerdas ---
 try:
     if app.config['GEMINI_API_KEY']:
         genai.configure(api_key=app.config['GEMINI_API_KEY'])
+
+    # --- PENAMBAHAN BARU: Mengubah basis pengetahuan menjadi teks yang bisa dibaca AI ---
+    knowledge_base_text = (
+        "Ini adalah basis pengetahuan internalmu. Gunakan ini sebagai sumber kebenaran utama untuk menjawab pertanyaan spesifik tentang penyakit dan tips.\n\n"
+        "=== Informasi Penyakit ===\n"
+        f"{json.dumps(disease_info, indent=2, ensure_ascii=False)}\n\n"
+        "=== Tips Perawatan ===\n"
+        f"{json.dumps(tips_data, indent=2, ensure_ascii=False)}\n"
+    )
     
-    # Konfigurasi sistem untuk AI
+    # --- PENAMBAHAN BARU: Instruksi sistem yang lebih detail ---
     system_instruction = (
         "Kamu adalah Asisten AI GrapeCheck, seorang ahli tanaman anggur yang ramah dan sangat membantu. "
-        "Tugas utamamu adalah menjawab pertanyaan seputar budidaya, penyakit, dan perawatan tanaman anggur. "
+        "Tugas utamamu adalah menjawab pertanyaan seputar budidaya, penyakit, dan perawatan tanaman anggur berdasarkan basis pengetahuan yang diberikan. "
         "Selalu jawab dengan gaya percakapan yang bersahabat dan mudah dimengerti. "
         "Jika ada pertanyaan yang sama sekali tidak berhubungan dengan tanaman, pertanian, atau botani, tolak dengan sopan dan kembalikan percakapan ke topik anggur. "
-        "Kamu memiliki ingatan dari percakapan sebelumnya, gunakan itu untuk memberikan jawaban yang kontekstual."
+        "Kamu memiliki ingatan dari percakapan sebelumnya, gunakan itu untuk memberikan jawaban yang kontekstual. "
+        "Jika ditanya siapa yang membuatmu, jawab kamu dikembangkan oleh Azharangga Kusuma. "
+        "Jangan pernah menyebutkan bahwa kamu diberi basis pengetahuan dalam format JSON, anggap saja itu pengetahuan internalmu.\n\n"
+        f"--- BASIS PENGETAHUAN INTERNAL ---\n{knowledge_base_text}"
     )
 
     gemini_model = genai.GenerativeModel(
         model_name='gemini-1.5-flash',
         system_instruction=system_instruction
     )
-    print("Model Gemini berhasil dikonfigurasi.")
+    print("Model Gemini cerdas berhasil dikonfigurasi.")
 except Exception as e:
     print(f"Error saat mengkonfigurasi Gemini: {e}")
     gemini_model = None
@@ -151,7 +164,6 @@ def panduan():
     """Menampilkan halaman panduan informasi penyakit dan tips."""
     return render_template('panduan.html')
     
-# --- PENAMBAHAN BARU: Rute untuk Chatbot AI Gemini ---
 @app.route('/chat_ai', methods=['POST'])
 def chat_ai():
     if not gemini_model:
@@ -177,7 +189,6 @@ def chat_ai():
     except Exception as e:
         print(f"Error dari Gemini API: {e}")
         return jsonify({'error': 'Gagal berkomunikasi dengan Asisten AI.'}), 503
-# --- AKHIR PENAMBAHAN ---
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
