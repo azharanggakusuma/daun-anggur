@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         hideTypingIndicator();
                         const welcomeText = "Halo! Saya Asisten AI GrapeCheck. Tanya saya tentang penyakit atau tips perawatan anggur.";
-                        addBotMessage(welcomeText, ["Info Penyakit Busuk", "Tips Pemupukan"]);
+                        addBotMessage(welcomeText, ["Cara pakai aplikasi", "Info Penyakit Busuk"]);
                         conversationHistory.push({ role: 'model', parts: [{ text: welcomeText }] });
                     }, 1200);
                 }, 500);
@@ -38,50 +38,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // +++ PENAMBAHAN BARU: Fungsi untuk menangani Markdown +++
     const renderMarkdown = (text) => {
-        // 1. Ubah **teks tebal** menjadi <strong>
         let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-        // 2. Proses item daftar yang diawali dengan '-' atau '*'
         const lines = html.split('\n');
         let inList = false;
         const processedLines = lines.map(line => {
             const trimmedLine = line.trim();
-            // Cek apakah baris ini adalah item daftar
             if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
-                const listItemContent = trimmedLine.substring(2); // Ambil teks setelah '- '
+                const listItemContent = trimmedLine.substring(2);
                 const listItem = `<li>${listItemContent}</li>`;
-                // Jika kita belum berada di dalam <ul>, mulai satu
                 if (!inList) {
                     inList = true;
                     return `<ul>${listItem}`;
                 }
                 return listItem;
             } else {
-                // Jika baris ini bukan item daftar dan kita sebelumnya di dalam <ul>, tutup <ul>
                 if (inList) {
                     inList = false;
-                    return `</ul>${line}`; // Kembalikan tag penutup dan baris saat ini
+                    return `</ul>${line}`;
                 }
-                return line; // Kembalikan baris seperti biasa
+                return line;
             }
         });
-
-        // Gabungkan kembali semua baris yang telah diproses
         html = processedLines.join('\n');
-        
-        // 3. Jika pesan diakhiri dengan daftar, pastikan tag <ul> ditutup
         if (inList) {
             html += '</ul>';
         }
-
-        // 4. Ganti sisa baris baru dengan <br> untuk paragraf
         return html.replace(/\n/g, '<br>');
     };
 
-
-    // --- Fungsi Pesan & Quick Reply (Dengan Modifikasi Kecil) ---
     const addMessage = (text, sender, replies = []) => {
         const oldReplies = messagesContainer.querySelector('.quick-replies-container');
         if (oldReplies) oldReplies.remove();
@@ -89,15 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
 
-        // +++ MODIFIKASI DI SINI +++
         if (sender === 'bot') {
-            // Gunakan renderMarkdown untuk pesan dari bot agar formatnya rapi
             messageDiv.innerHTML = renderMarkdown(text);
         } else {
-            // Untuk pesan dari pengguna, gunakan textContent agar lebih aman
             messageDiv.textContent = text;
         }
-        // +++ AKHIR MODIFIKASI +++
 
         messagesContainer.insertBefore(messageDiv, typingIndicator);
 
@@ -173,55 +154,71 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- FUNGSI STATIS DENGAN DATA YANG DIPERKAYA ---
+    // --- FUNGSI STATIS DENGAN PENGETAHUAN YANG DIPERKAYA ---
     const getStaticResponse = (userInput) => {
         const text = userInput.toLowerCase().trim();
-        let response = { text: "Maaf, saya belum mengerti. Coba tanyakan hal lain tentang penyakit atau perawatan anggur.", replies: ["Daftar Penyakit", "Tips Perawatan"] };
+        let response = { text: "Maaf, saya belum mengerti. Saya akan coba tanyakan ke AI yang lebih pintar. Mohon tunggu...", replies: [] };
 
-        // Definisikan pengetahuan statis dengan keyword yang lebih kaya
+        // +++ PERUBAHAN UTAMA DI SINI: Pengetahuan Statis yang Diperkaya +++
         const staticKnowledge = {
             diseases: { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' },
             topics: {
-                'gejala': 'symptoms', 'ciri-ciri': 'symptoms', 'tandanya': 'symptoms', 'seperti apa': 'symptoms',
-                'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'solusi': 'action', 'obatnya': 'action', 'caranya': 'action',
-                'pemicu': 'triggers', 'penyebab': 'triggers', 'kenapa bisa': 'triggers', 'asalnya': 'triggers',
-                'deskripsi': 'description', 'info': 'description', 'tentang': 'description', 'adalah': 'description', 'apa itu': 'description'
+                'gejala': 'symptoms', 'ciri-ciri': 'symptoms', 'tandanya': 'symptoms',
+                'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'solusi': 'action', 'obatnya': 'action',
+                'pemicu': 'triggers', 'penyebab': 'triggers', 'kenapa bisa': 'triggers',
+                'deskripsi': 'description', 'info': 'description', 'tentang': 'description', 'apa itu': 'description'
             },
+            // Pengetahuan tentang aplikasi itu sendiri
             meta: {
                 creator: {
-                    keywords: ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh', 'siapa yang buat', 'azharangga kusuma', 'azhar'],
-                    text: "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh **Azharangga Kusuma** untuk membantu para petani dan penghobi anggur seperti Anda.",
-                    replies: ["Kamu bisa apa saja?", "Info Penyakit"]
+                    keywords: ['pembuat', 'developer', 'pencipta', 'dibuat oleh', 'azharangga kusuma', 'azhar'],
+                    text: "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh **Azharangga Kusuma**.",
+                    replies: ["Kemampuan aplikasi", "Info Penyakit"]
                 },
                 thanks: {
-                    keywords: ['terima kasih', 'makasih', 'thanks', 'terimakasih'],
-                    text: "Sama-sama! Senang jika saya bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?",
+                    keywords: ['terima kasih', 'makasih', 'thanks'],
+                    text: "Sama-sama! Senang bisa membantu.",
                     replies: ["Daftar Penyakit", "Tips Perawatan"]
                 },
-                capability: {
-                    keywords: ['bisa apa', 'kemampuanmu', 'fiturmu', 'apa yang bisa kamu lakukan'],
-                    text: "Tentu! Saya bisa membantu Anda dengan beberapa hal:\n- Memberikan informasi detail tentang penyakit (gejala, penyebab, penanganan).\n- Menawarkan tips umum perawatan tanaman anggur.",
-                    replies: ["Info Penyakit Busuk", "Tips Pemupukan", "Penyebab Esca"]
+                app_capability: {
+                    keywords: ['kemampuan aplikasi', 'bisa apa', 'fitur'],
+                    text: "Aplikasi **GrapeCheck** memiliki beberapa kemampuan utama:\n- **Deteksi Penyakit**: Unggah gambar daun anggur untuk dianalisis.\n- **Panduan Lengkap**: Lihat informasi detail penyakit dan tips di halaman Panduan.\n- **Riwayat Analisis**: Semua hasil cek Anda tersimpan di halaman Riwayat.",
+                    replies: ["Cara deteksi penyakit", "Lihat halaman Riwayat", "Buka Panduan"]
                 },
-                reset: {
-                    keywords: ['kembali', 'bukan ini', 'menu utama', 'batal'],
-                    text: "Baik, ada lagi yang bisa saya bantu?",
-                    replies: ["Daftar Penyakit", "Tips Perawatan"]
+                how_to_use: {
+                    keywords: ['cara pakai', 'cara menggunakan', 'cara deteksi penyakit', 'cara analisis', 'upload gambar'],
+                    text: "Caranya sangat mudah!\n1. Di **Halaman Utama**, klik tombol 'Pilih Gambar'.\n2. Pilih foto daun anggur dari galeri Anda.\n3. Aplikasi akan langsung menganalisis dan memberikan hasilnya!",
+                    replies: ["Halaman Riwayat", "Daftar Penyakit"]
+                },
+                history_page: {
+                    keywords: ['halaman riwayat', 'lihat riwayat', 'histori'],
+                    text: "Halaman **Riwayat** berguna untuk melihat kembali semua hasil analisis yang pernah Anda lakukan. Ini membantu Anda memantau kesehatan tanaman anggur dari waktu ke waktu.",
+                    replies: ["Cara deteksi penyakit", "Buka Panduan"]
+                },
+                guidance_page: {
+                    keywords: ['halaman panduan', 'buka panduan', 'semua info'],
+                    text: "Di halaman **Panduan**, Anda bisa menemukan semua informasi tentang penyakit dan tips perawatan yang disusun rapi seperti buku saku digital.",
+                    replies: ["Daftar Penyakit", "Daftar Tips"]
                 },
                 listDiseases: {
                     keywords: ['daftar penyakit', 'semua penyakit'],
-                    text: "Tentu, saya bisa memberi info tentang: **Busuk**, **Esca**, dan **Hawar**. Penyakit mana yang ingin Anda ketahui lebih dulu?",
+                    text: "Saya punya data untuk penyakit berikut:\n- **Busuk** (Black Rot)\n- **Esca** (Black Measles)\n- **Hawar** (Leaf Blight)\nPenyakit mana yang ingin Anda ketahui?",
                     replies: ["Info Busuk", "Info Esca", "Info Hawar"]
                 },
                 listTips: {
-                    keywords: ['tips perawatan', 'semua tips'],
-                    text: "Saya punya beberapa tips perawatan umum: **Pencegahan Jamur**, **Pemupukan**, **Penyiraman**, dan **Sanitasi Kebun**. Mau tahu yang mana?",
-                    replies: ["Pencegahan Jamur", "Pemupukan", "Penyiraman"]
-                }
+                    keywords: ['tips perawatan', 'daftar tips'],
+                    text: "Tentu, ini beberapa tips umum yang tersedia:\n- Pencegahan Jamur\n- Pemupukan\n- Penyiraman\n- Sanitasi Kebun\nMau dibacakan yang mana?",
+                    replies: ["Tips Pemupukan", "Tips Penyiraman", "Tips Sanitasi"]
+                },
+                 reset: {
+                    keywords: ['kembali', 'menu utama', 'batal'],
+                    text: "Baik, kita mulai dari awal. Ada yang bisa saya bantu?",
+                    replies: ["Kemampuan aplikasi", "Daftar Penyakit"]
+                },
             }
         };
 
-        // 1. Cek Pertanyaan Meta (tentang bot, sapaan, dll)
+        // 1. Cek Pertanyaan Meta (tentang aplikasi, sapaan, dll)
         for (const key in staticKnowledge.meta) {
             if (staticKnowledge.meta[key].keywords.some(k => text.includes(k))) {
                 if(key === 'reset') conversationContext = null;
@@ -263,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Jika tidak ada yang cocok, kembalikan response default untuk memicu AI
+        // Modifikasi pesan agar lebih jelas
+        response.text = "Maaf, saya belum mengerti. Saya akan coba tanyakan ke AI yang lebih pintar untuk pertanyaan ini.";
         return response;
     };
 
