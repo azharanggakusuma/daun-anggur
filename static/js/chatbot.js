@@ -94,6 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const diseases = { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' };
         const topics = { 'gejala': 'symptoms', 'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'pemicu': 'triggers', 'penyebab': 'triggers', 'deskripsi': 'description', 'info': 'description' };
         
+        // --- PENAMBAHAN BARU: Logika untuk menebak penyakit dari gejala ---
+        // Kata kunci unik dari gejala untuk identifikasi
+        const symptomKeywords = {
+            'Busuk': ['keputihan', 'kuning', 'coklat kemerahan', 'tepi hitam', 'titik-titik hitam'],
+            'Esca': ['garis harimau', 'tiger stripes', 'layu tiba-tiba'],
+            'Hawar': ['kebasahan', 'water-soaked', 'nekrotik', 'retakan', 'kanker']
+        };
+
+        for (const diseaseName in symptomKeywords) {
+            const keywords = symptomKeywords[diseaseName];
+            if (keywords.some(keyword => text.includes(keyword))) {
+                conversationContext = diseaseName; // Set konteks ke penyakit yang teridentifikasi
+                response.text = `Gejala yang Anda sebutkan mirip dengan penyakit ${diseaseName}. Apakah Anda ingin informasi lebih lanjut tentang penyakit ini?`;
+                response.replies = [`Info ${diseaseName}`, `Penanganan ${diseaseName}`, `Bukan ini`];
+                return response;
+            }
+        }
+        // --- AKHIR PENAMBAHAN ---
+        
         let foundDisease = Object.keys(diseases).find(d => text.includes(d));
         let foundTopic = Object.keys(topics).find(t => text.includes(t));
         
@@ -137,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             response.replies = ["Pencegahan Jamur", "Pemupukan", "Penyiraman"];
             return response;
         }
-        if (text.includes('kembali')) {
+        if (text.includes('kembali') || text.includes('bukan ini')) {
             conversationContext = null;
             response.text = "Baik, ada lagi yang bisa saya bantu?";
             response.replies = ["Daftar Penyakit", "Tips Perawatan"];
