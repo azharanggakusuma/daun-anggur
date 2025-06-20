@@ -190,13 +190,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.bg-dots-pattern {
-    background-image: radial-gradient(var(--border-secondary) 1px, transparent 1px);
-    background-size: 24px 24px;
+/* #### PERUBAHAN DI SINI: Mengganti pola titik-titik menjadi grid #### */
+.bg-grid-pattern {
+    background-image: 
+        linear-gradient(to right, var(--border-primary) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--border-primary) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
-html.dark .bg-dots-pattern {
-    background-image: radial-gradient(var(--border-secondary) 0.5px, transparent 0.5px);
+html.dark .bg-grid-pattern {
+    background-image: 
+        linear-gradient(to right, var(--border-primary) 0.5px, transparent 0.5px),
+        linear-gradient(to bottom, var(--border-primary) 0.5px, transparent 0.5px);
 }
+/* #### AKHIR PERUBAHAN #### */
 
 .text-brand-gradient {
   background-image: var(--brand-gradient);
@@ -1080,6 +1086,11 @@ details[open] > summary .accordion-chevron {
   gap: 0.5rem;
   margin-bottom: -1px;
 }
+@media (max-width: 639px) {
+  .upload-tab-button span {
+    display: none;
+  }
+}
 .upload-tab-button:hover:not(.active) {
   color: var(--text-primary);
 }
@@ -1203,15 +1214,6 @@ html.dark .preview-remove-button:hover {
 html.dark .toast.toast-error {
     background-color: #f87171; /* red-400 */
     color: #450a0a; /* red-950 */
-}
-
-/* Gaya baru untuk Sukses */
-.toast.toast-success {
-    background-color: var(--brand-color); /* Menggunakan warna merek (hijau) */
-}
-html.dark .toast.toast-success {
-    background-color: #4ade80; /* green-400 */
-    color: #052e16; /* green-950 */
 }
 
 /* Gaya baru untuk Sukses */
