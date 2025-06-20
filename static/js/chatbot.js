@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = text;
+        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
         messagesContainer.insertBefore(messageDiv, typingIndicator);
 
         if (replies.length > 0 && sender === 'bot') {
@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 conversationHistory.push({ role: 'model', parts: [{ text: geminiResponse }] });
             } else {
                 await new Promise(resolve => setTimeout(resolve, 1200));
-
                 addBotMessage(staticResponse.text, staticResponse.replies);
                 conversationHistory.push({ role: 'model', parts: [{ text: staticResponse.text }] });
             }
@@ -109,12 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     history: conversationHistory.slice(0, -1)
                 })
             });
-
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Gagal mendapat respons dari AI.");
             }
-
             const data = await response.json();
             return data.response;
         } catch (error) {
@@ -123,100 +120,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- FUNGSI STATIS DENGAN DATA YANG DIPERKAYA ---
     const getStaticResponse = (userInput) => {
         const text = userInput.toLowerCase().trim();
         let response = { text: "Maaf, saya belum mengerti. Coba tanyakan hal lain tentang penyakit atau perawatan anggur.", replies: ["Daftar Penyakit", "Tips Perawatan"] };
 
-        // --- PERUBAHAN DI SINI ---
-        const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh', 'siapa yang buat', 'kamu siapa'];
-        if (creatorKeywords.some(keyword => text.includes(keyword))) {
-            response.text = "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur seperti Anda.";
-            response.replies = ["Kamu bisa apa saja?", "Info Penyakit"];
-            return response;
-        }
-        // --- AKHIR PERUBAHAN ---
-
-        const thanksKeywords = ['terima kasih', 'makasih', 'thanks', 'terimakasih'];
-        if (thanksKeywords.some(keyword => text.includes(keyword))) {
-            response.text = "Sama-sama! Senang jika saya bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?";
-            response.replies = ["Daftar Penyakit", "Tips Perawatan"];
-            return response;
-        }
-
-        const capabilityKeywords = ['bisa apa', 'kemampuanmu', 'fiturmu', 'apa yang bisa kamu lakukan'];
-        if (capabilityKeywords.some(keyword => text.includes(keyword))) {
-            response.text = "Tentu! Saya bisa membantu Anda dengan beberapa hal:\n- Mengidentifikasi penyakit dari deskripsi gejala.\n- Memberikan informasi detail tentang penyakit (gejala, penyebab, penanganan).\n- Menawarkan tips umum perawatan tanaman anggur.";
-            response.replies = ["Info Penyakit Busuk", "Tips Pemupukan", "Penyebab Esca"];
-            return response;
-        }
-
-        const diseases = { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' };
-        const topics = { 'gejala': 'symptoms', 'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'pemicu': 'triggers', 'penyebab': 'triggers', 'deskripsi': 'description', 'info': 'description' };
-
-        const symptomKeywords = {
-            'Busuk': ['keputihan', 'kuning', 'coklat kemerahan', 'tepi hitam', 'titik-titik hitam'],
-            'Esca': ['garis harimau', 'tiger stripes', 'layu tiba-tiba'],
-            'Hawar': ['kebasahan', 'water-soaked', 'nekrotik', 'retakan', 'kanker']
+        // Definisikan pengetahuan statis dengan keyword yang lebih kaya
+        const staticKnowledge = {
+            diseases: { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' },
+            topics: {
+                'gejala': 'symptoms', 'ciri-ciri': 'symptoms', 'tandanya': 'symptoms', 'seperti apa': 'symptoms',
+                'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'solusi': 'action', 'obatnya': 'action', 'caranya': 'action',
+                'pemicu': 'triggers', 'penyebab': 'triggers', 'kenapa bisa': 'triggers', 'asalnya': 'triggers',
+                'deskripsi': 'description', 'info': 'description', 'tentang': 'description', 'adalah': 'description', 'apa itu': 'description'
+            },
+            meta: {
+                creator: {
+                    keywords: ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh', 'siapa yang buat', 'azharangga kusuma', 'azhar'],
+                    text: "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur seperti Anda.",
+                    replies: ["Kamu bisa apa saja?", "Info Penyakit"]
+                },
+                thanks: {
+                    keywords: ['terima kasih', 'makasih', 'thanks', 'terimakasih'],
+                    text: "Sama-sama! Senang jika saya bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?",
+                    replies: ["Daftar Penyakit", "Tips Perawatan"]
+                },
+                capability: {
+                    keywords: ['bisa apa', 'kemampuanmu', 'fiturmu', 'apa yang bisa kamu lakukan'],
+                    text: "Tentu! Saya bisa membantu Anda dengan beberapa hal:\n- Memberikan informasi detail tentang penyakit (gejala, penyebab, penanganan).\n- Menawarkan tips umum perawatan tanaman anggur.",
+                    replies: ["Info Penyakit Busuk", "Tips Pemupukan", "Penyebab Esca"]
+                },
+                reset: {
+                    keywords: ['kembali', 'bukan ini', 'menu utama', 'batal'],
+                    text: "Baik, ada lagi yang bisa saya bantu?",
+                    replies: ["Daftar Penyakit", "Tips Perawatan"]
+                },
+                listDiseases: {
+                    keywords: ['daftar penyakit', 'semua penyakit'],
+                    text: "Tentu, saya bisa memberi info tentang: Busuk, Esca, dan Hawar. Penyakit mana yang ingin Anda ketahui lebih dulu?",
+                    replies: ["Info Busuk", "Info Esca", "Info Hawar"]
+                },
+                listTips: {
+                    keywords: ['tips perawatan', 'semua tips'],
+                    text: "Saya punya beberapa tips perawatan umum: Pencegahan Jamur, Pemupukan, Penyiraman, dan Sanitasi Kebun. Mau tahu yang mana?",
+                    replies: ["Pencegahan Jamur", "Pemupukan", "Penyiraman"]
+                }
+            }
         };
 
-        for (const diseaseName in symptomKeywords) {
-            const keywords = symptomKeywords[diseaseName];
-            if (keywords.some(keyword => text.includes(keyword))) {
-                conversationContext = diseaseName;
-                response.text = `Gejala yang Anda sebutkan mirip dengan penyakit ${diseaseName}. Apakah Anda ingin informasi lebih lanjut tentang penyakit ini?`;
-                response.replies = [`Info ${diseaseName}`, `Penanganan ${diseaseName}`, `Bukan ini`];
-                return response;
+        // 1. Cek Pertanyaan Meta (tentang bot, sapaan, dll)
+        for (const key in staticKnowledge.meta) {
+            if (staticKnowledge.meta[key].keywords.some(k => text.includes(k))) {
+                if(key === 'reset') conversationContext = null;
+                return staticKnowledge.meta[key];
             }
         }
 
-        let foundDisease = Object.keys(diseases).find(d => text.includes(d));
-        let foundTopic = Object.keys(topics).find(t => text.includes(t));
+        // 2. Cek Pertanyaan Spesifik tentang Penyakit & Topik
+        let foundDiseaseName = Object.keys(staticKnowledge.diseases).find(d => text.includes(d)) || null;
+        if (foundDiseaseName) foundDiseaseName = staticKnowledge.diseases[foundDiseaseName];
+        
+        let foundTopicKey = Object.keys(staticKnowledge.topics).find(t => text.includes(t)) || null;
+        if (foundTopicKey) foundTopicKey = staticKnowledge.topics[foundTopicKey];
 
-        if (foundDisease) {
-            const diseaseName = diseases[foundDisease];
-            conversationContext = diseaseName;
-            const topicKey = foundTopic ? topics[foundTopic] : 'description';
-            const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[diseaseName][topicKey];
-
-            response.text = Array.isArray(diseaseData) ? `Berikut ${foundTopic || 'info'} untuk ${diseaseName}:\n- ${diseaseData.join('\n- ')}` : diseaseData;
-            response.replies = [`Gejala ${diseaseName}`, `Penanganan ${diseaseName}`, `Penyebab ${diseaseName}`];
+        if (foundDiseaseName) {
+            conversationContext = foundDiseaseName;
+            const topicToGet = foundTopicKey || 'description';
+            const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[foundDiseaseName][topicToGet];
+            const topicName = Object.keys(staticKnowledge.topics).find(key => staticKnowledge.topics[key] === topicToGet) || "info";
+            response.text = `Tentu, ini ${topicName} untuk penyakit ${foundDiseaseName}:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
+            response.replies = [`Gejala ${foundDiseaseName}`, `Penanganan ${foundDiseaseName}`, `Penyebab ${foundDiseaseName}`];
             return response;
         }
 
-        if (foundTopic && conversationContext) {
-            const topicKey = topics[foundTopic];
-            const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[conversationContext][topicKey];
-            response.text = Array.isArray(diseaseData) ? `Tentu, ini ${foundTopic} untuk ${conversationContext}:\n- ${diseaseData.join('\n- ')}` : diseaseData;
+        if (foundTopicKey && conversationContext) {
+            const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[conversationContext][foundTopicKey];
+            const topicName = Object.keys(staticKnowledge.topics).find(key => staticKnowledge.topics[key] === foundTopicKey) || "info";
+            response.text = `Berikut ${topicName} untuk penyakit ${conversationContext} yang tadi kita bahas:\n${Array.isArray(diseaseData) ? `- ${diseaseData.join('\n- ')}` : diseaseData}`;
             response.replies = [`Gejala ${conversationContext}`, `Penanganan ${conversationContext}`, `Kembali`];
             return response;
         }
 
-        const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k) || tip.title.toLowerCase().includes(text)));
+        // 3. Cek Pertanyaan tentang Tips
+        const foundTip = CHATBOT_TIPS_KNOWLEDGE.find(tip => tip.keywords.some(k => text.includes(k)) || text.includes(tip.title.toLowerCase()));
         if (foundTip) {
-            response.text = `Berikut tips tentang ${foundTip.title}:\n${foundTip.summary}`;
-            response.replies = ["Tips Pemupukan", "Tips Penyiraman", "Info Penyakit"];
+            response.text = `Ini tips terkait "${foundTip.title}":\n${foundTip.summary}`;
+            response.replies = ["Tips Pemupukan", "Tips Penyiraman", "Pencegahan Jamur"];
             return response;
         }
 
-        if (text.includes('daftar penyakit') || text.includes('info penyakit')) {
-            response.text = "Tentu, saya bisa memberi info tentang: Busuk, Esca, dan Hawar. Penyakit mana yang ingin Anda ketahui?";
-            response.replies = ["Info Busuk", "Info Esca", "Info Hawar"];
-            return response;
-        }
-        if (text.includes('tips') && text.includes('perawatan')) {
-            response.text = "Saya punya beberapa tips perawatan umum: Pencegahan Jamur, Pemupukan, Penyiraman, dan Sanitasi Kebun. Mau tahu yang mana?";
-            response.replies = ["Pencegahan Jamur", "Pemupukan", "Penyiraman"];
-            return response;
-        }
-        if (text.includes('kembali') || text.includes('bukan ini')) {
-            conversationContext = null;
-            response.text = "Baik, ada lagi yang bisa saya bantu?";
-            response.replies = ["Daftar Penyakit", "Tips Perawatan"];
-            return response;
-        }
-
+        // Jika tidak ada yang cocok, kembalikan response default untuk memicu AI
         return response;
     };
+
 
     // --- Event Listeners ---
     fab.addEventListener('click', toggleChat);
