@@ -1,113 +1,159 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     {# ---- PERUBAHAN: Menambahkan viewport-fit=cover ---- #}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    
-    <meta name="theme-color" content="#16a34a">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <meta name="theme-color" content="#16a34a" />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}"
+    />
 
     <title>{% block title %}GrapeCheck{% endblock %}</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/sharp-solid.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/sharp-regular.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/sharp-light.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/duotone.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://site-assets.fontawesome.com/releases/v6.7.2/css/brands.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
     {% block head_extra %}{% endblock %}
-</head>
-<body class="antialiased flex flex-col min-h-screen">
-    
+  </head>
+  <body class="antialiased flex flex-col min-h-screen">
     <div id="preloader">
-        <div class="preloader-animation">
-            <i class="fa-solid fa-leaf leaf-icon"></i>
-            <i class="fa-solid fa-magnifying-glass scanner-icon"></i>
-            <p class="preloader-text">Menganalisis...</p>
-        </div>
+      <div class="preloader-animation">
+        <i class="fa-solid fa-leaf leaf-icon"></i>
+        <i class="fa-solid fa-magnifying-glass scanner-icon"></i>
+        <p class="preloader-text">Menganalisis...</p>
+      </div>
     </div>
 
     <div class="fixed top-0 left-0 -z-10 h-full w-full bg-grid-pattern"></div>
-    
+
     {% include 'components/header.html' %}
 
     <div id="main-content-wrapper">
-        <div class="w-full pb-16 sm:pb-0 flex-grow">
-            {% block content %}{% endblock %}
-        </div>
-        {% include 'components/footer.html' %}
+      <div class="w-full pb-16 sm:pb-0 flex-grow">
+        {% block content %}{% endblock %}
+      </div>
+      {% include 'components/footer.html' %}
     </div>
-
 
     <div id="chatbot-container">
-    <div id="chat-overlay"></div>
-    <button id="chat-fab" title="Tanya Asisten AI">
+      <div id="chat-overlay"></div>
+      <button id="chat-fab" title="Tanya Asisten AI">
         <i class="fa-solid fa-comment icon-opened"></i>
-    </button>
-    <div id="chat-widget">
+      </button>
+      <div id="chat-widget">
         <header id="chat-header">
-            <div class="flex items-center gap-3">
-                <div class="chat-header-icon">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
-                    <p class="text-xs text-secondary">Online</p>
-                </div>
+          <div class="flex items-center gap-3">
+            <div class="chat-header-icon">
+              <i class="fa-solid fa-robot"></i>
             </div>
-            <button id="chat-close-button" title="Tutup">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            <div>
+              <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
+              <p class="text-xs text-secondary">Online</p>
+            </div>
+          </div>
+          <button id="chat-close-button" title="Tutup">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </header>
         <main id="chat-messages">
-            <div id="typing-indicator" class="hidden">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
+          <div id="typing-indicator" class="hidden">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
         </main>
         <footer id="chat-footer">
-            <form id="chat-form" class="flex items-center gap-2">
-                <input type="text" id="chat-input" placeholder="Ketik pertanyaan..." autocomplete="off">
-                <button type="submit" id="chat-send-button" title="Kirim">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </form>
+          <form id="chat-form" class="flex items-center gap-2">
+            <input
+              type="text"
+              id="chat-input"
+              placeholder="Ketik pertanyaan..."
+              autocomplete="off"
+            />
+            <button type="submit" id="chat-send-button" title="Kirim">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
         </footer>
+      </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
     <script src="{{ url_for('static', filename='js/tour.js') }}"></script>
-    
+
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
-                    .then(registration => {
-                        console.log('Service Worker berhasil didaftarkan: ', registration);
-                    })
-                    .catch(error => {
-                        console.log('Pendaftaran Service Worker gagal: ', error);
-                    });
-            });
-        }
-        
-        // --- PENGETAHUAN UNTUK CHATBOT PINTAR ---
-        const CHATBOT_DISEASE_KNOWLEDGE = {{ disease_info|tojson|safe }};
-        const CHATBOT_TIPS_KNOWLEDGE = {{ tips_data|tojson|safe }};
+      if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+              navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
+                  .then(registration => {
+                      console.log('Service Worker berhasil didaftarkan: ', registration);
+                  })
+                  .catch(error => {
+                      console.log('Pendaftaran Service Worker gagal: ', error);
+                  });
+          });
+      }
+
+      // --- PENGETAHUAN UNTUK CHATBOT PINTAR ---
+      const CHATBOT_DISEASE_KNOWLEDGE = {{ disease_info|tojson|safe }};
+      const CHATBOT_TIPS_KNOWLEDGE = {{ tips_data|tojson|safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
 
     {% block body_scripts %}{% endblock %}
-</body>
+  </body>
 </html>
