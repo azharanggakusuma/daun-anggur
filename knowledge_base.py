@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# knowledge_base.py
 
 """
 Basis Pengetahuan untuk Aplikasi GrapeCheck.
@@ -43,10 +43,10 @@ disease_info = {
     }
 }
 
-# Data Tips Perawatan untuk Chatbot
+# Data Tips Perawatan untuk Chatbot (DENGAN PENAMBAHAN 'icon')
 tips_data = [
-    { "title": "Pencegahan Jamur", "summary": "Pastikan sirkulasi udara yang baik dengan pemangkasan rutin dan hindari genangan air di sekitar akar untuk menekan pertumbuhan jamur.", "keywords": ["jamur", "cegah", "hujan"] },
-    { "title": "Pemupukan", "summary": "Gunakan pupuk NPK seimbang pada fase vegetatif dan tingkatkan Kalium (K) saat memasuki fase pembuahan untuk hasil yang maksimal.", "keywords": ["pupuk", "pemupukan", "nutrisi"] },
-    { "title": "Penyiraman", "summary": "Lakukan penyiraman di pagi hari untuk memberi waktu daun mengering sebelum malam, mengurangi risiko penyakit akibat kelembapan.", "keywords": ["siram", "air", "menyiram"] },
-    { "title": "Sanitasi Kebun", "summary": "Bersihkan daun dan ranting yang gugur secara teratur. Sisa tanaman dapat menjadi tempat berkembang biak bagi hama dan penyakit.", "keywords": ["bersih", "sanitasi", "kebun"] }
+    { "title": "Pencegahan Jamur", "summary": "Pastikan sirkulasi udara yang baik dengan pemangkasan rutin dan hindari genangan air di sekitar akar untuk menekan pertumbuhan jamur.", "keywords": ["jamur", "cegah", "hujan"], "icon": "fa-shield-virus" },
+    { "title": "Pemupukan", "summary": "Gunakan pupuk NPK seimbang pada fase vegetatif dan tingkatkan Kalium (K) saat memasuki fase pembuahan untuk hasil yang maksimal.", "keywords": ["pupuk", "pemupukan", "nutrisi"], "icon": "fa-seedling" },
+    { "title": "Penyiraman", "summary": "Lakukan penyiraman di pagi hari untuk memberi waktu daun mengering sebelum malam, mengurangi risiko penyakit akibat kelembapan.", "keywords": ["siram", "air", "menyiram"], "icon": "fa-faucet-drip" },
+    { "title": "Sanitasi Kebun", "summary": "Bersihkan daun dan ranting yang gugur secara teratur. Sisa tanaman dapat menjadi tempat berkembang biak bagi hama dan penyakit.", "keywords": ["bersih", "sanitasi", "kebun"], "icon": "fa-broom" }
 ]
