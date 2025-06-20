@@ -102,7 +102,9 @@
             });
         }
         
-        const CHATBOT_KNOWLEDGE = {{ disease_info|tojson|safe }};
+        // --- PENGETAHUAN UNTUK CHATBOT PINTAR ---
+        const CHATBOT_DISEASE_KNOWLEDGE = {{ disease_info|tojson|safe }};
+        const CHATBOT_TIPS_KNOWLEDGE = {{ tips_data|tojson|safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
