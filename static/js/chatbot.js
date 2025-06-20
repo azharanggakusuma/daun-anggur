@@ -76,14 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 addBotMessage(geminiResponse, []);
                 conversationHistory.push({ role: 'model', parts: [{ text: geminiResponse }] });
             } else {
-                // --- PERUBAHAN DI SINI: Menambahkan jeda untuk respons statis ---
-                // Tambahkan jeda buatan 1.2 detik agar animasi mengetik terlihat konsisten.
                 await new Promise(resolve => setTimeout(resolve, 1200));
 
-                // Tampilkan hasilnya setelah jeda
                 addBotMessage(staticResponse.text, staticResponse.replies);
                 conversationHistory.push({ role: 'model', parts: [{ text: staticResponse.text }] });
-                // --- AKHIR PERUBAHAN ---
             }
         } catch (error) {
             console.error("Error processing response:", error);
@@ -131,12 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = userInput.toLowerCase().trim();
         let response = { text: "Maaf, saya belum mengerti. Coba tanyakan hal lain tentang penyakit atau perawatan anggur.", replies: ["Daftar Penyakit", "Tips Perawatan"] };
 
-        const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh'];
+        // --- PERUBAHAN DI SINI ---
+        const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh', 'siapa yang buat', 'kamu siapa'];
         if (creatorKeywords.some(keyword => text.includes(keyword))) {
-            response.text = "Saya adalah aplikasi GrapeCheck, sebuah asisten cerdas yang dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur.";
+            response.text = "Saya adalah Asisten AI GrapeCheck. Saya dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur seperti Anda.";
             response.replies = ["Kamu bisa apa saja?", "Info Penyakit"];
             return response;
         }
+        // --- AKHIR PERUBAHAN ---
 
         const thanksKeywords = ['terima kasih', 'makasih', 'thanks', 'terimakasih'];
         if (thanksKeywords.some(keyword => text.includes(keyword))) {
