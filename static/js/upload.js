@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreviewImg = document.getElementById("image-preview-img");
     const imagePreviewFilename = document.getElementById("image-preview-filename");
     const imagePreviewSize = document.getElementById("image-preview-size");
-    const imagePreviewDimensions = document.getElementById("image-preview-dimensions"); // Elemen baru
+    const imagePreviewDimensions = document.getElementById("image-preview-dimensions");
     const removeImageButton = document.getElementById("remove-image-button");
 
     // Notifikasi Toast
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let availableCameras = [];
     let currentCameraIndex = 0;
     const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB (digunakan dari config.py)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
     // --- Fungsi Bantuan ---
     function formatBytes(bytes, decimals = 2) {
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         canvas.getContext('2d').drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
             const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
-            handleFileSelection(file); // Menggunakan handler utama
+            handleFileSelection(file);
         }, 'image/jpeg', 0.95);
     }
 
@@ -131,14 +131,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFileSelection(file) {
         if (!file) return;
 
-        // Validasi tipe file
         if (!ALLOWED_TYPES.includes(file.type)) {
             showNotification('Format file tidak valid. Harap pilih JPG, JPEG, atau PNG.', 'error');
             fileInput.value = "";
             return;
         }
 
-        // FITUR BARU: Validasi ukuran file
         if (file.size > MAX_FILE_SIZE) {
             showNotification(`Ukuran file melebihi batas ${formatBytes(MAX_FILE_SIZE)}.`, 'error');
             fileInput.value = "";
@@ -155,13 +153,12 @@ document.addEventListener("DOMContentLoaded", function () {
         imagePreviewImg.src = objectURL;
         imagePreviewFilename.textContent = file.name;
         imagePreviewSize.textContent = formatBytes(file.size);
-        imagePreviewDimensions.textContent = 'Memuat dimensi...'; // Teks sementara
+        imagePreviewDimensions.textContent = 'Memuat dimensi...';
 
-        // FITUR BARU: Mendapatkan dimensi gambar
         const img = new Image();
         img.onload = function() {
             imagePreviewDimensions.textContent = `Dimensi: ${this.naturalWidth} x ${this.naturalHeight} px`;
-            URL.revokeObjectURL(this.src); // Membersihkan memori
+            URL.revokeObjectURL(this.src);
         };
         img.src = objectURL;
 
@@ -170,6 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
         imagePreviewContainer.classList.remove('hidden');
         
         submitButton.disabled = false;
+        // Tambahkan animasi pulse pada tombol submit
+        submitButton.classList.add('animate-subtle-pulse');
+        
         showNotification('Gambar berhasil dipilih!', 'success');
     }
 
@@ -190,6 +190,8 @@ document.addEventListener("DOMContentLoaded", function () {
             startCamera(availableCameras.length > 0 ? availableCameras[currentCameraIndex].deviceId : undefined);
         }
         submitButton.disabled = true;
+        // Hapus animasi pulse dari tombol submit
+        submitButton.classList.remove('animate-subtle-pulse');
     }
 
     function switchTabs(targetTab) {
@@ -207,22 +209,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // FITUR BARU: Fungsi untuk menangani paste gambar
     function handlePaste(event) {
-        if (selectedFile) return; // Jangan lakukan apa-apa jika sudah ada file
+        if (selectedFile) return;
         const items = event.clipboardData?.files;
         if (items && items.length > 0) {
             for (const file of items) {
                 if (file.type.startsWith("image/")) {
                     handleFileSelection(file);
-                    break; // Ambil gambar pertama saja
+                    break;
                 }
             }
         }
     }
     
     // --- Event Listeners ---
-    window.addEventListener('paste', handlePaste); // Listener untuk paste
+    window.addEventListener('paste', handlePaste);
 
     tabFile.addEventListener('click', () => switchTabs('file'));
     tabCamera.addEventListener('click', () => switchTabs('camera'));
@@ -261,6 +262,8 @@ document.addEventListener("DOMContentLoaded", function () {
         buttonText.textContent = "Menganalisis...";
         buttonSpinner.classList.remove("hidden");
         submitButton.disabled = true;
+        // Hentikan animasi pulse saat proses dimulai
+        submitButton.classList.remove('animate-subtle-pulse');
 
         const formData = new FormData();
         formData.append('file', selectedFile, selectedFile.name);
