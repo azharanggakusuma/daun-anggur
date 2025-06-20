@@ -68,8 +68,7 @@ body.chat-is-open #chat-overlay { opacity: 1; visibility: visible; }
     border-top-left-radius: inherit; border-top-right-radius: inherit;
 }
 #chat-header h3 { font-weight: 700; font-size: 1.125rem; color: var(--text-primary); }
-/* Status online dengan warna brand */
-#chat-header p { font-size: 0.8rem; color: var(--text-brand); }
+#chat-header .online-status p { font-size: 0.8rem; color: var(--text-brand); }
 .chat-header-icon {
     width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
     border-radius: 9999px; background-color: var(--brand-color); color: white;
@@ -79,11 +78,31 @@ body.chat-is-open #chat-overlay { opacity: 1; visibility: visible; }
     background: var(--bg-tertiary); color: var(--text-muted);
     border: none; cursor: pointer; transition: all 0.2s ease;
 }
-/* Efek hover yang lebih menarik pada tombol close */
 #chat-close-button:hover {
     background-color: var(--brand-color); color: white;
     transform: rotate(90deg) scale(1.1);
 }
+
+/* --- PERUBAHAN: Indikator Online --- */
+.online-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* 8px */
+}
+.online-indicator-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--brand-color);
+    border-radius: 50%;
+    animation: pulse-online 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+@keyframes pulse-online {
+    50% {
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.3);
+    }
+}
+/* --- AKHIR PERUBAHAN --- */
+
 #chat-messages {
     flex-grow: 1; padding: 1.5rem; overflow-y: auto;
     display: flex; flex-direction: column; gap: 1rem;
@@ -96,10 +115,8 @@ body.chat-is-open #chat-overlay { opacity: 1; visibility: visible; }
 .message {
     padding: 0.75rem 1.25rem; border-radius: 1.25rem;
     max-width: 85%; line-height: 1.6; word-wrap: break-word;
-    /* Animasi pesan masuk yang lebih menarik */
     animation: message-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     opacity: 0; 
-    /* Menambahkan bayangan pada balon pesan */
     box-shadow: var(--shadow-sm);
 }
 @keyframes message-in {
@@ -144,7 +161,6 @@ body.chat-is-open #chat-overlay { opacity: 1; visibility: visible; }
     background-color: var(--bg-primary); color: var(--text-primary);
     transition: all 0.2s ease; font-size: 1rem;
 }
-/* Efek focus yang lebih jelas pada input */
 #chat-input:focus {
     outline: none; border-color: var(--brand-color);
     box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
@@ -172,7 +188,6 @@ body.chat-is-open #chat-overlay { opacity: 1; visibility: visible; }
     background-color: var(--bg-secondary); border-radius: 9999px;
     cursor: pointer; transition: all 0.2s ease;
 }
-/* Efek hover yang lebih baik pada quick reply */
 .quick-reply-button:hover {
     background-color: var(--brand-color); color: white;
     transform: translateY(-2px); box-shadow: var(--shadow-md);
