@@ -5,7 +5,7 @@
 {% block content %}
 <header class="relative bg-gray-800 text-white py-24 md:py-32 overflow-hidden animate-page-in">
     <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1598122353381-5de62a149ccea?q=80&w=2070&auto=format&fit=crop" alt="Kebun Anggur" class="w-full h-full object-cover opacity-30">
+        <img src="{{ url_for('static', filename='images/stock/hero.jpg') }}" alt="Kebun Anggur" class="w-full h-full object-cover opacity-30">
         <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
     </div>
     <div class="relative max-w-4xl mx-auto px-4 text-center animate-slide-in-up">
