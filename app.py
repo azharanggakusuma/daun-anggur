@@ -28,7 +28,6 @@ except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
     model = None
 
-# PERUBAHAN: Menambahkan 'risk_level' dan 'risk_color'
 disease_info = {
     'Sehat': {
         'description': 'Daun tidak menunjukkan tanda-tanda visual penyakit atau kekurangan nutrisi. Ini menandakan kesehatan tanaman yang baik dan praktik perawatan yang efektif.',
@@ -72,6 +71,12 @@ disease_info = {
         'action': [], 'symptoms': [], 'triggers': [], 'color': 'zinc'
     }
 }
+
+# --- PENAMBAHAN BARU: Context Processor ---
+@app.context_processor
+def inject_global_data():
+    """Menyuntikkan variabel ke semua template."""
+    return dict(disease_info=disease_info)
 
 # --- Fungsi Bantuan ---
 def allowed_file(filename):
@@ -161,9 +166,8 @@ def hasil(filename):
         'timestamp': timestamp
     }
     
-    return render_template('hasil.html', result=result_data, disease_info=disease_info)
+    return render_template('hasil.html', result=result_data)
 
-# PERUBAHAN: Nama route diubah dari /penyakit menjadi /panduan
 @app.route('/panduan')
 def panduan():
     """Menampilkan halaman panduan informasi penyakit dan tips."""
@@ -189,8 +193,7 @@ def panduan():
             "icon": "fa-broom"
         }
     ]
-    # PERUBAHAN: Nama file template diubah menjadi panduan.html
-    return render_template('panduan.html', disease_info=disease_info, tips=tips_data)
+    return render_template('panduan.html', tips=tips_data)
 
 @app.route('/feedback', methods=['POST'])
 def feedback():

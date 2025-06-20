@@ -40,6 +40,36 @@
         {% block content %}{% endblock %}
     </div>
 
+    <div id="chatbot-container">
+        <button id="chat-fab" title="Tanya Asisten AI">
+            <i class="fa-solid fa-robot icon-closed"></i>
+            <i class="fa-solid fa-xmark icon-opened"></i>
+        </button>
+
+        <div id="chat-widget">
+            <header id="chat-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-brand/10 text-brand">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
+                        <p class="text-xs text-secondary">Siap membantu Anda!</p>
+                    </div>
+                </div>
+            </header>
+            <main id="chat-messages"></main>
+            <footer id="chat-footer">
+                <form id="chat-form" class="flex items-center gap-2">
+                    <input type="text" id="chat-input" placeholder="Ketik pertanyaan..." autocomplete="off">
+                    <button type="submit" id="chat-send-button" title="Kirim">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </footer>
+        </div>
+    </div>
+
     {% include 'components/footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
@@ -60,7 +90,12 @@
                     });
             });
         }
+        
+        // PENAMBAHAN BARU: Menyediakan data untuk JS chatbot
+        const CHATBOT_KNOWLEDGE = {{ disease_info|tojson|safe }};
     </script>
+
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
 
     {% block body_scripts %}{% endblock %}
 </body>
