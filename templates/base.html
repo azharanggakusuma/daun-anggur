@@ -58,7 +58,13 @@
                     </div>
                 </div>
             </header>
-            <main id="chat-messages"></main>
+            <main id="chat-messages">
+                <div id="typing-indicator" class="message bot hidden">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </main>
             <footer id="chat-footer">
                 <form id="chat-form" class="flex items-center gap-2">
                     <input type="text" id="chat-input" placeholder="Ketik pertanyaan..." autocomplete="off">
@@ -91,7 +97,6 @@
             });
         }
         
-        // PENAMBAHAN BARU: Menyediakan data untuk JS chatbot
         const CHATBOT_KNOWLEDGE = {{ disease_info|tojson|safe }};
     </script>
 
