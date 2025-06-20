@@ -36,14 +36,18 @@
     
     {% include 'components/header.html' %}
 
-    <div class="w-full pb-16 sm:pb-0 flex-grow">
-        {% block content %}{% endblock %}
+    <div id="main-content-wrapper">
+        <div class="w-full pb-16 sm:pb-0 flex-grow">
+            {% block content %}{% endblock %}
+        </div>
+        {% include 'components/footer.html' %}
     </div>
+
 
     <div id="chatbot-container">
         <button id="chat-fab" title="Tanya Asisten AI">
             <i class="fa-solid fa-robot icon-closed"></i>
-            <i class="fa-solid fa-xmark icon-opened"></i>
+            <i class="fa-solid fa-comments icon-opened"></i>
         </button>
 
         <div id="chat-widget">
@@ -57,6 +61,9 @@
                         <p class="text-xs text-secondary">Siap membantu Anda!</p>
                     </div>
                 </div>
+                <button id="chat-close-button" class="sm:hidden" title="Tutup">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </header>
             <main id="chat-messages">
                 <div id="typing-indicator" class="message bot hidden">
@@ -75,8 +82,6 @@
             </footer>
         </div>
     </div>
-
-    {% include 'components/footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
