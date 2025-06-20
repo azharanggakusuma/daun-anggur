@@ -540,6 +540,7 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   box-shadow: var(--shadow-md);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   padding: 1rem;
+  position: relative; /* DITAMBAHKAN: untuk menciptakan konteks tumpukan (stacking context) */
 }
 .history-card:hover {
   transform: translateY(-5px) scale(1.01);
@@ -575,6 +576,8 @@ html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  position: relative; /* DITAMBAHKAN: agar z-index berfungsi */
+  z-index: 2; /* DITAMBAHKAN: untuk mengangkat tombol ke lapisan atas */
 }
 .history-delete-button:hover {
   background-color: #fee2e2; /* red-100 */

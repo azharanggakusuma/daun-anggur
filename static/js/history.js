@@ -44,10 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (summarySection) summarySection.classList.remove('hidden');
 
-        // Total Analisis
         totalAnalysesEl.textContent = history.length;
 
-        // Diagnosis Umum
         const labelCounts = history.reduce((acc, item) => {
             if (item.label !== 'Sehat') {
                 acc[item.label] = (acc[item.label] || 0) + 1;
@@ -57,12 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const commonDiagnosis = Object.keys(labelCounts).length > 0 ? Object.keys(labelCounts).reduce((a, b) => labelCounts[a] > labelCounts[b] ? a : b) : 'N/A';
         commonDiagnosisEl.textContent = commonDiagnosis;
         
-        // Rata-rata Keyakinan
         const totalConfidence = history.reduce((sum, item) => sum + parseFloat(item.confidence), 0);
-        const avgConfidence = (totalConfidence / history.length).toFixed(1) + '%';
+        const avgConfidence = (history.length > 0 ? totalConfidence / history.length : 0).toFixed(1) + '%';
         avgConfidenceEl.textContent = avgConfidence;
 
-        // Sehat Terdeteksi
         const healthyCount = history.filter(item => item.label === 'Sehat').length;
         healthyDetectedEl.textContent = healthyCount;
     }
@@ -96,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cardDiv.className = `history-card animate-stagger-in`;
             cardDiv.style.setProperty('--delay', `${index * 60}ms`);
             
+            // --- STRUKTUR HTML DIKEMBALIKAN KE VERSI AWAL ---
             cardDiv.innerHTML = `
                 <a href="/hasil/${item.filename}" class="history-card-link group">
                     <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
@@ -140,26 +137,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (lastFocusedElement) lastFocusedElement.focus();
     }
 
-    // --- PERUBAHAN DI SINI ---
     function deleteSingleItem(filename) {
-        // Temukan kartu yang akan dihapus untuk dianimasikan
         const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`)?.closest('.history-card');
-
-        // Jalankan animasi jika elemennya ada
+        
         if (cardToDelete) {
             cardToDelete.classList.add('animate-fade-out-shrink');
         }
-
-        // Selalu jalankan logika penghapusan data setelah jeda untuk sinkronisasi dengan animasi.
-        // Ini memastikan data akan selalu terhapus meskipun elemen visualnya tidak ditemukan.
+        
         setTimeout(() => {
             history = history.filter(item => item.filename !== filename);
             localStorage.setItem('analysisHistory', JSON.stringify(history));
             calculateSummary();
             renderHistory();
-        }, 400); // Durasi harus cocok dengan animasi 'fade-out-shrink'
+        }, 400);
     }
-    // --- AKHIR PERUBAHAN ---
     
     function deleteAllHistory() {
         localStorage.removeItem('analysisHistory');
@@ -168,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
         renderHistory();
     }
     
-    // Event Listeners
+    // --- EVENT LISTENER DIKEMBALIKAN KE VERSI AWAL ---
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
@@ -209,7 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Initial Load
     function initialize() {
         setTimeout(() => {
             calculateSummary();
