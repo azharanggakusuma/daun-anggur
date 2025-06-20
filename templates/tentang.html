@@ -3,18 +3,24 @@
 {% block title %}Tentang GrapeCheck{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-16 md:py-20 animate-page-in">
-    <header class="text-center mb-16 animate-slide-in-up">
+<header class="relative bg-gray-800 text-white py-24 md:py-32 overflow-hidden animate-page-in">
+    <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1598122353381-5de62a149ccea?q=80&w=2070&auto=format&fit=crop" alt="Kebun Anggur" class="w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-4 text-center animate-slide-in-up">
         <h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-primary">
             Mendeteksi Penyakit, <span class="text-brand-gradient">Menjaga Panen.</span>
         </h1>
         <p class="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-secondary">
             GrapeCheck adalah asisten cerdas Anda dalam mengidentifikasi penyakit daun anggur secara cepat dan akurat menggunakan kekuatan AI.
         </p>
-    </header>
+    </div>
+</header>
 
-    <main class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-16">
-        <div class="text-center p-4 animate-stagger-in" style="--delay: 150ms;">
+<div class="max-w-5xl mx-auto px-4 py-16 md:py-20">
+    <main class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-20">
+        <div class="card-layout text-center p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-stagger-in" style="--delay: 150ms;">
             <div class="flex items-center justify-center h-16 w-16 rounded-full bg-brand/10 text-brand mx-auto mb-5">
                 <i class="fa-solid fa-rocket text-2xl"></i>
             </div>
@@ -24,7 +30,7 @@
             </p>
         </div>
 
-        <div class="text-center p-4 animate-stagger-in" style="--delay: 300ms;">
+        <div class="card-layout text-center p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-stagger-in" style="--delay: 300ms;">
             <div class="flex items-center justify-center h-16 w-16 rounded-full bg-brand/10 text-brand mx-auto mb-5">
                 <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
             </div>
@@ -34,7 +40,7 @@
             </p>
         </div>
 
-        <div class="text-center p-4 animate-stagger-in" style="--delay: 450ms;">
+        <div class="card-layout text-center p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-stagger-in" style="--delay: 450ms;">
             <div class="flex items-center justify-center h-16 w-16 rounded-full bg-brand/10 text-brand mx-auto mb-5">
                 <i class="fa-solid fa-microchip text-2xl"></i>
             </div>
@@ -45,7 +51,7 @@
         </div>
     </main>
 
-    <section class="border-t border-primary/20 pt-16 mb-16 space-y-12">
+    <section class="border-t border-primary/20 pt-16 mb-20 space-y-16">
         <div class="animate-stagger-in" style="--delay: 550ms;">
             <h2 class="text-2xl sm:text-3xl font-bold text-primary text-center mb-8">Teknologi di Balik GrapeCheck</h2>
             <div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-secondary">
@@ -62,15 +68,41 @@
             <h2 class="text-2xl sm:text-3xl font-bold text-primary text-center mb-8">Roadmap Pengembangan</h2>
             <div class="max-w-lg mx-auto">
                 <ul class="space-y-4">
-                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500 text-white flex-shrink-0"><i class="fa-solid fa-check"></i></div><div><h3 class="font-semibold text-primary">Versi Saat Ini</h3><p class="text-secondary text-sm">Deteksi 4 kelas (3 penyakit + sehat) dengan rekomendasi.</p></div></li>
-                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white flex-shrink-0"><i class="fa-solid fa-flask"></i></div><div><h3 class="font-semibold text-primary">Selanjutnya</h3><p class="text-secondary text-sm">Menambahkan deteksi untuk lebih banyak jenis penyakit dan hama.</p></div></li>
-                    <li class="flex items-center gap-4"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-slate-400 dark:bg-slate-600 text-white flex-shrink-0"><i class="fa-solid fa-users"></i></div><div><h3 class="font-semibold text-primary">Masa Depan</h3><p class="text-secondary text-sm">Fitur komunitas untuk berbagi tips dan foto antar pengguna.</p></div></li>
+                    <li class="flex items-center gap-4 p-3 rounded-lg transition-all duration-300 hover:bg-secondary/50 hover:-translate-y-1"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500 text-white flex-shrink-0"><i class="fa-solid fa-check"></i></div><div><h3 class="font-semibold text-primary">Versi Saat Ini</h3><p class="text-secondary text-sm">Deteksi 4 kelas (3 penyakit + sehat) dengan rekomendasi.</p></div></li>
+                    <li class="flex items-center gap-4 p-3 rounded-lg transition-all duration-300 hover:bg-secondary/50 hover:-translate-y-1"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500 text-white flex-shrink-0"><i class="fa-solid fa-flask"></i></div><div><h3 class="font-semibold text-primary">Selanjutnya</h3><p class="text-secondary text-sm">Menambahkan deteksi untuk lebih banyak jenis penyakit dan hama.</p></div></li>
+                    <li class="flex items-center gap-4 p-3 rounded-lg transition-all duration-300 hover:bg-secondary/50 hover:-translate-y-1"><div class="flex items-center justify-center h-10 w-10 rounded-full bg-slate-400 dark:bg-slate-600 text-white flex-shrink-0"><i class="fa-solid fa-users"></i></div><div><h3 class="font-semibold text-primary">Masa Depan</h3><p class="text-secondary text-sm">Fitur komunitas untuk berbagi tips dan foto antar pengguna.</p></div></li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <footer class="text-center animate-stagger-in" style="--delay: 750ms;">
+    <section class="mb-20 py-16 bg-secondary/50 rounded-lg animate-stagger-in" style="--delay: 750ms;">
+        <h2 class="text-3xl font-bold text-primary text-center mb-12">Di Balik Proyek Ini</h2>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8 px-8">
+            <img src="https://avatars.githubusercontent.com/u/1?v=4" alt="Azharangga Kusuma" class="w-32 h-32 rounded-full object-cover border-4 border-brand">
+            <div class="text-center md:text-left">
+                <h3 class="text-2xl font-bold text-primary">Azharangga Kusuma</h3>
+                <p class="text-brand font-semibold text-lg">Pengembang & Penggagas</p>
+                <p class="text-secondary mt-2 max-w-md">Seorang penggiat teknologi dengan hasrat untuk menciptakan solusi praktis yang dapat memberikan dampak positif bagi komunitas.</p>
+                <div class="mt-4 flex justify-center md:justify-start gap-4 text-2xl">
+                    <a href="https://github.com/azharanggakusuma" class="text-muted hover:text-brand hover:scale-110 transition-all duration-200"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/azharanggakusuma/" class="text-muted hover:text-brand hover:scale-110 transition-all duration-200"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://instagram.com/azharangga_kusuma" class="text-muted hover:text-brand hover:scale-110 transition-all duration-200"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-center bg-brand/10 dark:bg-brand/20 border-t-4 border-brand rounded-lg p-8 md:p-12 animate-stagger-in" style="--delay: 850ms;">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-3">Punya Daun yang Mencurigakan?</h2>
+        <p class="text-secondary max-w-xl mx-auto mb-8">Jangan menunggu gejala memburuk. Gunakan GrapeCheck sekarang untuk mendapatkan analisis instan dan gratis.</p>
+        <a href="{{ url_for('index') }}" class="button-base button-primary">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            Mulai Analisis Sekarang
+        </a>
+    </section>
+
+    <footer class="text-center mt-16 animate-stagger-in" style="--delay: 950ms;">
          <div class="max-w-3xl mx-auto p-4 bg-yellow-50 dark:bg-yellow-900/50 border-t-4 border-yellow-400 rounded-b-lg text-yellow-800 dark:text-yellow-200 text-sm">
             <p><strong class="font-semibold">Disclaimer:</strong> Hasil dari aplikasi ini adalah alat bantu dan tidak dimaksudkan untuk menggantikan diagnosis maupun saran dari ahli pertanian profesional.</p>
         </div>
