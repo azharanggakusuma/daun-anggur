@@ -140,18 +140,26 @@ document.addEventListener("DOMContentLoaded", function () {
         if (lastFocusedElement) lastFocusedElement.focus();
     }
 
+    // --- PERUBAHAN DI SINI ---
     function deleteSingleItem(filename) {
+        // Temukan kartu yang akan dihapus untuk dianimasikan
         const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`)?.closest('.history-card');
+
+        // Jalankan animasi jika elemennya ada
         if (cardToDelete) {
             cardToDelete.classList.add('animate-fade-out-shrink');
-            setTimeout(() => {
-                history = history.filter(item => item.filename !== filename);
-                localStorage.setItem('analysisHistory', JSON.stringify(history));
-                calculateSummary();
-                renderHistory();
-            }, 400);
         }
+
+        // Selalu jalankan logika penghapusan data setelah jeda untuk sinkronisasi dengan animasi.
+        // Ini memastikan data akan selalu terhapus meskipun elemen visualnya tidak ditemukan.
+        setTimeout(() => {
+            history = history.filter(item => item.filename !== filename);
+            localStorage.setItem('analysisHistory', JSON.stringify(history));
+            calculateSummary();
+            renderHistory();
+        }, 400); // Durasi harus cocok dengan animasi 'fade-out-shrink'
     }
+    // --- AKHIR PERUBAHAN ---
     
     function deleteAllHistory() {
         localStorage.removeItem('analysisHistory');
