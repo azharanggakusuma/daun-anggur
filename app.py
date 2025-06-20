@@ -8,8 +8,8 @@ import numpy as np
 import os
 import pytz
 import uuid
+import google.generativeai as genai # --- PENAMBAHAN BARU ---
 from config import Config
-# --- PERUBAHAN DI SINI: Impor basis pengetahuan dari file baru ---
 from knowledge_base import disease_info, tips_data
 
 # --- Inisialisasi Aplikasi Flask ---
@@ -22,26 +22,43 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 # --- Memuat Model ---
 try:
-    # Memuat model machine learning yang telah dilatih sebelumnya
     model = load_model('model/model_daun_anggur.h5')
-    # Daftar nama kelas/label yang sesuai dengan output model
     class_names = ['Busuk', 'Esca', 'Hawar', 'Negative', 'Sehat']
 except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
     model = None
 
-# --- PERUBAHAN DI SINI: Kamus 'disease_info' dan 'tips_data' telah dipindahkan ---
-# --- ke 'knowledge_base.py' untuk menjaga file ini tetap bersih. ---
+# --- PERUBAHAN DI SINI: Inisialisasi Model Gemini ---
+try:
+    if app.config['GEMINI_API_KEY']:
+        genai.configure(api_key=app.config['GEMINI_API_KEY'])
+    
+    # Konfigurasi sistem untuk AI
+    system_instruction = (
+        "Kamu adalah Asisten AI GrapeCheck, seorang ahli tanaman anggur yang ramah dan sangat membantu. "
+        "Tugas utamamu adalah menjawab pertanyaan seputar budidaya, penyakit, dan perawatan tanaman anggur. "
+        "Selalu jawab dengan gaya percakapan yang bersahabat dan mudah dimengerti. "
+        "Jika ada pertanyaan yang sama sekali tidak berhubungan dengan tanaman, pertanian, atau botani, tolak dengan sopan dan kembalikan percakapan ke topik anggur. "
+        "Kamu memiliki ingatan dari percakapan sebelumnya, gunakan itu untuk memberikan jawaban yang kontekstual."
+    )
 
-# --- Context Processor yang diperbarui (tidak ada perubahan fungsional) ---
+    gemini_model = genai.GenerativeModel(
+        model_name='gemini-1.5-flash',
+        system_instruction=system_instruction
+    )
+    print("Model Gemini berhasil dikonfigurasi.")
+except Exception as e:
+    print(f"Error saat mengkonfigurasi Gemini: {e}")
+    gemini_model = None
+# --- AKHIR PERUBAHAN ---
+
+
 @app.context_processor
 def inject_global_data():
     """Menyuntikkan variabel ke semua template."""
     return dict(disease_info=disease_info, tips_data=tips_data)
 
-# --- (Sisa kode app.py tetap sama persis seperti sebelumnya) ---
-
-# --- Fungsi Bantuan ---
+# --- (Sisa kode rute seperti / , /riwayat, /upload, dll. tetap sama persis) ---
 def allowed_file(filename):
     """Memeriksa apakah ekstensi file diizinkan."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -69,13 +86,11 @@ def process_prediction(image_path):
         print(f"Error saat memproses prediksi: {e}")
         return "Negative", 0, {}
 
-# --- Penangan Kesalahan (Error Handlers) ---
 @app.errorhandler(413)
 def request_entity_too_large(error):
     """Menangani error ketika file yang diunggah terlalu besar."""
     return jsonify({'error': 'Ukuran file melebihi batas maksimal (10MB).'}), 413
 
-# --- Rute Aplikasi ---
 @app.route('/')
 def index():
     """Menampilkan halaman utama untuk mengunggah gambar."""
@@ -135,6 +150,34 @@ def hasil(filename):
 def panduan():
     """Menampilkan halaman panduan informasi penyakit dan tips."""
     return render_template('panduan.html')
+    
+# --- PENAMBAHAN BARU: Rute untuk Chatbot AI Gemini ---
+@app.route('/chat_ai', methods=['POST'])
+def chat_ai():
+    if not gemini_model:
+        return jsonify({'error': 'Model AI tidak terkonfigurasi dengan benar.'}), 500
+
+    data = request.get_json()
+    if not data or 'message' not in data:
+        return jsonify({'error': 'Pesan tidak ditemukan'}), 400
+    
+    user_message = data['message']
+    history = data.get('history', []) # Ambil riwayat dari request
+
+    try:
+        # Mulai sesi chat dengan riwayat yang ada
+        chat_session = gemini_model.start_chat(history=history)
+        
+        # Kirim pesan baru ke Gemini
+        response = chat_session.send_message(user_message)
+        
+        # Kirim kembali jawaban dari Gemini
+        return jsonify({'response': response.text})
+        
+    except Exception as e:
+        print(f"Error dari Gemini API: {e}")
+        return jsonify({'error': 'Gagal berkomunikasi dengan Asisten AI.'}), 503
+# --- AKHIR PENAMBAHAN ---
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
@@ -155,6 +198,7 @@ def feedback():
 def tentang():
     """Menampilkan halaman Tentang Aplikasi."""
     return render_template('tentang.html')
+
 
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':

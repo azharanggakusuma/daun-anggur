@@ -10,49 +10,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!fab || !mainContentWrapper) return;
 
-    // --- STATE MANAGEMENT ---
+    // --- MANAJEMEN STATE & MEMORI CHATBOT ---
     let isOpen = false;
-    let conversationContext = null; // Untuk mengingat topik penyakit
+    let conversationContext = null;
     let welcomeTimeout;
+    let conversationHistory = [];
 
     // --- Fungsi Tampilan (UI) ---
     const toggleChat = () => {
         isOpen = !isOpen;
-        // Menambahkan kelas ke body untuk kontrol global (termasuk main content)
         document.body.classList.toggle('chat-is-open');
 
         clearTimeout(welcomeTimeout);
         if (isOpen) {
             input.focus();
-            // Hanya tampilkan pesan selamat datang jika belum ada pesan
             if (messagesContainer.querySelectorAll('.message').length === 0) {
                 welcomeTimeout = setTimeout(() => {
                     showTypingIndicator();
                     setTimeout(() => {
                         hideTypingIndicator();
-                        addBotMessage("Halo! Saya Asisten AI GrapeCheck. Tanya saya tentang penyakit atau tips perawatan anggur.", ["Info Penyakit Busuk", "Tips Pemupukan"]);
+                        const welcomeText = "Halo! Saya Asisten AI GrapeCheck. Tanya saya tentang penyakit atau tips perawatan anggur.";
+                        addBotMessage(welcomeText, ["Info Penyakit Busuk", "Tips Pemupukan"]);
+                        conversationHistory.push({ role: 'model', parts: [{ text: welcomeText }] });
                     }, 1200);
                 }, 500);
             }
-        } else {
-            // Konteks tidak di-reset agar percakapan bisa dilanjutkan nanti
-            // conversationContext = null; 
         }
     };
-    
-    // --- Fungsi Pesan & Quick Reply (diperbarui) ---
+
+    // --- Fungsi Pesan & Quick Reply ---
     const addMessage = (text, sender, replies = []) => {
-        // Hapus quick replies yang lama sebelum menambah pesan baru
         const oldReplies = messagesContainer.querySelector('.quick-replies-container');
         if (oldReplies) oldReplies.remove();
-        
+
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
         messageDiv.textContent = text;
-        // Sisipkan pesan sebelum indikator ketik
         messagesContainer.insertBefore(messageDiv, typingIndicator);
 
-        // Jika ada quick replies, buat tombolnya
         if (replies.length > 0 && sender === 'bot') {
             const repliesContainer = document.createElement('div');
             repliesContainer.className = 'quick-replies-container';
@@ -62,36 +57,80 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.textContent = replyText;
                 repliesContainer.appendChild(button);
             });
-            // Sisipkan kontainer tombol setelah pesan bot
             messagesContainer.insertBefore(repliesContainer, typingIndicator);
         }
-        // Scroll ke bawah
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
 
-    const processAndRespond = (userInput) => {
+    const processAndRespond = async (userInput) => {
         if (!userInput.trim()) return;
+
         addUserMessage(userInput);
         showTypingIndicator();
-        setTimeout(() => {
+
+        try {
+            const staticResponse = getStaticResponse(userInput);
+
+            if (staticResponse.text.startsWith("Maaf, saya belum mengerti")) {
+                const geminiResponse = await getGeminiResponse(userInput);
+                addBotMessage(geminiResponse, []);
+                conversationHistory.push({ role: 'model', parts: [{ text: geminiResponse }] });
+            } else {
+                // --- PERUBAHAN DI SINI: Menambahkan jeda untuk respons statis ---
+                // Tambahkan jeda buatan 1.2 detik agar animasi mengetik terlihat konsisten.
+                await new Promise(resolve => setTimeout(resolve, 1200));
+
+                // Tampilkan hasilnya setelah jeda
+                addBotMessage(staticResponse.text, staticResponse.replies);
+                conversationHistory.push({ role: 'model', parts: [{ text: staticResponse.text }] });
+                // --- AKHIR PERUBAHAN ---
+            }
+        } catch (error) {
+            console.error("Error processing response:", error);
+            addBotMessage("Maaf, terjadi sedikit gangguan. Coba beberapa saat lagi ya.", []);
+        } finally {
             hideTypingIndicator();
-            const response = getSmarterResponse(userInput);
-            addBotMessage(response.text, response.replies);
-        }, 1500);
+        }
     };
 
     const addBotMessage = (text, replies) => addMessage(text, 'bot', replies);
-    const addUserMessage = (text) => addMessage(text, 'user');
+
+    const addUserMessage = (text) => {
+        addMessage(text, 'user');
+        conversationHistory.push({ role: 'user', parts: [{ text: text }] });
+    };
+
     const showTypingIndicator = () => typingIndicator.classList.remove('hidden');
     const hideTypingIndicator = () => typingIndicator.classList.add('hidden');
 
-    // --- LOGIKA CHATBOT PINTAR (v5 - Dengan Persona) ---
-    const getSmarterResponse = (userInput) => {
+    const getGeminiResponse = async (userInput) => {
+        try {
+            const response = await fetch('/chat_ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userInput,
+                    history: conversationHistory.slice(0, -1)
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Gagal mendapat respons dari AI.");
+            }
+
+            const data = await response.json();
+            return data.response;
+        } catch (error) {
+            console.error('Gemini Fetch Error:', error);
+            return "Waduh, sepertinya saya sedang kesulitan terhubung dengan pusat data. Silakan coba lagi nanti.";
+        }
+    };
+
+    const getStaticResponse = (userInput) => {
         const text = userInput.toLowerCase().trim();
         let response = { text: "Maaf, saya belum mengerti. Coba tanyakan hal lain tentang penyakit atau perawatan anggur.", replies: ["Daftar Penyakit", "Tips Perawatan"] };
-        
-        // --- PENAMBAHAN BARU: Logika Persona & Interaksi Sosial ---
-        // 1. Mengenali pertanyaan tentang pencipta/developer
+
         const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh'];
         if (creatorKeywords.some(keyword => text.includes(keyword))) {
             response.text = "Saya adalah aplikasi GrapeCheck, sebuah asisten cerdas yang dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur.";
@@ -99,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        // 2. Merespons ucapan terima kasih
         const thanksKeywords = ['terima kasih', 'makasih', 'thanks', 'terimakasih'];
         if (thanksKeywords.some(keyword => text.includes(keyword))) {
             response.text = "Sama-sama! Senang jika saya bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?";
@@ -107,20 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        // 3. Menjelaskan kemampuan diri sendiri
         const capabilityKeywords = ['bisa apa', 'kemampuanmu', 'fiturmu', 'apa yang bisa kamu lakukan'];
         if (capabilityKeywords.some(keyword => text.includes(keyword))) {
             response.text = "Tentu! Saya bisa membantu Anda dengan beberapa hal:\n- Mengidentifikasi penyakit dari deskripsi gejala.\n- Memberikan informasi detail tentang penyakit (gejala, penyebab, penanganan).\n- Menawarkan tips umum perawatan tanaman anggur.";
             response.replies = ["Info Penyakit Busuk", "Tips Pemupukan", "Penyebab Esca"];
             return response;
         }
-        // --- AKHIR PENAMBAHAN ---
 
-        // Kata Kunci & Topik
         const diseases = { 'busuk': 'Busuk', 'esca': 'Esca', 'hawar': 'Hawar' };
         const topics = { 'gejala': 'symptoms', 'penanganan': 'action', 'rekomendasi': 'action', 'mengatasi': 'action', 'pemicu': 'triggers', 'penyebab': 'triggers', 'deskripsi': 'description', 'info': 'description' };
-        
-        // Logika untuk menebak penyakit dari gejala
+
         const symptomKeywords = {
             'Busuk': ['keputihan', 'kuning', 'coklat kemerahan', 'tepi hitam', 'titik-titik hitam'],
             'Esca': ['garis harimau', 'tiger stripes', 'layu tiba-tiba'],
@@ -130,23 +164,22 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const diseaseName in symptomKeywords) {
             const keywords = symptomKeywords[diseaseName];
             if (keywords.some(keyword => text.includes(keyword))) {
-                conversationContext = diseaseName; 
+                conversationContext = diseaseName;
                 response.text = `Gejala yang Anda sebutkan mirip dengan penyakit ${diseaseName}. Apakah Anda ingin informasi lebih lanjut tentang penyakit ini?`;
                 response.replies = [`Info ${diseaseName}`, `Penanganan ${diseaseName}`, `Bukan ini`];
                 return response;
             }
         }
-        
+
         let foundDisease = Object.keys(diseases).find(d => text.includes(d));
         let foundTopic = Object.keys(topics).find(t => text.includes(t));
-        
-        // ... (sisa logika untuk menangani penyakit dan tips tetap sama persis) ...
+
         if (foundDisease) {
             const diseaseName = diseases[foundDisease];
-            conversationContext = diseaseName; // SET KONTEKS
+            conversationContext = diseaseName;
             const topicKey = foundTopic ? topics[foundTopic] : 'description';
             const diseaseData = CHATBOT_DISEASE_KNOWLEDGE[diseaseName][topicKey];
-            
+
             response.text = Array.isArray(diseaseData) ? `Berikut ${foundTopic || 'info'} untuk ${diseaseName}:\n- ${diseaseData.join('\n- ')}` : diseaseData;
             response.replies = [`Gejala ${diseaseName}`, `Penanganan ${diseaseName}`, `Penyebab ${diseaseName}`];
             return response;
@@ -184,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response;
         }
 
-        return response; 
+        return response;
     };
 
     // --- Event Listeners ---
@@ -197,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = '';
     });
 
-    // Event listener untuk tombol quick reply (diperbarui)
     messagesContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('quick-reply-button')) {
             processAndRespond(e.target.textContent);
