@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Mengenali pertanyaan tentang pencipta/developer
         const creatorKeywords = ['pembuat', 'buat kamu', 'developer', 'pencipta', 'dibuat oleh'];
         if (creatorKeywords.some(keyword => text.includes(keyword))) {
-            response.text = "Saya adalah aplikasi GrapeCheck, sebuah asisten cerdas yang dikembangkan oleh Azharngga Kusuma untuk membantu para petani dan penghobi anggur.";
+            response.text = "Saya adalah aplikasi GrapeCheck, sebuah asisten cerdas yang dikembangkan oleh Azharangga Kusuma untuk membantu para petani dan penghobi anggur.";
             response.replies = ["Kamu bisa apa saja?", "Info Penyakit"];
             return response;
         }
