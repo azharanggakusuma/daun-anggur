@@ -1285,19 +1285,11 @@ html.dark .filter-button.active {
     color: var(--bg-primary);
 }
 
-/* --- GAYA CHATBOT INTEGRATED SIDE-PANEL (v3) --- */
 
-/* Wrapper untuk konten utama halaman */
-#main-content-wrapper {
-    width: 100%;
-    /* Tidak lagi mengubah lebar atau transform, karena widget akan menjadi overlay */
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Tombol Chat (FAB) */
+/* --- DESAIN CHATBOT PROFESIONAL --- */
 #chat-fab {
     position: fixed;
-    bottom: 1.5rem; /* Disesuaikan agar konsisten */
+    bottom: 1.5rem;
     right: 1.5rem;
     width: 60px;
     height: 60px;
@@ -1310,60 +1302,52 @@ html.dark .filter-button.active {
     justify-content: center;
     box-shadow: var(--shadow-lg);
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     z-index: 1002;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
-
-/* Sembunyikan FAB saat chat terbuka dengan animasi */
+#chat-fab:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-brand-glow);
+}
 body.chat-is-open #chat-fab {
     transform: scale(0) rotate(180deg);
     opacity: 0;
     visibility: hidden;
 }
 
-#chat-fab .icon-closed { display: block; }
-#chat-fab .icon-opened { display: none; }
-
-/* --- PERUBAHAN UTAMA: GAYA POP-UP CHAT BARU --- */
 #chat-widget {
     position: fixed;
-    /* Posisi default untuk mobile (full screen) */
-    top: 0;
+    bottom: 0;
     right: 0;
     width: 100%;
-    height: 100%;
-    background-color: var(--bg-secondary);
+    height: 100%; /* D kembalikan untuk ditangani oleh JS */
+    background-color: var(--bg-primary);
     z-index: 1001;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* Animasi default untuk mobile */
     transform: translateY(100%); 
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 1;
 }
-
 body.chat-is-open #chat-widget {
     transform: translateY(0);
 }
 
-/* Gaya untuk Desktop (Pop-up Window) */
 @media (min-width: 768px) {
     #chat-widget {
         top: auto;
-        bottom: 90px; /* Posisi di atas FAB */
+        bottom: 90px;
         right: 1.5rem;
-        width: 380px;
-        height: auto;
-        max-height: 70vh; /* Batas tinggi agar tidak terlalu besar */
+        width: 400px;
+        height: 70vh;
+        max-height: 600px;
         border: 1px solid var(--border-primary);
-        border-radius: 1rem; /* Sudut membulat */
-        box-shadow: var(--shadow-lg);
-        /* Animasi Pop-up untuk desktop */
-        transform: translateY(30px) scale(0.9);
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(30px) scale(0.95);
         opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                    opacity 0.3s ease;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     }
     body.chat-is-open #chat-widget {
         transform: translateY(0) scale(1);
@@ -1372,78 +1356,109 @@ body.chat-is-open #chat-widget {
 }
 
 #chat-header {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-primary);
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* ---- PENAMBAHAN GRADASI PADA HEADER ---- */
-    background-image: var(--brand-gradient);
-    color: white;
+    background: var(--bg-secondary);
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
 }
 #chat-header h3 {
-    color: white; /* Pastikan teks header putih */
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-primary);
 }
 #chat-header p {
-    color: rgba(255, 255, 255, 0.8); /* Buat subteks sedikit transparan */
+    color: var(--text-secondary);
 }
-#chat-header .bg-brand\/10 {
-    background-color: rgba(255, 255, 255, 0.15);
+.chat-header-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: var(--brand-color);
     color: white;
 }
-
 #chat-close-button {
     width: 36px; height: 36px; border-radius: 50%;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.8);
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
     border: none; cursor: pointer; 
     transition: all 0.2s ease;
 }
 #chat-close-button:hover {
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: var(--brand-color);
     color: white;
     transform: rotate(90deg) scale(1.1);
 }
 
 #chat-messages {
-    flex-grow: 1; padding: 1rem; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 0.75rem;
+    flex-grow: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
+
+#chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+#chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--border-primary);
+    border-radius: 10px;
+}
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: var(--border-secondary);
+}
+
 .message {
-    padding: 0.6rem 1rem; border-radius: 1rem; max-width: 85%;
-    line-height: 1.5; white-space: pre-wrap;
+    padding: 0.75rem 1.25rem;
+    border-radius: 1.25rem;
+    max-width: 85%;
+    line-height: 1.6;
+    word-wrap: break-word;
     animation: message-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    animation-delay: 0.2s;
     opacity: 0;
+    box-shadow: var(--shadow-sm);
 }
 @keyframes message-in {
     from { opacity: 0; transform: translateY(15px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
 .message.bot {
-    background-color: var(--bg-tertiary); color: var(--text-primary);
-    border-bottom-left-radius: 0.25rem; align-self: flex-start;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom-left-radius: 0.25rem;
+    align-self: flex-start;
 }
 .message.user {
-    background-color: var(--brand-color); color: white;
-    border-bottom-right-radius: 0.25rem; align-self: flex-end;
+    background-image: var(--brand-gradient);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+    align-self: flex-end;
 }
 
-/* PENYEMPURNAAN: Animasi indikator ketik */
 #typing-indicator { 
     display: flex; 
     align-items: center; 
     gap: 0.5rem; 
     align-self: flex-start;
-    padding: 0.6rem 1rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 1rem;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--bg-secondary);
+    border-radius: 1.25rem;
     border-bottom-left-radius: 0.25rem;
     transition: all 0.3s ease;
 }
-
-/* PERBAIKAN: Menggunakan display: none untuk menyembunyikan sepenuhnya */
 #typing-indicator.hidden { 
     display: none;
 }
@@ -1459,32 +1474,65 @@ body.chat-is-open #chat-widget {
 }
 
 #chat-footer {
-    padding: 0.75rem; border-top: 1px solid var(--border-primary);
-    flex-shrink: 0; background-color: var(--bg-secondary);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+    flex-shrink: 0;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+#chat-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 #chat-input {
-    width: 100%; padding: 0.7rem 1rem;
+    flex-grow: 1;
+    padding: 0.8rem 1.25rem;
     border: 1px solid var(--border-primary);
-    border-radius: 9999px; background-color: var(--bg-primary);
-    color: var(--text-primary); transition: all 0.2s ease;
+    border-radius: 9999px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    font-size: 1rem;
 }
-#chat-input:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 2px var(--brand-color); }
+#chat-input:focus {
+    outline: none;
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+}
 #chat-send-button {
-    width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%;
-    border: none; background-color: var(--brand-color); color: white;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s ease;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: none;
+    background-image: var(--brand-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-brand);
 }
-#chat-send-button:hover { transform: scale(1.1); }
+#chat-send-button:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-brand-glow);
+}
+#chat-send-button i {
+    font-size: 1.125rem;
+}
 
-/* --- GAYA QUICK REPLIES --- */
 .quick-replies-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding: 0.5rem 0 0.25rem 0;
+    padding: 0.5rem 0 0 0;
     animation: message-in 0.4s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     opacity: 0;
+    margin-left: 1.25rem;
+    align-self: flex-start;
 }
 .quick-reply-button {
     padding: 0.5rem 1rem;
@@ -1492,7 +1540,7 @@ body.chat-is-open #chat-widget {
     font-weight: 600;
     border: 1px solid var(--brand-color);
     color: var(--brand-color);
-    background-color: transparent;
+    background-color: var(--bg-secondary);
     border-radius: 9999px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1501,15 +1549,13 @@ body.chat-is-open #chat-widget {
     background-color: var(--brand-color);
     color: white;
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* PERBAIKAN: Pindahkan posisi FAB di mobile agar tidak menutupi navigasi */
 @media (max-width: 639px) {
   #chat-fab {
-    bottom: 5.5rem; /* 4rem (tinggi nav) + 1.5rem (jarak) */
+    bottom: 5.5rem;
   }
-
-  /* PERBAIKAN BARU: Jadikan background navigasi bawah solid */
   #app-header {
     background-color: var(--bg-secondary);
     backdrop-filter: none;
