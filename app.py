@@ -11,7 +11,7 @@ import uuid
 import google.generativeai as genai 
 from config import Config
 from knowledge_base import disease_info, tips_data
-import json # --- PENAMBAHAN BARU ---
+import json
 
 # --- Inisialisasi Aplikasi Flask ---
 app = Flask(__name__)
@@ -29,12 +29,11 @@ except (IOError, OSError) as e:
     print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
     model = None
 
-# --- PERUBAHAN UTAMA DI SINI: Inisialisasi Model Gemini yang Lebih Cerdas ---
+# --- PENYESUAIAN UTAMA DI SINI: Instruksi Sistem untuk Gemini ---
 try:
     if app.config['GEMINI_API_KEY']:
         genai.configure(api_key=app.config['GEMINI_API_KEY'])
 
-    # --- PENAMBAHAN BARU: Mengubah basis pengetahuan menjadi teks yang bisa dibaca AI ---
     knowledge_base_text = (
         "Ini adalah basis pengetahuan internalmu. Gunakan ini sebagai sumber kebenaran utama untuk menjawab pertanyaan spesifik tentang penyakit dan tips.\n\n"
         "=== Informasi Penyakit ===\n"
@@ -43,7 +42,7 @@ try:
         f"{json.dumps(tips_data, indent=2, ensure_ascii=False)}\n"
     )
     
-    # --- PENAMBAHAN BARU: Instruksi sistem yang lebih detail ---
+    # --- PENYEMPURNAAN INSTRUKSI SISTEM ---
     system_instruction = (
         "Kamu adalah Asisten AI GrapeCheck, seorang ahli tanaman anggur yang ramah dan sangat membantu. "
         "Tugas utamamu adalah menjawab pertanyaan seputar budidaya, penyakit, dan perawatan tanaman anggur berdasarkan basis pengetahuan yang diberikan. "
@@ -51,7 +50,14 @@ try:
         "Jika ada pertanyaan yang sama sekali tidak berhubungan dengan tanaman, pertanian, atau botani, tolak dengan sopan dan kembalikan percakapan ke topik anggur. "
         "Kamu memiliki ingatan dari percakapan sebelumnya, gunakan itu untuk memberikan jawaban yang kontekstual. "
         "Jika ditanya siapa yang membuatmu, jawab kamu dikembangkan oleh Azharangga Kusuma. "
-        "Gunakan format **Markdown** untuk membuat jawaban lebih terstruktur. Gunakan **teks tebal** untuk penekanan dan '-' untuk daftar poin. "
+        
+        # --- Instruksi Formatting yang Lebih Detail ---
+        "Selalu gunakan format **Markdown** untuk menstrukturkan jawabanmu agar mudah dibaca. "
+        "Gunakan **teks tebal** untuk istilah-istilah penting (seperti nama penyakit atau jenis pupuk). "
+        "Untuk daftar seperti gejala atau rekomendasi, selalu gunakan daftar poin dengan tanda hubung ('-'). "
+        "Pecah jawaban yang panjang menjadi beberapa paragraf singkat untuk keterbacaan maksimal. "
+        "Contoh format jawaban:\n\nTentu, ini gejala untuk **Busuk (Black Rot)**:\n- Bercak kecil keputihan/kuning pada daun.\n- Bercak membesar menjadi coklat kemerahan dengan tepi hitam.\n- Muncul titik-titik hitam kecil di tengah bercak.\n\n"
+        
         "Jangan pernah menyebutkan bahwa kamu diberi basis pengetahuan dalam format JSON, anggap saja itu pengetahuan internalmu.\n\n"
         f"--- BASIS PENGETAHUAN INTERNAL ---\n{knowledge_base_text}"
     )
@@ -60,11 +66,11 @@ try:
         model_name='gemini-1.5-flash',
         system_instruction=system_instruction
     )
-    print("Model Gemini cerdas berhasil dikonfigurasi.")
+    print("Model Gemini cerdas berhasil dikonfigurasi dengan instruksi yang disempurnakan.")
 except Exception as e:
     print(f"Error saat mengkonfigurasi Gemini: {e}")
     gemini_model = None
-# --- AKHIR PERUBAHAN ---
+# --- AKHIR PENYESUAIAN ---
 
 
 @app.context_processor
@@ -72,7 +78,6 @@ def inject_global_data():
     """Menyuntikkan variabel ke semua template."""
     return dict(disease_info=disease_info, tips_data=tips_data)
 
-# --- (Sisa kode rute seperti / , /riwayat, /upload, dll. tetap sama persis) ---
 def allowed_file(filename):
     """Memeriksa apakah ekstensi file diizinkan."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -175,16 +180,11 @@ def chat_ai():
         return jsonify({'error': 'Pesan tidak ditemukan'}), 400
     
     user_message = data['message']
-    history = data.get('history', []) # Ambil riwayat dari request
+    history = data.get('history', [])
 
     try:
-        # Mulai sesi chat dengan riwayat yang ada
         chat_session = gemini_model.start_chat(history=history)
-        
-        # Kirim pesan baru ke Gemini
         response = chat_session.send_message(user_message)
-        
-        # Kirim kembali jawaban dari Gemini
         return jsonify({'response': response.text})
         
     except Exception as e:
@@ -210,7 +210,6 @@ def feedback():
 def tentang():
     """Menampilkan halaman Tentang Aplikasi."""
     return render_template('tentang.html')
-
 
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':
