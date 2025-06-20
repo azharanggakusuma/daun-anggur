@@ -1502,3 +1502,10 @@ body.chat-is-open #chat-widget {
     color: white;
     transform: translateY(-2px);
 }
+
+/* PERBAIKAN: Pindahkan posisi FAB di mobile agar tidak menutupi navigasi */
+@media (max-width: 639px) {
+  #chat-fab {
+    bottom: 5.5rem; /* 4rem (tinggi nav) + 1.5rem (jarak) */
+  }
+}
