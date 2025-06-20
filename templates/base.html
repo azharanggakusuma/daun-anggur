@@ -46,10 +46,10 @@
 
 
     <div id="chatbot-container">
+    <div id="chat-overlay"></div>
     <button id="chat-fab" title="Tanya Asisten AI">
-        <i class="fa-solid fa-comments icon-opened"></i>
+        <i class="fa-solid fa-comment icon-opened"></i>
     </button>
-
     <div id="chat-widget">
         <header id="chat-header">
             <div class="flex items-center gap-3">
@@ -58,7 +58,7 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-primary">Asisten AI GrapeCheck</h3>
-                    <p class="text-xs text-secondary">Siap membantu Anda!</p>
+                    <p class="text-xs text-secondary">Online</p>
                 </div>
             </div>
             <button id="chat-close-button" title="Tutup">
@@ -82,8 +82,7 @@
         </footer>
     </div>
 </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
