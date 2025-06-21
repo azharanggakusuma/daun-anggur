@@ -1,5 +1,7 @@
+// static/js/history.js
+
 document.addEventListener("DOMContentLoaded", function () {
-    // DOM Elements
+    // --- Elemen DOM ---
     const historyContainer = document.getElementById("history-container");
     const emptyHistoryMessage = document.getElementById("empty-history");
     const skeletonContainer = document.getElementById("history-skeleton");
@@ -9,20 +11,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterButtonsContainer = document.getElementById('filter-buttons');
     const managementPanel = document.querySelector('.mb-8.flex');
 
-    // Modal Elements
+    // --- Elemen Modal ---
     const modal = document.getElementById("delete-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalText = document.getElementById("modal-text");
     const modalCancelButton = document.getElementById("modal-cancel-button");
     const modalConfirmButton = document.getElementById("modal-confirm-button");
     
-    // State
-    let history = JSON.parse(localStorage.getItem("analysisHistory")) || [];
+    // --- State Aplikasi ---
+    let analysisHistory = JSON.parse(localStorage.getItem("analysisHistory")) || [];
     let currentFilter = '*';
-    let currentAction = { type: null, data: null };
-    let lastFocusedElement; 
+    let itemToDeleteFilename = null; // State untuk menyimpan filename yang akan dihapus
 
-    const diseaseInfo = {
+    // --- Informasi untuk tampilan (icon & warna) ---
+    const diseaseInfoMap = {
         'Sehat': { color: 'green', icon: 'fa-leaf' },
         'Busuk': { color: 'red', icon: 'fa-virus' },
         'Esca': { color: 'orange', icon: 'fa-disease' },
@@ -30,36 +32,44 @@ document.addEventListener("DOMContentLoaded", function () {
         'Negative': { color: 'zinc', icon: 'fa-question-circle' }
     };
 
+    /**
+     * Merender kartu riwayat ke dalam kontainer.
+     * Fungsi ini sekarang lebih andal dalam menangani filter dan pencarian.
+     */
     function renderHistory() {
         if (skeletonContainer) skeletonContainer.classList.add('hidden');
         if (historyContainer) historyContainer.classList.remove('hidden');
 
         historyContainer.innerHTML = '';
 
-        const isHistoryEmpty = history.length === 0;
+        const isHistoryEmpty = analysisHistory.length === 0;
         emptyHistoryMessage.classList.toggle("hidden", !isHistoryEmpty);
         if (managementPanel) managementPanel.classList.toggle('hidden', isHistoryEmpty);
 
         if (isHistoryEmpty) return;
 
-        const filteredHistory = history.filter(item => currentFilter === '*' || item.label === currentFilter);
         const searchQuery = searchInput.value.toLowerCase().trim();
-        const finalHistory = filteredHistory.filter(item => item.label.toLowerCase().includes(searchQuery));
         
-        noSearchResultsMessage.classList.toggle('hidden', finalHistory.length > 0);
+        const finalHistory = analysisHistory.filter(item => {
+            const matchesFilter = currentFilter === '*' || item.label === currentFilter;
+            const matchesSearch = item.label.toLowerCase().includes(searchQuery);
+            return matchesFilter && matchesSearch;
+        });
+        
+        noSearchResultsMessage.classList.toggle('hidden', finalHistory.length > 0 || isHistoryEmpty);
 
         const fragment = document.createDocumentFragment();
         finalHistory.forEach((item, index) => {
             const date = new Date(item.timestamp);
             const desktopDate = new Intl.DateTimeFormat("id-ID", { year: "numeric", month: "long", day: "numeric" }).format(date);
             const desktopTime = date.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
-            const info = diseaseInfo[item.label] || diseaseInfo['Negative'];
+            const info = diseaseInfoMap[item.label] || diseaseInfoMap['Negative'];
 
             const cardDiv = document.createElement('div');
             cardDiv.className = `history-card animate-stagger-in`;
             cardDiv.style.setProperty('--delay', `${index * 60}ms`);
-            
-            // --- STRUKTUR HTML DIKEMBALIKAN KE VERSI AWAL ---
+            cardDiv.setAttribute('data-filename', item.filename); // Atribut pada elemen terluar
+
             cardDiv.innerHTML = `
                 <a href="/hasil/${item.filename}" class="history-card-link group">
                     <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
@@ -84,73 +94,109 @@ document.addEventListener("DOMContentLoaded", function () {
         historyContainer.appendChild(fragment);
     }
 
-    function showModal(type, data = null) {
-        lastFocusedElement = document.activeElement; 
-        currentAction = { type, data };
+    /**
+     * Menampilkan modal konfirmasi penghapusan.
+     * @param {string} type - Tipe penghapusan ('single' atau 'all').
+     * @param {string|null} filename - Nama file jika tipenya 'single'.
+     */
+    function showModal(type, filename = null) {
+        itemToDeleteFilename = filename; // Simpan filename
+        
         if (type === 'single') {
             modalTitle.textContent = 'Konfirmasi Penghapusan';
             modalText.textContent = 'Apakah Anda yakin ingin menghapus riwayat ini secara permanen?';
         } else if (type === 'all') {
             modalTitle.textContent = 'Hapus Semua Riwayat?';
-            modalText.textContent = 'Apakah Anda yakin ingin menghapus SEMUA riwayat secara permanen?';
+            modalText.textContent = 'Tindakan ini akan menghapus SEMUA data analisis Anda dan tidak bisa dibatalkan.';
         }
         modal.classList.add('visible');
-        modalCancelButton.focus(); 
+        modalConfirmButton.focus();
     }
 
+    /**
+     * Menyembunyikan modal konfirmasi.
+     */
     function hideModal() {
-        currentAction = { type: null, data: null };
         modal.classList.remove('visible');
-        if (lastFocusedElement) lastFocusedElement.focus();
+        itemToDeleteFilename = null; // Reset state
     }
 
+    /**
+     * Menghapus satu item riwayat berdasarkan nama file.
+     * @param {string} filename - Nama file yang akan dihapus.
+     */
     function deleteSingleItem(filename) {
-        const cardToDelete = historyContainer.querySelector(`[data-filename="${filename}"]`)?.closest('.history-card');
+        const cardToDelete = historyContainer.querySelector(`.history-card[data-filename="${filename}"]`);
         
         if (cardToDelete) {
             cardToDelete.classList.add('animate-fade-out-shrink');
         }
         
+        // Tunggu animasi selesai sebelum menghapus data dan re-render
         setTimeout(() => {
-            history = history.filter(item => item.filename !== filename);
-            localStorage.setItem('analysisHistory', JSON.stringify(history));
+            analysisHistory = analysisHistory.filter(item => item.filename !== filename);
+            localStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
             renderHistory();
-        }, 400);
+        }, 400); // Durasi harus cocok dengan animasi di CSS
     }
     
+    /**
+     * Menghapus seluruh riwayat analisis.
+     */
     function deleteAllHistory() {
+        analysisHistory = [];
         localStorage.removeItem('analysisHistory');
-        history = [];
         renderHistory();
     }
     
+    // --- Event Listeners ---
+
+    // Event listener untuk klik di dalam kontainer riwayat (menangani tombol hapus)
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
-            event.preventDefault();
-            showModal('single', deleteButton.dataset.filename);
+            event.preventDefault(); // Mencegah perilaku default jika ada
+            const filename = deleteButton.dataset.filename;
+            showModal('single', filename);
         }
     });
 
+    // Event listener untuk tombol hapus semua
     if (clearHistoryButton) {
         clearHistoryButton.addEventListener('click', () => {
-            if (history.length > 0) showModal('all');
+            if (analysisHistory.length > 0) {
+                showModal('all');
+            }
         });
     }
 
+    // Event listeners untuk tombol di dalam modal
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
+        
         modalConfirmButton.addEventListener('click', () => {
-            if (currentAction.type === 'single') deleteSingleItem(currentAction.data);
-            else if (currentAction.type === 'all') deleteAllHistory();
+            if (itemToDeleteFilename) { // Jika ada filename yang tersimpan, hapus satu
+                deleteSingleItem(itemToDeleteFilename);
+            } else { // Jika tidak, berarti ini adalah 'hapus semua'
+                deleteAllHistory();
+            }
             hideModal();
+        });
+
+        // Tutup modal jika menekan tombol Escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('visible')) {
+                hideModal();
+            }
         });
     }
     
+    // Event listener untuk input pencarian
     if (searchInput) {
         searchInput.addEventListener('input', renderHistory);
     }
     
+    // Event listener untuk tombol filter
     if (filterButtonsContainer) {
         filterButtonsContainer.addEventListener('click', (e) => {
             const button = e.target.closest('.filter-button');
@@ -164,10 +210,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /**
+     * Inisialisasi halaman riwayat.
+     */
     function initialize() {
         setTimeout(() => {
             renderHistory();
-        }, 300);
+        }, 300); // Beri sedikit jeda agar animasi halaman masuk selesai
     }
 
     initialize();
