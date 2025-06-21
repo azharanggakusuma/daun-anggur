@@ -62,13 +62,14 @@ body {
 }
 
 .bg-grid-pattern {
-    background-image: 
+    background-color: var(--bg-primary);
+    background-image:
         linear-gradient(to right, var(--border-primary) 1px, transparent 1px),
         linear-gradient(to bottom, var(--border-primary) 1px, transparent 1px);
     background-size: 40px 40px;
 }
 html.dark .bg-grid-pattern {
-    background-image: 
+    background-image:
         linear-gradient(to right, var(--border-primary) 0.5px, transparent 0.5px),
         linear-gradient(to bottom, var(--border-primary) 0.5px, transparent 0.5px);
 }
