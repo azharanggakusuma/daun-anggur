@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /**
      * Merender kartu riwayat ke dalam kontainer.
-     * Fungsi ini sekarang lebih andal dalam menangani filter dan pencarian.
      */
     function renderHistory() {
         if (skeletonContainer) skeletonContainer.classList.add('hidden');
@@ -80,12 +79,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             <span>${item.label}</span>
                         </p>
                         <p class="text-sm text-secondary font-medium">Keyakinan: ${item.confidence}%</p>
+                        
+                        <div class="text-xs text-muted mt-2">
+                            <span>${desktopDate}</span>
+                            <span class="hidden sm:inline">, pukul ${desktopTime}</span>
+                        </div>
                     </div>
                 </a>
-                <div class="text-right text-sm text-muted hidden sm:block flex-shrink-0">
-                    <p class="font-semibold">${desktopDate}</p>
-                    <p class="text-xs">pukul ${desktopTime}</p>
-                </div>
                 <button class="history-delete-button" data-filename="${item.filename}" title="Hapus riwayat ini">
                     <i class="fa-solid fa-trash-can-xmark"></i>
                 </button>
@@ -99,8 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /**
      * Menampilkan modal konfirmasi penghapusan.
-     * @param {string} type - Tipe penghapusan ('single' atau 'all').
-     * @param {string|null} filename - Nama file jika tipenya 'single'.
      */
     function showModal(type, filename = null) {
         itemToDeleteFilename = filename; 
@@ -126,8 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /**
      * Menghapus satu item riwayat berdasarkan nama file.
-     * Mengirim permintaan ke server untuk menghapus file fisik.
-     * @param {string} filename - Nama file yang akan dihapus.
      */
     async function deleteSingleItem(filename) {
         const cardToDelete = historyContainer.querySelector(`.history-card[data-filename="${filename}"]`);
@@ -163,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     /**
      * Menghapus seluruh riwayat analisis.
-     * Mengirim daftar semua nama file ke server untuk dihapus.
      */
     async function deleteAllHistory() {
         const filenamesToDelete = analysisHistory.map(item => item.filename);
