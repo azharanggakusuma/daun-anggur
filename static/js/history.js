@@ -104,10 +104,10 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if (type === 'single') {
             modalTitle.textContent = 'Konfirmasi Penghapusan';
-            modalText.textContent = 'Apakah Anda yakin ingin menghapus riwayat ini secara permanen?';
+            modalText.textContent = 'Apakah Anda yakin ingin menghapus riwayat ini secara permanen? Tindakan ini juga akan menghapus file gambar dari server.';
         } else if (type === 'all') {
             modalTitle.textContent = 'Hapus Semua Riwayat?';
-            modalText.textContent = 'Tindakan ini akan menghapus SEMUA data analisis Anda dan tidak bisa dibatalkan.';
+            modalText.textContent = 'Tindakan ini akan menghapus SEMUA data dan file gambar analisis Anda dan tidak bisa dibatalkan.';
         }
         modal.classList.add('visible');
         modalConfirmButton.focus();
@@ -123,30 +123,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /**
      * Menghapus satu item riwayat berdasarkan nama file.
+     * Mengirim permintaan ke server untuk menghapus file fisik.
      * @param {string} filename - Nama file yang akan dihapus.
      */
-    function deleteSingleItem(filename) {
+    async function deleteSingleItem(filename) {
         const cardToDelete = historyContainer.querySelector(`.history-card[data-filename="${filename}"]`);
         
         if (cardToDelete) {
             cardToDelete.classList.add('animate-fade-out-shrink');
         }
-        
-        // Tunggu animasi selesai sebelum menghapus data dan re-render
-        setTimeout(() => {
-            analysisHistory = analysisHistory.filter(item => item.filename !== filename);
-            localStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
-            renderHistory();
-        }, 400); // Durasi harus cocok dengan animasi di CSS
+
+        try {
+            const response = await fetch(`/history/${filename}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Gagal menghapus file di server.');
+            }
+
+            // Tunggu animasi selesai sebelum menghapus data dan re-render
+            setTimeout(() => {
+                analysisHistory = analysisHistory.filter(item => item.filename !== filename);
+                localStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
+                renderHistory();
+            }, 400); // Durasi harus cocok dengan animasi di CSS
+
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            alert('Terjadi kesalahan saat mencoba menghapus riwayat. Silakan coba lagi.');
+            // Kembalikan kartu jika penghapusan gagal
+            if (cardToDelete) {
+                cardToDelete.classList.remove('animate-fade-out-shrink');
+            }
+        }
     }
     
     /**
      * Menghapus seluruh riwayat analisis.
+     * Mengirim daftar semua nama file ke server untuk dihapus.
      */
-    function deleteAllHistory() {
-        analysisHistory = [];
-        localStorage.removeItem('analysisHistory');
-        renderHistory();
+    async function deleteAllHistory() {
+        const filenamesToDelete = analysisHistory.map(item => item.filename);
+        if (filenamesToDelete.length === 0) return;
+
+        try {
+            const response = await fetch('/history', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filenames: filenamesToDelete })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Gagal menghapus riwayat di server.');
+            }
+
+            // Jika server berhasil, bersihkan localStorage dan render ulang UI
+            analysisHistory = [];
+            localStorage.removeItem('analysisHistory');
+            renderHistory();
+
+        } catch (error) {
+            console.error('Error deleting all history:', error);
+            alert('Terjadi kesalahan saat mencoba menghapus semua riwayat. Silakan coba lagi.');
+        }
     }
     
     // --- Event Listeners ---
@@ -175,6 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
         modalCancelButton.addEventListener('click', hideModal);
         
         modalConfirmButton.addEventListener('click', () => {
+            // Gunakan fungsi async di sini
             if (itemToDeleteFilename) { // Jika ada filename yang tersimpan, hapus satu
                 deleteSingleItem(itemToDeleteFilename);
             } else { // Jika tidak, berarti ini adalah 'hapus semua'

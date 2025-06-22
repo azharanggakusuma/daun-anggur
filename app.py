@@ -211,6 +211,66 @@ def tentang():
     """Menampilkan halaman Tentang Aplikasi."""
     return render_template('tentang.html')
 
+@app.route('/history/<filename>', methods=['DELETE'])
+def delete_history_item(filename):
+    """Menghapus satu item riwayat dan file gambarnya."""
+    # Keamanan: Pastikan filename aman dan tidak mengandung path traversal
+    safe_filename = secure_filename(filename)
+    if safe_filename != filename:
+        return jsonify({'status': 'error', 'message': 'Nama file tidak valid.'}), 400
+
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], safe_filename)
+        
+        # Hapus file jika ada
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return jsonify({'status': 'success', 'message': f'File {safe_filename} berhasil dihapus.'}), 200
+        else:
+            # Jika file tidak ada, mungkin sudah dihapus sebelumnya. Anggap sukses.
+            return jsonify({'status': 'success', 'message': f'File {safe_filename} tidak ditemukan, riwayat tetap dihapus.'}), 200
+            
+    except Exception as e:
+        print(f"Error saat menghapus file {safe_filename}: {e}")
+        return jsonify({'status': 'error', 'message': 'Gagal menghapus file di server.'}), 500
+
+@app.route('/history', methods=['DELETE'])
+def delete_all_history_items():
+    """Menghapus semua item riwayat dan file gambar terkait."""
+    data = request.get_json()
+    if not data or 'filenames' not in data:
+        return jsonify({'status': 'error', 'message': 'Data filenames tidak ada.'}), 400
+
+    filenames = data['filenames']
+    if not isinstance(filenames, list):
+        return jsonify({'status': 'error', 'message': 'Data filenames harus berupa list.'}), 400
+
+    deleted_files = []
+    failed_files = []
+
+    for filename in filenames:
+        safe_filename = secure_filename(filename)
+        if safe_filename != filename:
+            failed_files.append({'filename': filename, 'reason': 'Nama file tidak valid'})
+            continue
+        
+        try:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], safe_filename)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                deleted_files.append(safe_filename)
+        except Exception as e:
+            print(f"Error saat menghapus file {safe_filename}: {e}")
+            failed_files.append({'filename': safe_filename, 'reason': str(e)})
+
+    return jsonify({
+        'status': 'success', 
+        'message': 'Proses penghapusan selesai.',
+        'deleted_count': len(deleted_files),
+        'failed_count': len(failed_files),
+        'failed_files': failed_files
+    }), 200
+
 # --- Menjalankan Aplikasi ---
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
