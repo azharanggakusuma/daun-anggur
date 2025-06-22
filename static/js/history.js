@@ -68,8 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const cardDiv = document.createElement('div');
             cardDiv.className = `history-card animate-stagger-in`;
             cardDiv.style.setProperty('--delay', `${index * 60}ms`);
-            cardDiv.setAttribute('data-filename', item.filename); // Atribut pada elemen terluar
+            cardDiv.setAttribute('data-filename', item.filename);
 
+            // --- PERUBAHAN STRUKTUR HTML DI SINI ---
             cardDiv.innerHTML = `
                 <a href="/hasil/${item.filename}" class="history-card-link group">
                     <img src="/static/uploads/${item.filename}" alt="Miniatur ${item.label}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-primary/10 flex-shrink-0">
@@ -80,15 +81,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         </p>
                         <p class="text-sm text-secondary font-medium">Keyakinan: ${item.confidence}%</p>
                     </div>
-                    <div class="text-right text-sm text-muted hidden sm:block">
-                        <p class="font-semibold">${desktopDate}</p>
-                        <p class="text-xs">pukul ${desktopTime}</p>
-                    </div>
                 </a>
+                <div class="text-right text-sm text-muted hidden sm:block flex-shrink-0">
+                    <p class="font-semibold">${desktopDate}</p>
+                    <p class="text-xs">pukul ${desktopTime}</p>
+                </div>
                 <button class="history-delete-button" data-filename="${item.filename}" title="Hapus riwayat ini">
                     <i class="fa-solid fa-trash-can-xmark"></i>
                 </button>
             `;
+            // --- AKHIR PERUBAHAN ---
+            
             fragment.appendChild(cardDiv);
         });
         historyContainer.appendChild(fragment);
@@ -100,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
      * @param {string|null} filename - Nama file jika tipenya 'single'.
      */
     function showModal(type, filename = null) {
-        itemToDeleteFilename = filename; // Simpan filename
+        itemToDeleteFilename = filename; 
         
         if (type === 'single') {
             modalTitle.textContent = 'Konfirmasi Penghapusan';
@@ -118,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function hideModal() {
         modal.classList.remove('visible');
-        itemToDeleteFilename = null; // Reset state
+        itemToDeleteFilename = null; 
     }
 
     /**
@@ -143,17 +146,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(errorData.message || 'Gagal menghapus file di server.');
             }
 
-            // Tunggu animasi selesai sebelum menghapus data dan re-render
             setTimeout(() => {
                 analysisHistory = analysisHistory.filter(item => item.filename !== filename);
                 localStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
                 renderHistory();
-            }, 400); // Durasi harus cocok dengan animasi di CSS
+            }, 400); 
 
         } catch (error) {
             console.error('Error deleting item:', error);
             alert('Terjadi kesalahan saat mencoba menghapus riwayat. Silakan coba lagi.');
-            // Kembalikan kartu jika penghapusan gagal
             if (cardToDelete) {
                 cardToDelete.classList.remove('animate-fade-out-shrink');
             }
@@ -182,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(errorData.message || 'Gagal menghapus riwayat di server.');
             }
 
-            // Jika server berhasil, bersihkan localStorage dan render ulang UI
             analysisHistory = [];
             localStorage.removeItem('analysisHistory');
             renderHistory();
@@ -195,17 +195,15 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // --- Event Listeners ---
 
-    // Event listener untuk klik di dalam kontainer riwayat (menangani tombol hapus)
     historyContainer.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.history-delete-button');
         if (deleteButton) {
-            event.preventDefault(); // Mencegah perilaku default jika ada
+            event.preventDefault(); 
             const filename = deleteButton.dataset.filename;
             showModal('single', filename);
         }
     });
 
-    // Event listener untuk tombol hapus semua
     if (clearHistoryButton) {
         clearHistoryButton.addEventListener('click', () => {
             if (analysisHistory.length > 0) {
@@ -214,21 +212,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Event listeners untuk tombol di dalam modal
     if (modal) {
         modalCancelButton.addEventListener('click', hideModal);
         
         modalConfirmButton.addEventListener('click', () => {
-            // Gunakan fungsi async di sini
-            if (itemToDeleteFilename) { // Jika ada filename yang tersimpan, hapus satu
+            if (itemToDeleteFilename) { 
                 deleteSingleItem(itemToDeleteFilename);
-            } else { // Jika tidak, berarti ini adalah 'hapus semua'
+            } else { 
                 deleteAllHistory();
             }
             hideModal();
         });
 
-        // Tutup modal jika menekan tombol Escape
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('visible')) {
                 hideModal();
@@ -236,12 +231,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     
-    // Event listener untuk input pencarian
     if (searchInput) {
         searchInput.addEventListener('input', renderHistory);
     }
     
-    // Event listener untuk tombol filter
     if (filterButtonsContainer) {
         filterButtonsContainer.addEventListener('click', (e) => {
             const button = e.target.closest('.filter-button');
@@ -261,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function initialize() {
         setTimeout(() => {
             renderHistory();
-        }, 300); // Beri sedikit jeda agar animasi halaman masuk selesai
+        }, 300); 
     }
 
     initialize();

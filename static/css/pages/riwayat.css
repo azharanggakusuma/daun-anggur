@@ -3,14 +3,14 @@
 .history-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* Jarak antara link dan tombol hapus */
+  gap: 0.75rem;
   background-color: var(--bg-secondary);
   border-radius: 0.75rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-md);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease,
     border-color 0.3s ease;
-  padding: 0.75rem 1rem; /* Sesuaikan padding */
+  padding: 0.75rem 1rem;
   position: relative;
 }
 .history-card:hover {
@@ -20,7 +20,7 @@
 }
 .history-card-link {
   display: flex;
-  flex-grow: 1; /* Membuat area link memenuhi sisa ruang */
+  flex-grow: 1;
   align-items: center;
   gap: 1rem;
   text-decoration: none;
@@ -34,47 +34,38 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* --- PERUBAHAN UTAMA UNTUK TOMBOL HAPUS --- */
 .history-delete-button {
-  /* Hapus position: absolute dan properti terkait */
-  flex-shrink: 0; /* Mencegah tombol mengecil */
-  width: 2.5rem;  /* 40px */
-  height: 2.5rem; /* 40px */
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 9999px;
-  
-  /* Gaya default yang lebih halus */
+
   background-color: var(--bg-tertiary);
   color: var(--text-secondary);
   border: 1px solid var(--border-primary);
 
-  /* Properti lainnya */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  /* Tombol selalu terlihat */
-  opacity: 1; 
+
+  opacity: 1;
   transform: none;
+  /* Properti position dan z-index dihapus karena tidak perlu lagi */
 }
 
-/* Hapus aturan .history-card:hover .history-delete-button */
-
-/* Gaya saat tombol hapus di-hover */
 .history-delete-button:hover {
-  background-color: #fee2e2; /* Merah muda */
-  color: #ef4444; /* Merah terang */
+  background-color: #fee2e2;
+  color: #ef4444;
   border-color: #fca5a5;
-  transform: scale(1.1); /* Efek perbesar */
+  transform: scale(1.1);
 }
 
 html.dark .history-delete-button:hover {
   background-color: #7f1d1d;
   color: #fca5a5;
 }
-/* --- AKHIR PERUBAHAN --- */
-
 
 /* Sisa kode (tidak berubah) */
 .summary-card {
