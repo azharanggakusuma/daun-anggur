@@ -3,22 +3,35 @@
 /* --- Tampilan Desktop: Menu Vertikal di Kiri --- */
 @media (min-width: 640px) {
   #app-header {
-    top: 50%; left: 1.5rem; right: auto; bottom: auto;
-    transform: translateY(-50%); z-index: 60;
+    top: 50%;
+    left: 1.5rem;
+    right: auto;
+    bottom: auto;
+    transform: translateY(-50%);
+    z-index: 60;
   }
   #app-nav {
-    display: flex; flex-direction: column; gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    padding: 0.75rem; border-radius: 1rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-lg);
   }
   .nav-item {
-    width: 44px; height: 44px; border-radius: 9999px;
-    color: var(--text-muted); background-color: transparent;
-    border: none; box-shadow: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    color: var(--text-muted);
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
     transition: all 0.2s ease-in-out;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
   }
   .nav-item:hover {
@@ -31,74 +44,166 @@
     background-color: var(--bg-primary);
   }
   .nav-item::before {
-    content: ''; position: absolute; left: -20px; top: 50%;
-    transform: translateY(-50%); width: 4px; height: 0;
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 0;
     background-image: var(--brand-gradient);
     border-radius: 4px;
     transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .nav-item.active::before { height: 60%; }
-  .nav-item i { font-size: 1.25rem; }
+  .nav-item.active::before {
+    height: 60%;
+  }
+  .nav-item i {
+    font-size: 1.25rem;
+  }
   .nav-item .nav-text {
-    display: block; position: absolute; left: 100%; top: 50%;
+    display: block;
+    position: absolute;
+    left: 100%;
+    top: 50%;
     transform: translateY(-50%) translateX(0) scale(0.95);
-    opacity: 0; visibility: hidden; margin-left: 16px;
-    padding: 0.3rem 0.8rem; background-color: var(--bg-secondary);
-    color: var(--text-primary); border-radius: 0.5rem;
-    border: 1px solid var(--border-primary); box-shadow: var(--shadow-md);
-    white-space: nowrap; font-size: 0.8rem; font-weight: 600;
+    opacity: 0;
+    visibility: hidden;
+    margin-left: 16px;
+    padding: 0.3rem 0.8rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 600;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .nav-item:hover .nav-text {
-    opacity: 1; visibility: visible;
+    opacity: 1;
+    visibility: visible;
     transform: translateY(-50%) translateX(8px) scale(1);
   }
-  #app-nav #theme-toggle.fab { order: 5; transform: translateY(0); }
-  #app-nav #theme-toggle.fab #theme-icon-container { width: auto; height: auto; }
-  #app-nav #theme-toggle.fab .theme-icon { font-size: 1.25rem; }
-  .nav-item.active i { animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+  #app-nav #theme-toggle.fab {
+    order: 5;
+    transform: translateY(0);
+  }
+  #app-nav #theme-toggle.fab #theme-icon-container {
+    width: auto;
+    height: auto;
+  }
+  #app-nav #theme-toggle.fab .theme-icon {
+    font-size: 1.25rem;
+  }
+  .nav-item.active i {
+    animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
 }
 
 /* --- Tampilan Mobile: Menu di Bawah --- */
 @media (max-width: 639px) {
-  #app-header { background-color: var(--bg-secondary); backdrop-filter: none; }
+  #app-header {
+    background-color: var(--bg-secondary);
+    backdrop-filter: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
   #app-nav {
-    display: flex; justify-content: space-around;
-    align-items: center; height: 100%; position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    position: relative;
   }
   .nav-item {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: var(--text-muted); height: 100%; flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    height: 100%;
+    flex-grow: 1;
     transition: color 0.2s ease-in-out;
   }
-  .nav-item i { font-size: 1.25rem; margin-bottom: 4px; }
-  .nav-item .nav-text { font-size: 0.7rem; display: block; transition: transform 0.2s ease-in-out; }
-  .nav-item.active { color: var(--brand-color); }
-  .nav-item.active i { animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-  .nav-item.active .nav-text { transform: translateY(-1px); }
-  #app-nav > :nth-child(2) { padding-right: 35px; }
-  #app-nav > :nth-child(4) { padding-left: 35px; }
+  .nav-item i {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  }
+  .nav-item .nav-text {
+    font-size: 0.7rem;
+    display: block;
+    transition: transform 0.2s ease-in-out;
+  }
+  .nav-item.active {
+    color: var(--brand-color);
+  }
+  .nav-item.active i {
+    animation: gojek-jiggle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  .nav-item.active .nav-text {
+    transform: translateY(-1px);
+  }
+  #app-nav > :nth-child(2) {
+    padding-right: 35px;
+  }
+  #app-nav > :nth-child(4) {
+    padding-left: 35px;
+  }
   #app-nav #theme-toggle.fab {
-    background-color: var(--brand-color); color: white;
-    width: 64px; height: 64px; border-radius: 9999px;
-    box-shadow: var(--shadow-lg); border: 4px solid var(--bg-secondary);
-    transition: transform 0.2s ease; flex-grow: 0; flex-shrink: 0;
-    position: absolute; top: 0; left: 50%;
+    background-color: var(--brand-color);
+    color: white;
+    width: 64px;
+    height: 64px;
+    border-radius: 9999px;
+    box-shadow: var(--shadow-lg);
+    border: 4px solid var(--bg-secondary);
+    transition: transform 0.2s ease;
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: absolute;
+    top: 0;
+    left: 50%;
     transform: translate(-50%, -24px);
   }
-  #app-nav #theme-toggle.fab:hover { transform: translate(-50%, -24px) scale(1.1); }
-  #app-nav #theme-toggle.fab #theme-icon-container { width: 24px; height: 24px; position: relative; }
-  #app-nav #theme-toggle.fab .theme-icon { font-size: 1.5rem; }
-  #app-nav #theme-toggle.fab .nav-text { display: none; }
+  #app-nav #theme-toggle.fab:hover {
+    transform: translate(-50%, -24px) scale(1.1);
+  }
+  #app-nav #theme-toggle.fab #theme-icon-container {
+    width: 24px;
+    height: 24px;
+    position: relative;
+  }
+  #app-nav #theme-toggle.fab .theme-icon {
+    font-size: 1.5rem;
+  }
+  #app-nav #theme-toggle.fab .nav-text {
+    display: none;
+  }
 }
 
 /* --- Tombol Tema --- */
 .theme-icon {
-  position: absolute; top: 50%; left: 50%;
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-in-out;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    opacity 0.3s ease-in-out;
 }
-#theme-icon-sun { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-#theme-icon-moon { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-90deg); }
-html.dark #theme-icon-sun { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(90deg); }
-html.dark #theme-icon-moon { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+#theme-icon-sun {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+#theme-icon-moon {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0) rotate(-90deg);
+}
+html.dark #theme-icon-sun {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0) rotate(90deg);
+}
+html.dark #theme-icon-moon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
