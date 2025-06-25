@@ -1,36 +1,29 @@
-{% extends "base.html" %} {% block title %}GrapeCheck | Analisis Penyakit Daun
-Anggur{% endblock %} {% block content %}
-<div
-  class="relative flex flex-col flex-grow items-center justify-center p-4 sm:p-6 pt-16 sm:pt-20 pb-12 animate-page-in"
->
+{% extends "base.html" %}
+{% block title %}GrapeCheck | Analisis Penyakit Daun Anggur{% endblock %}
+{% block content %}
+<div class="relative flex flex-col items-center justify-center px-4 sm:px-6 pt-20 pb-16 animate-page-in min-h-screen bg-bg-primary">
   <main class="w-full max-w-2xl mx-auto">
-    <header class="text-center mb-8 animate-swoop-in">
-      <h1
-        class="text-4xl sm:text-5xl font-black tracking-tighter text-brand-gradient"
-      >
+
+    <!-- Hero -->
+    <header class="text-center mb-10 animate-swoop-in">
+      <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-brand-gradient">
         <span class="text-primary">Grape</span>Check
       </h1>
-      <p class="text-base sm:text-lg mt-3 max-w-xl mx-auto text-secondary">
+      <p class="mt-4 text-base sm:text-lg max-w-xl mx-auto text-secondary leading-relaxed">
         Analisis gambar daun anggur untuk mendeteksi gejala penyakit lebih awal menggunakan teknologi deep learning.
       </p>
-      <p
-        class="flex items-center justify-center gap-2 text-xs sm:text-sm mt-3 max-w-xl mx-auto text-secondary"
-      >
-        <span>Didukung oleh Model Deep Learning (TensorFlow)</span>
+      <p class="mt-3 text-xs sm:text-sm text-muted flex justify-center items-center gap-2">
+        <i class="fa-solid fa-brain text-sm"></i>
+        Didukung oleh Model Deep Learning (TensorFlow)
       </p>
     </header>
 
-    <section
-      id="uploader-section"
-      class="card-layout animate-slide-in-up"
-      style="animation-delay: 150ms"
-    >
-      <div
-        id="upload-tabs"
-        class="flex items-center border-b border-primary/20 mb-6"
-      >
+    <!-- Upload Section -->
+    <section id="uploader-section" class="card-layout animate-slide-in-up space-y-6" style="animation-delay: 150ms">
+      <!-- Tab Buttons -->
+      <div id="upload-tabs" class="flex items-center justify-center gap-4 border-b border-primary/20 pb-2">
         <button id="tab-file" class="upload-tab-button active">
-          <i class="fa-solid fa-files"></i>
+          <i class="fa-solid fa-file-arrow-up"></i>
           <span>Unggah File</span>
         </button>
         <button id="tab-camera" class="upload-tab-button">
@@ -39,102 +32,58 @@ Anggur{% endblock %} {% block content %}
         </button>
       </div>
 
-      <form id="uploadForm" method="POST" enctype="multipart/form-data">
+      <form id="uploadForm" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <!-- File Upload -->
         <div id="pane-file" class="upload-pane">
-          <div
-            id="dropzone"
-            class="relative p-6 sm:p-10 text-center cursor-pointer"
-          >
-            <input
-              type="file"
-              name="file"
-              id="fileInput"
+          <div id="dropzone" class="relative p-8 text-center cursor-pointer transition-all border-dashed rounded-xl">
+            <input type="file" name="file" id="fileInput"
               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              accept="image/jpeg, image/png, image/jpg"
-            />
-
-            <div
-              id="uploadPlaceholder"
-              class="space-y-3 pointer-events-none transition-opacity duration-300"
-            >
+              accept="image/jpeg, image/png, image/jpg" />
+            <div id="uploadPlaceholder" class="pointer-events-none space-y-2">
               <div id="upload-icon-wrapper">
-                <i
-                  class="fa-solid fa-cloud-arrow-up text-4xl text-muted mb-2"
-                ></i>
+                <i class="fa-solid fa-cloud-arrow-up text-4xl text-muted"></i>
               </div>
               <p class="text-sm sm:text-base font-medium text-primary">
-                Seret & lepas,
-                <span class="font-semibold text-brand">klik untuk pilih</span>,
-                atau tempel dari clipboard
+                Seret & lepas, <span class="text-brand font-semibold">klik untuk pilih</span>, atau tempel dari clipboard
               </p>
-              <p class="text-xs text-muted">
-                Format: JPG, JPEG, PNG • Maks: 10MB
-              </p>
+              <p class="text-xs text-muted">Format: JPG, JPEG, PNG • Maks: 10MB</p>
             </div>
           </div>
         </div>
 
+        <!-- Camera Upload -->
         <div id="pane-camera" class="upload-pane hidden">
-          <div
-            id="camera-container"
-            class="relative bg-tertiary rounded-xl overflow-hidden aspect-video flex items-center justify-center"
-          >
-            <video
-              id="video-feed"
-              class="w-full h-full object-cover"
-              playsinline
-              autoplay
-              muted
-            ></video>
-            <div
-              id="camera-permission-prompt"
-              class="absolute inset-0 p-4 text-center flex-col items-center justify-center space-y-3 hidden"
-            >
+          <div id="camera-container"
+            class="relative aspect-video bg-tertiary rounded-xl overflow-hidden flex items-center justify-center">
+            <video id="video-feed" class="w-full h-full object-cover" playsinline autoplay muted></video>
+
+            <div id="camera-permission-prompt"
+              class="absolute inset-0 p-4 flex flex-col items-center justify-center space-y-3 text-center hidden">
               <i class="fa-solid fa-camera-slash text-4xl text-muted"></i>
-              <p class="font-semibold text-primary">
-                Kamera Tidak Dapat Diakses
-              </p>
-              <p class="text-sm text-muted">
-                Harap izinkan akses kamera di browser Anda untuk menggunakan
-                fitur ini.
-              </p>
+              <p class="font-semibold text-primary">Kamera Tidak Dapat Diakses</p>
+              <p class="text-sm text-muted">Izinkan akses kamera di browser untuk menggunakan fitur ini.</p>
             </div>
-            <div
-              id="camera-controls"
-              class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4"
-            >
-              <button
-                id="capture-button"
-                type="button"
+
+            <div id="camera-controls"
+              class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
+              <button id="capture-button" type="button"
                 class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg"
-                title="Ambil Gambar"
-              >
-                <div
-                  class="h-12 w-12 bg-white rounded-full ring-2 ring-inset ring-slate-800"
-                ></div>
+                title="Ambil Gambar">
+                <div class="h-12 w-12 bg-white rounded-full ring-2 ring-inset ring-slate-800"></div>
               </button>
-              <button
-                id="switch-camera-button"
-                type="button"
+              <button id="switch-camera-button" type="button"
                 class="absolute -right-20 top-1/2 -translate-y-1/2 h-10 w-10 bg-slate-800/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-slate-800 transition-colors hidden"
-                title="Ganti Kamera"
-              >
+                title="Ganti Kamera">
                 <i class="fa-solid fa-rotate"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <div
-          id="imagePreviewContainer"
-          class="hidden mt-6 animate-fade-in-zoom"
-        >
+        <!-- Preview -->
+        <div id="imagePreviewContainer" class="hidden animate-fade-in-zoom">
           <div class="preview-card">
-            <img
-              id="image-preview-img"
-              class="preview-image"
-              alt="Pratinjau Gambar"
-            />
+            <img id="image-preview-img" class="preview-image" alt="Pratinjau Gambar" />
             <div class="preview-info">
               <p id="image-preview-filename" class="preview-filename"></p>
               <div class="preview-details">
@@ -143,39 +92,34 @@ Anggur{% endblock %} {% block content %}
                 <span id="image-preview-dimensions"></span>
               </div>
             </div>
-            <button
-              id="remove-image-button"
-              type="button"
-              class="preview-remove-button"
-              title="Ganti Gambar"
-            >
+            <button id="remove-image-button" type="button" class="preview-remove-button" title="Ganti Gambar">
               <i class="fa-solid fa-rotate-right"></i>
             </button>
           </div>
         </div>
 
-        <button
-          type="submit"
-          id="submitButton"
-          class="relative flex items-center justify-center w-full px-6 py-3 mt-6 text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-semibold rounded-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
-          disabled
-        >
+        <!-- Submit Button -->
+        <button type="submit" id="submitButton"
+          class="relative flex items-center justify-center w-full px-6 py-3 mt-4 text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-semibold rounded-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
+          disabled>
           <i class="fa-solid fa-magnifying-glass-chart mr-2"></i>
           <span id="buttonText">Mulai Analisis</span>
-          <div
-            id="buttonSpinner"
-            class="absolute right-5 hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"
-          ></div>
+          <div id="buttonSpinner"
+            class="absolute right-5 hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full">
+          </div>
         </button>
       </form>
     </section>
   </main>
 </div>
 
+<!-- Toast Notification -->
 <div id="toast" class="toast" role="alert" aria-live="assertive">
   <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
   <p id="toast-message">Pesan error akan muncul di sini.</p>
 </div>
-{% endblock %} {% block body_scripts %}
+{% endblock %}
+
+{% block body_scripts %}
 <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
 {% endblock %}
