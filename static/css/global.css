@@ -59,37 +59,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* === PERUBAHAN UTAMA: LATAR BELAKANG MINIMALIS & PROFESIONAL === */
 .bg-grid-pattern {
-    background-color: var(--bg-primary);
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: linear-gradient(145deg, #f8fafc, #ecfdf5, #f1f5f9);
 }
 
-/* Lapisan untuk efek "Subtle Noise" (Bintik Halus) */
+/* Noise lembut di light mode */
 .bg-grid-pattern::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    /* Membuat pola titik sangat kecil menggunakan gradasi radial */
-    background-image: radial-gradient(var(--border-secondary) 0.5px, transparent 0);
-    
-    /* Mengulang pola titik tersebut pada area 2x2 pixel */
-    background-size: 2px 2px;
-    
-    /* Mengatur transparansi agar efeknya sangat halus */
-    opacity: 0.3;
-    z-index: -1;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--border-secondary) 0.4px, transparent 0);
+  background-size: 2px 2px;
+  opacity: 0.1;
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* Opacity yang sedikit berbeda untuk mode gelap agar tetap terlihat pas */
+/* Dark mode: background solid saja */
+html.dark .bg-grid-pattern {
+  background: var(--bg-primary);
+}
+
 html.dark .bg-grid-pattern::after {
-    opacity: 0.2;
+  opacity: 0.04;
 }
 /* === AKHIR PERUBAHAN === */
 
