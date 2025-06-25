@@ -122,3 +122,32 @@ html.dark .history-delete-button:hover {
 html.dark .filter-button.active {
   color: var(--bg-primary);
 }
+
+@media (max-width: 480px) {
+  .history-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-card-link {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-delete-button {
+    align-self: flex-end;
+  }
+}
+
+/* Gaya tambahan modern */
+input[type="search"] {
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-primary);
+  transition: all 0.2s ease;
+}
+
+input[type="search"]:focus {
+  border-color: var(--brand-color);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--brand-color-light);
+}

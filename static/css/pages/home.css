@@ -1,6 +1,5 @@
 /* static/css/pages/home.css */
 
-/* --- Animasi Pulse Ring --- */
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.5);
@@ -9,12 +8,13 @@
     box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
   }
 }
-
 #capture-button:active {
   transform: scale(0.95);
 }
-
-#video-feed:not([src=""]):not([src=""])+#camera-permission-prompt+#camera-controls>#capture-button {
+#video-feed:not([src=""]):not([src=""])
+  + #camera-permission-prompt
+  + #camera-controls
+  > #capture-button {
   animation: pulse-ring 1.5s infinite;
 }
 
@@ -32,9 +32,6 @@
   gap: 0.6rem;
   margin-bottom: -1px;
   position: relative;
-  background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(4px);
-  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .upload-tab-button:hover:not(.active) {
@@ -76,13 +73,14 @@
   border-color: var(--brand-color);
   background-color: var(--bg-secondary);
   transform: scale(1.02);
-  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.15);
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.1);
 }
 
 #dropzone.dropzone-active {
   border-color: var(--brand-color) !important;
-  background-color: var(--bg-secondary);
+  border-style: solid;
   transform: scale(1.02);
+  background-color: var(--bg-secondary);
   box-shadow: 0 0 30px rgba(22, 163, 74, 0.2);
 }
 
@@ -95,7 +93,6 @@
   position: relative;
   z-index: 1;
 }
-
 #upload-icon-wrapper {
   width: 64px;
   height: 64px;
@@ -107,7 +104,6 @@
   margin: 0 auto 1rem auto;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 #dropzone:hover #upload-icon-wrapper {
   transform: scale(1.1) rotate(-5deg);
 }
@@ -117,20 +113,16 @@
 #pane-file {
   transition: opacity 0.3s ease;
 }
-
 #pane-camera.hidden,
 #pane-file.hidden {
   display: none;
 }
-
 #camera-container {
   background-color: var(--bg-tertiary);
 }
-
 html.dark #camera-container {
   background-color: #000;
 }
-
 #video-feed {
   transition: filter 0.3s ease;
 }
@@ -157,12 +149,11 @@ html.dark #camera-container {
   border-radius: 0.5rem;
   border: 1px solid var(--border-secondary);
   flex-shrink: 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .preview-card:hover .preview-image {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
 }
 
 .preview-info {
@@ -213,7 +204,7 @@ html.dark .preview-remove-button:hover {
   color: #fca5a5;
 }
 
-/* --- Submit Button Pulse --- */
+/* --- Pulse Animation for Submit Button --- */
 .animate-subtle-pulse {
   animation: subtlePulse 1.5s infinite;
 }
@@ -230,50 +221,35 @@ html.dark .preview-remove-button:hover {
   }
 }
 
-/* --- Dark Mode Theme Variables --- */
-html.dark {
-  --bg-primary: #1e1e1e;
-  --bg-secondary: #2a2a2a;
-  --bg-tertiary: #333;
-  --text-primary: #f3f4f6;
-  --text-muted: #9ca3af;
-  --border-primary: #444;
-  --border-secondary: #555;
-  --brand-color: #4ade80;
-  --brand-color-hover: #22c55e;
-}
-
-/* --- Dark Mode Specific Styling --- */
-html.dark #dropzone {
-  background-color: var(--bg-primary);
-  border-color: var(--border-secondary);
-}
-
-html.dark #dropzone:hover {
-  background-color: var(--bg-secondary);
+/* --- Dropzone Hover & Active Enhancements --- */
+#dropzone:hover {
   border-color: var(--brand-color);
-  box-shadow: 0 10px 25px rgba(74, 222, 128, 0.15);
-}
-
-html.dark #upload-icon-wrapper {
   background-color: var(--bg-secondary);
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.15);
 }
 
-html.dark .preview-card {
-  background-color: var(--bg-primary);
-  border-color: var(--border-primary);
+#dropzone.dropzone-active {
+  border-color: var(--brand-color) !important;
+  background-color: var(--bg-secondary);
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(22, 163, 74, 0.2);
 }
 
-html.dark .upload-tab-button {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: var(--text-muted);
+/* --- Tab Button Glass Effect --- */
+.upload-tab-button {
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
-html.dark .upload-tab-button.active {
-  color: var(--brand-color);
+/* --- Preview Image Enhancements --- */
+.preview-image {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-html.dark #submitButton {
-  background-image: linear-gradient(to right, #16a34a, #22c55e);
-  color: #fff;
+.preview-card:hover .preview-image {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+
