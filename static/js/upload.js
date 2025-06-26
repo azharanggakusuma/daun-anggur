@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- DOM Elements ---
   const uploadForm = document.getElementById("uploadForm");
   const submitButton = document.getElementById("submitButton");
   const buttonText = document.getElementById("buttonText");
@@ -29,15 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const toastIcon = document.getElementById("toast-icon");
   const toastMessage = document.getElementById("toast-message");
 
-  const cropModal = document.getElementById("cropModal");
-  const cropperImage = document.getElementById("cropperImage");
-  const cancelCrop = document.getElementById("cancelCrop");
-  const confirmCrop = document.getElementById("confirmCrop");
   const uploadOverlay = document.getElementById("uploadOverlay");
 
   let selectedFile = null;
-  let croppedBlob = null;
-  let cropper = null;
   let toastTimeout;
   let activeTab = "file";
   let videoStream = null;
@@ -59,9 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clearTimeout(toastTimeout);
     toastMessage.textContent = message;
     toast.className = `toast toast-visible toast-${type}`;
-    toastIcon.className = `fa-solid ${
-      type === "success" ? "fa-circle-check" : "fa-circle-exclamation"
-    }`;
+    toastIcon.className = `fa-solid ${type === "success" ? "fa-circle-check" : "fa-circle-exclamation"}`;
     toastTimeout = setTimeout(() => toast.classList.remove("toast-visible"), 4000);
   }
 
@@ -84,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function resetToInitialState() {
     selectedFile = null;
-    croppedBlob = null;
     fileInput.value = "";
 
     imagePreviewContainer.classList.add("hidden");
@@ -126,22 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.classList.add("animate-subtle-pulse");
   }
 
-  function openCropper(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      cropperImage.src = e.target.result;
-      cropModal.classList.remove("hidden");
-
-      if (cropper) cropper.destroy();
-      cropper = new Cropper(cropperImage, {
-        aspectRatio: 1,
-        viewMode: 1,
-        background: false,
-      });
-    };
-    reader.readAsDataURL(file);
-  }
-
   function resizeImage(blob, callback) {
     const img = new Image();
     img.onload = function () {
@@ -164,62 +138,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      showNotification(`Ukuran file melebihi ${formatBytes(MAX_FILE_SIZE)}.`, "error");
-      return;
+      resizeImage(file, (resized) => {
+        selectedFile = resized;
+        displayImagePreview(resized, file.name);
+      });
+    } else {
+      selectedFile = file;
+      displayImagePreview(file, file.name);
     }
-
-    selectedFile = file;
-    openCropper(file);
   }
-
-  confirmCrop.addEventListener("click", () => {
-    cropModal.classList.add("hidden");
-    cropper.getCroppedCanvas().toBlob((blob) => {
-      if (blob.size > MAX_FILE_SIZE) {
-        resizeImage(blob, (resized) => {
-          croppedBlob = resized;
-          displayImagePreview(resized, selectedFile.name);
-        });
-      } else {
-        croppedBlob = blob;
-        displayImagePreview(blob, selectedFile.name);
-      }
-    }, "image/jpeg", 0.95);
-  });
-
-  cancelCrop.addEventListener("click", () => {
-    cropModal.classList.add("hidden");
-    cropper?.destroy();
-    cropper = null;
-  });
-
-  dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("dropzone-active");
-  });
-
-  dropzone.addEventListener("dragleave", () => {
-    dropzone.classList.remove("dropzone-active");
-  });
-
-  dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("dropzone-active");
-    if (e.dataTransfer.files.length) handleFileSelection(e.dataTransfer.files[0]);
-  });
-
-  fileInput.addEventListener("change", () => {
-    if (fileInput.files.length) handleFileSelection(fileInput.files[0]);
-  });
-
-  removeImageButton.addEventListener("click", resetToInitialState);
-
-  tabFile.addEventListener("click", () => switchTabs("file"));
-  tabCamera.addEventListener("click", () => switchTabs("camera"));
 
   uploadForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    if (!croppedBlob) {
+    if (!selectedFile) {
       showNotification("Tidak ada gambar yang dipilih.", "error");
       return;
     }
@@ -227,10 +158,10 @@ document.addEventListener("DOMContentLoaded", function () {
     buttonText.textContent = "Menganalisis...";
     buttonSpinner.classList.remove("hidden");
     submitButton.disabled = true;
-    uploadOverlay.classList.remove("hidden");
+    uploadOverlay?.classList.remove("hidden");
 
     const formData = new FormData();
-    formData.append("file", croppedBlob, "image.jpg");
+    formData.append("file", selectedFile, selectedFile.name || "image.jpg");
 
     fetch("/upload", {
       method: "POST",
@@ -249,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         buttonText.textContent = "Mulai Analisis";
         buttonSpinner.classList.add("hidden");
         submitButton.disabled = false;
-        uploadOverlay.classList.add("hidden");
+        uploadOverlay?.classList.add("hidden");
       });
   });
 
@@ -300,10 +231,39 @@ document.addEventListener("DOMContentLoaded", function () {
     canvas.width = videoFeed.videoWidth;
     canvas.height = videoFeed.videoHeight;
     canvas.getContext("2d").drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
-    canvas.toBlob((blob) => handleFileSelection(blob), "image/jpeg", 0.95);
+    canvas.toBlob((blob) => {
+      if (blob) {
+        selectedFile = blob;
+        displayImagePreview(blob, "kamera.jpg");
+      }
+    }, "image/jpeg", 0.95);
   });
 
   switchCameraButton.addEventListener("click", switchCamera);
+
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropzone.classList.add("dropzone-active");
+  });
+
+  dropzone.addEventListener("dragleave", () => {
+    dropzone.classList.remove("dropzone-active");
+  });
+
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("dropzone-active");
+    if (e.dataTransfer.files.length) handleFileSelection(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) handleFileSelection(fileInput.files[0]);
+  });
+
+  removeImageButton.addEventListener("click", resetToInitialState);
+  tabFile.addEventListener("click", () => switchTabs("file"));
+  tabCamera.addEventListener("click", () => switchTabs("camera"));
+
   window.addEventListener("paste", (event) => {
     if (event.clipboardData?.files.length) {
       const file = event.clipboardData.files[0];
