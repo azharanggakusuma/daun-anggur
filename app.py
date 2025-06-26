@@ -23,10 +23,10 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 # --- Memuat Model ---
 try:
-    model = load_model('model/model_daun_anggur.h5')
+    model = load_model('model/model_final.h5')
     class_names = ['Busuk', 'Esca', 'Hawar', 'Negative', 'Sehat']
 except (IOError, OSError) as e:
-    print(f"Error: Gagal memuat file model 'model/model_daun_anggur.h5'. {e}")
+    print(f"Error: Gagal memuat file model 'model/model_final.h5'. {e}")
     model = None
 
 # --- PENYESUAIAN UTAMA DI SINI: Instruksi Sistem untuk Gemini ---
